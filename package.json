@@ -1,16 +1,16 @@
 {
-  "name": "backend",
-  "author": "beginner",
+  "name": "blog-server",
+  "author": "Begin0Dev",
   "description": "beginner blog backend",
   "version": "1.0.0",
   "private": true,
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
     "start": "cross-env node scripts/start",
     "dev": "node scripts/development",
     "test": "jest"
   },
-  "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
     "bcrypt": "^3.0.2",
