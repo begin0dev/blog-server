@@ -7,11 +7,11 @@ const httpMocks = require('node-mocks-http');
 const User = require('datebase/models/user');
 const MockUserData = require('datebase/models/__mocks__/user');
 const { generateAccessToken, generateRefreshToken } = require('lib/token');
-const { checkedAccessToken, checkedRefreshToken } = require('lib/middlewares/jwt');
+const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
 
 const { JWT_SECRET } = process.env;
 
-describe('Test checkedAccessToken', () => {
+describe('Test checkAccessToken', () => {
   const user = {
     _id: 'id',
     displayName: 'displayName',
@@ -25,7 +25,7 @@ describe('Test checkedAccessToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkedAccessToken(req, res, (err) => {
+    await checkAccessToken(req, res, (err) => {
       if (err) console.error(err);
       expect(req.user).toBeNull();
     });
@@ -39,7 +39,7 @@ describe('Test checkedAccessToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkedAccessToken(req, res, (err) => {
+    await checkAccessToken(req, res, (err) => {
       if (err) console.error(err);
       expect(req.user).toEqual(user);
     });
@@ -60,7 +60,7 @@ describe('Test checkedAccessToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkedAccessToken(req, res, (err) => {
+    await checkAccessToken(req, res, (err) => {
       if (err) console.error(err);
       expect(req.user).toBeNull();
     });
@@ -68,7 +68,7 @@ describe('Test checkedAccessToken', () => {
 });
 
 
-describe('Test checkedRefreshToken', () => {
+describe('Test checkRefreshToken', () => {
   let refreshToken;
   let user;
 
@@ -89,7 +89,7 @@ describe('Test checkedRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkedRefreshToken(req, res, (err) => {
+    await checkRefreshToken(req, res, (err) => {
       if (err) console.error(err);
       expect(req.user).toEqual(user.toJSON());
     });
@@ -105,7 +105,7 @@ describe('Test checkedRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkedRefreshToken(req, res, (err) => {
+    await checkRefreshToken(req, res, (err) => {
       if (err) console.error(err);
       expect(req.user).toEqual(user.toJSON());
     });
@@ -123,7 +123,7 @@ describe('Test checkedRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkedRefreshToken(req, res, (err) => {
+    await checkRefreshToken(req, res, (err) => {
       if (err) console.error(err);
       expect(req.user).toBeNull();
     });

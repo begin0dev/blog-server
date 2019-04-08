@@ -7,8 +7,8 @@ const session = require('express-session');
 const flash = require('connect-flash');
 
 const api = require('api/index');
-const db = require('datebase/index');
-const { checkedAccessToken, checkedRefreshToken } = require('lib/middlewares/jwt');
+const connectDB = require('datebase/index');
+const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
 require('lib/oauth/strategies'); // Set Oauth strategies
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
@@ -17,7 +17,7 @@ const app = express();
 const port = PORT || 3000;
 
 /* mongoose connected */
-db.connect();
+connectDB();
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
 if (NODE_ENV === 'production') {
@@ -43,7 +43,8 @@ app.use(session({
 app.use(flash());
 
 /* SETUP ROUTER */
-app.use(checkedAccessToken, checkedRefreshToken);
+app.use(checkAccessToken);
+app.use(checkRefreshToken);
 app.use('/api', api);
 
 /* 404 error */
@@ -56,10 +57,6 @@ app.use((req, res, next) => {
 /* handle error */
 app.use((err, req, res, next) => {
   console.error(err);
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
   res.status(err.status || 500);
   res.json({
     status: 'error',

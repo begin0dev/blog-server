@@ -83,49 +83,39 @@ class Strategy {
     return url.format(parsed);
   }
 
-  getOauthAccessToken(code, redirectURI) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { clientID, clientSecret, tokenURL } = this;
-        const params = {
-          client_id: clientID,
-          client_secret: clientSecret,
-          redirect_uri: redirectURI,
-          code,
-        };
-        if (this.grantType) {
-          params.grant_type = this.grantType;
-        }
-        const payload = await axios({
-          method: 'post',
-          url: tokenURL,
-          data: querystring.stringify(params),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        });
-        const accessToken = payload.data.access_token;
-        resolve(accessToken);
-      } catch (err) {
-        reject(err);
+  async getOauthAccessToken(code, redirectURI) {
+    try {
+      const { clientID, clientSecret, tokenURL } = this;
+      const params = {
+        client_id: clientID,
+        client_secret: clientSecret,
+        redirect_uri: redirectURI,
+        code,
+      };
+      if (this.grantType) {
+        params.grant_type = this.grantType;
       }
-    });
+      const { data: { access_token: accessToken } } = await axios({
+        method: 'post',
+        url: tokenURL,
+        data: querystring.stringify(params),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+      return accessToken;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   getUserProfile(accessToken) {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const { profileURL, scope } = this;
-        const params = {
-          access_token: accessToken,
-          fields: scope,
-        };
-        const payload = await axios.get(profileURL, { params });
-        resolve(payload.data);
-      } catch (err) {
-        reject(err);
-      }
-    });
+    const { profileURL, scope } = this;
+    const params = {
+      access_token: accessToken,
+      fields: scope,
+    };
+    return axios.get(profileURL, { params });
   }
 }
 

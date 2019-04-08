@@ -2,26 +2,14 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 12;
 
-exports.generatePassword = (password) => {
-  return new Promise(async (resolve, reject) => {
+exports.generatePassword = async (password) => {
+  try {
     // generate salt
-    try {
-      const salt = await bcrypt.genSalt(saltRounds);
-      const hash = await bcrypt.hash(password, salt);
-      resolve(hash);
-    } catch (err) {
-      reject(err);
-    }
-  });
+    const salt = await bcrypt.genSalt(saltRounds);
+    return await bcrypt.hash(password, salt);
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
-exports.comparePassword = (password, hash) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const result = await bcrypt.compare(password, hash);
-      resolve(result);
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
+exports.comparePassword = (password, hash) => bcrypt.compare(password, hash);

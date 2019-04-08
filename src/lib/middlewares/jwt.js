@@ -3,7 +3,7 @@ const moment = require('moment');
 const User = require('datebase/models/user');
 const { decodeAccessToken, generateAccessToken } = require('lib/token');
 
-exports.checkedAccessToken = async (req, res, next) => {
+exports.checkAccessToken = async (req, res, next) => {
   let accessToken = req.get('x-access-token') || req.get('authorization');
   if (!accessToken) {
     req.user = null;
@@ -22,7 +22,7 @@ exports.checkedAccessToken = async (req, res, next) => {
   }
 };
 
-exports.checkedRefreshToken = async (req, res, next) => {
+exports.checkRefreshToken = async (req, res, next) => {
   const { refreshToken } = req.cookies;
   if (!refreshToken) {
     req.user = null;
