@@ -13,11 +13,11 @@ require('lib/oauth/strategies'); // Set Oauth strategies
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
 
-const app = express();
-const port = PORT || 3000;
-
 /* mongoose connected */
 connectDB();
+
+const app = express();
+const port = PORT || 3000;
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
 if (NODE_ENV === 'production') {
@@ -31,15 +31,17 @@ if (NODE_ENV === 'production') {
 app.use(express.json()); // parses json
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(COOKIE_SECRET));
-app.use(session({
-  resave: false,
-  secret: COOKIE_SECRET,
-  saveUninitialized: false,
-  cookie: {
-    httpOnly: true,
-    secure: NODE_ENV === 'production',
-  },
-}));
+app.use(
+  session({
+    resave: false,
+    secret: COOKIE_SECRET,
+    saveUninitialized: false,
+    cookie: {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+    },
+  }),
+);
 app.use(flash());
 
 /* SETUP ROUTER */

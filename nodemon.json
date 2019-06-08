@@ -1,5 +1,9 @@
 {
-  "watch": ["src", ".env", "nodemon.json"],
+  "watch": ["src", "nodemon.json"],
   "exec": "node src/app.js",
-  "ext": "js json"
+  "ext": "js json",
+  "env": {
+    "NODE_ENV": "development",
+    "NODE_PATH": "src"
+  }
 }
