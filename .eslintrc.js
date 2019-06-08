@@ -1,30 +1,30 @@
 module.exports = {
-  extends: "airbnb-base",
-  plugins: ["jest"],
+  extends: 'airbnb-base',
+  plugins: ['jest'],
   settings: {
-    "import/resolver": {
+    'import/resolver': {
       node: {
-        paths: ["src"]
-      }
-    }
+        paths: ['src'],
+      },
+    },
   },
   env: {
-    "jest/globals": true
+    'jest/globals': true,
   },
   rules: {
-    "arrow-body-style": 0,
-    "consistent-return": 0,
-    "object-property-newline": 0,
-    "object-curly-newline": 0,
-    "import/no-extraneous-dependencies": 0,
-    "import/prefer-default-export": 0,
-    "no-console": 0,
-    "no-underscore-dangle": [
-      "error",
+    'arrow-body-style': 0,
+    'consistent-return': 0,
+    'object-property-newline': 0,
+    'object-curly-newline': 0,
+    'import/no-extraneous-dependencies': 0,
+    'import/prefer-default-export': 0,
+    'no-console': 0,
+    'no-underscore-dangle': [
+      'error',
       {
-        allow: ["_id"]
-      }
+        allow: ['_id'],
+      },
     ],
-    "max-len": 0
-  }
+    'max-len': 0,
+  },
 };
