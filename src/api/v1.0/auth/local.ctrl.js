@@ -1,6 +1,6 @@
 const express = require('express');
 const moment = require('moment');
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 const User = require('datebase/models/user');
 const { comparePassword } = require('lib/bcryptHelper');
@@ -19,17 +19,24 @@ router.get('/', (req, res) => {
 
 router.post('/register', async (req, res, next) => {
   const { body } = req;
-  const {
-    email,
-    password,
-    displayName,
-  } = body;
+  const { email, password, displayName } = body;
 
   // check validate user info
   const schema = Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(15).required(),
-    displayName: Joi.string().min(3).max(10).required(),
+    email: Joi.string()
+      .email()
+      .required(),
+    password: Joi.string()
+      .min(6)
+      .max(15)
+      .required(),
+    passwordConfirm: Joi.string()
+      .valid(Joi.ref('password'))
+      .required(),
+    displayName: Joi.string()
+      .min(3)
+      .max(10)
+      .required(),
   });
   const validate = Joi.validate(body, schema);
   if (validate.error) return res.status(409).json({ status: 'fail', message: validate.error.details[0].message });
@@ -70,8 +77,13 @@ router.post('/login', async (req, res, next) => {
 
   // check validate user info
   const schema = Joi.object({
-    email: Joi.string().email().required(),
-    password: Joi.string().min(6).max(15).required(),
+    email: Joi.string()
+      .email()
+      .required(),
+    password: Joi.string()
+      .min(6)
+      .max(15)
+      .required(),
   });
   const validate = Joi.validate(body, schema);
   if (validate.error) return res.status(409).json({ status: 'fail', message: validate.error.details[0].message });

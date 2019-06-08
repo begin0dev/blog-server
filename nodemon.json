@@ -1,5 +1,5 @@
 {
-  "watch": ["src", "nodemon.json", ".env"],
+  "watch": ["src", ".env", "nodemon.json"],
   "exec": "node src/app.js",
   "ext": "js json"
 }
