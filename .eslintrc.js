@@ -12,6 +12,7 @@ module.exports = {
     'jest/globals': true,
   },
   rules: {
+    'arrow-parens': 0,
     'arrow-body-style': 0,
     'consistent-return': 0,
     'object-property-newline': 0,

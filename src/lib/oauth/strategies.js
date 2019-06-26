@@ -30,32 +30,36 @@ const socialLogin = async (provider, id, email, displayName, done) => {
 };
 
 oAuth.use(
-  new Strategy({
-    name: 'facebook',
-    clientID: FACEBOOK_APP_ID,
-    clientSecret: FACEBOOK_SECRET,
-    callbackURL: '/api/v1.0/auth/social/facebook',
-  },
-  (accessToken, profile, done) => {
-    const { id, name, email } = profile;
-    return socialLogin('facebook', id, email, name, done);
-  }),
+  new Strategy(
+    {
+      name: 'facebook',
+      clientID: FACEBOOK_APP_ID,
+      clientSecret: FACEBOOK_SECRET,
+      callbackURL: '/api/v1.0/auth/social/facebook',
+    },
+    (accessToken, profile, done) => {
+      const { id, name, email } = profile;
+      return socialLogin('facebook', id, email, name, done);
+    },
+  ),
 );
 
 oAuth.use(
-  new Strategy({
-    name: 'kakao',
-    clientID: KAKAO_APP_ID,
-    clientSecret: KAKAO_SECRET,
-    callbackURL: '/api/v1.0/auth/social/kakao',
-    grantType: 'authorization_code',
-  },
-  (accessToken, profile, done) => {
-    const { id, properties, kakao_account: kakaoAccount } = profile;
-    const nickname = properties && properties.nickname;
-    const email = kakaoAccount && kakaoAccount.email;
-    return socialLogin('kakao', id, accessToken, email, nickname, done);
-  }),
+  new Strategy(
+    {
+      name: 'kakao',
+      clientID: KAKAO_APP_ID,
+      clientSecret: KAKAO_SECRET,
+      callbackURL: '/api/v1.0/auth/social/kakao',
+      grantType: 'authorization_code',
+    },
+    (accessToken, profile, done) => {
+      const { id, properties, kakao_account: kakaoAccount } = profile;
+      const nickname = properties && properties.nickname;
+      const email = kakaoAccount && kakaoAccount.email;
+      return socialLogin('kakao', id, accessToken, email, nickname, done);
+    },
+  ),
 );
 
 // oAuth.use(

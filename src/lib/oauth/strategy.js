@@ -1,7 +1,7 @@
 const _ = require('lodash');
+const url = require('url');
 const axios = require('axios');
 const querystring = require('querystring');
-const url = require('url');
 
 const SOCIAL_BASE_URL = {
   facebook: {
@@ -51,12 +51,12 @@ class Strategy {
     }
     if (!verify) throw new Error('Strategy requires a verify callback!');
     if (!Array.isArray(scope)) throw new Error('Scope type must be array!');
-    ['name', 'clientID', 'clientSecret', 'callbackURL'].forEach((key) => {
+    ['name', 'clientID', 'clientSecret', 'callbackURL'].forEach(key => {
       if (!options[key]) throw new Error(`You must provide options the ${key} configuration value`);
       this[key] = options[key];
     });
     const { name, grantType } = options;
-    ['authorizationURL', 'tokenURL', 'profileURL'].forEach((key) => {
+    ['authorizationURL', 'tokenURL', 'profileURL'].forEach(key => {
       this[key] = SOCIAL_BASE_URL[name][key];
     });
 
@@ -95,7 +95,9 @@ class Strategy {
       if (this.grantType) {
         params.grant_type = this.grantType;
       }
-      const { data: { access_token: accessToken } } = await axios({
+      const {
+        data: { access_token: accessToken },
+      } = await axios({
         method: 'post',
         url: tokenURL,
         data: querystring.stringify(params),

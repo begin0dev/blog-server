@@ -6,8 +6,8 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 
-const api = require('api/index');
-const connectDB = require('datebase/index');
+const api = require('api');
+const connectDB = require('datebase');
 const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
 require('lib/oauth/strategies'); // Set Oauth strategies
 

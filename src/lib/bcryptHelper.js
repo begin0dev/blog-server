@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 12;
 
-exports.generatePassword = async (password) => {
+exports.generatePassword = async password => {
   try {
     // generate salt
     const salt = await bcrypt.genSalt(saltRounds);

@@ -5,9 +5,7 @@ const { NODE_ENV, MONGO_URI, MONGO_USER, MONGO_PWD } = process.env;
 module.exports = () => {
   const connectMongoDB = () => {
     // mongoose setting
-    if (NODE_ENV !== 'production') {
-      mongoose.set('debug', true);
-    }
+    mongoose.set('debug', NODE_ENV !== 'production');
     mongoose.set('useCreateIndex', true);
 
     console.log('Mongodb connected');
