@@ -8,17 +8,16 @@ const { generateAccessToken, generateRefreshToken } = require('lib/token');
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
+router.get('/check', (req, res) => {
   const { user } = req;
   if (user) {
     res.status(200).json({ status: 'success', data: { user } });
   } else {
-    res.status(401).end();
+    res.status(401).json({ status: 'error', message: 'Unauthorized' });
   }
 });
 
-router.post('/register', async (req, res, next) => {
-  const { body } = req;
+router.post('/register', async ({ body }, res, next) => {
   const { email, password, displayName } = body;
 
   // check validate user info
@@ -63,16 +62,15 @@ router.post('/register', async (req, res, next) => {
         'oAuth.local.expiredAt': moment().add(12, 'hour'),
       },
     });
-    res.set('x-access-token', accessToken);
+    res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.status(201).json({ status: 'success', data: { user: userJson } });
+    res.status(201).json({ status: 'success', data: null });
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/login', async (req, res, next) => {
-  const { body } = req;
+router.post('/login', async ({ body }, res, next) => {
   const { email, password } = body;
 
   // check validate user info
@@ -91,11 +89,11 @@ router.post('/login', async (req, res, next) => {
   try {
     // find by username
     const user = await User.findByEmail(email);
-    if (!user) return res.status(409).json({ status: 'fail', message: 'user is incorrect!' });
+    if (!user) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
 
     // find one user compare password
     const result = await comparePassword(password, user.password);
-    if (!result) return res.status(409).json({ status: 'fail', message: 'user is incorrect!' });
+    if (!result) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
 
     const userJson = user.toJSON();
     // access token and refresh token set cookie
@@ -107,9 +105,9 @@ router.post('/login', async (req, res, next) => {
         'oAuth.local.expiredAt': moment().add(12, 'hour'),
       },
     });
-    res.set('x-access-token', accessToken);
+    res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.status(200).json({ status: 'success', data: { user: userJson } });
+    res.status(200).json({ status: 'success', data: null });
   } catch (err) {
     next(err);
   }

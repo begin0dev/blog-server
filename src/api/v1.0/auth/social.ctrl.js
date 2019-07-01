@@ -19,7 +19,7 @@ const socialCallback = async (req, res) => {
         'oAuth.local.expiredAt': moment().add(12, 'hour'),
       },
     });
-    res.set('x-access-token', accessToken);
+    res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
     res.redirect('');
   } catch (err) {

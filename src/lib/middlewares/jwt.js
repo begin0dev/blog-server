@@ -4,20 +4,21 @@ const User = require('datebase/models/user');
 const { decodeAccessToken, generateAccessToken } = require('lib/token');
 
 exports.checkAccessToken = async (req, res, next) => {
-  let accessToken = req.get('x-access-token') || req.get('authorization');
+  // clear user
+  req.user = null;
+  let accessToken = req.get('authorization');
+  if (!accessToken) ({ accessToken } = req.cookies);
   if (!accessToken) {
-    req.user = null;
     return next();
   }
-  if (accessToken.startsWith('Bearer ')) accessToken = accessToken.slice(7, accessToken.length);
 
   try {
+    if (accessToken.startsWith('Bearer ')) accessToken = accessToken.slice(7, accessToken.length);
     const decoded = await decodeAccessToken(accessToken);
     req.user = decoded.user;
     next();
   } catch (err) {
-    req.user = null;
-    res.set('x-access-token', null);
+    res.clearCookie('accessToken');
     next();
   }
 };
@@ -25,21 +26,18 @@ exports.checkAccessToken = async (req, res, next) => {
 exports.checkRefreshToken = async (req, res, next) => {
   const { refreshToken } = req.cookies;
   if (!refreshToken) {
-    req.user = null;
     return next();
   }
 
   try {
     const user = await User.findByLocalRefreshToken(refreshToken);
     if (!user) {
-      req.user = null;
       res.clearCookie('refreshToken');
       return next();
     }
 
     const { expiredAt } = user.oAuth.local;
     if (moment() > moment(expiredAt)) {
-      req.user = null;
       res.clearCookie('refreshToken');
       await user.updateOne({
         $set: {
@@ -52,7 +50,7 @@ exports.checkRefreshToken = async (req, res, next) => {
 
     req.user = user.toJSON();
     const accessToken = await generateAccessToken({ user: req.user });
-    res.set('x-access-token', accessToken);
+    res.cookie('accessToken', accessToken);
 
     // extended your refresh token so they do not expire while using your site
     if (moment(expiredAt).diff(moment(), 'minute') <= 5) {
@@ -65,7 +63,6 @@ exports.checkRefreshToken = async (req, res, next) => {
     next();
   } catch (err) {
     console.error(err);
-    req.user = null;
     res.clearCookie('refreshToken');
     next();
   }
