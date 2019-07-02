@@ -11,7 +11,7 @@ const socialCallback = async (req, res) => {
   try {
     const { user: userJson } = req;
     // access token and refresh token set cookie
-    const accessToken = await generateAccessToken({ user: userJson });
+    const accessToken = generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
     await User.findByIdAndUpdate(userJson._id, {
       $set: {

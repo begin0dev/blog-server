@@ -36,9 +36,6 @@ class Oauth {
         if (user && successRedirect) {
           return res.redirect(successRedirect);
         }
-        if (err) {
-          res.locals.message = err.message;
-        }
         req.user = user;
         next();
       };

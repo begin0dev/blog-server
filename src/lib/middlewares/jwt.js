@@ -3,18 +3,16 @@ const moment = require('moment');
 const User = require('datebase/models/user');
 const { decodeAccessToken, generateAccessToken } = require('lib/token');
 
-exports.checkAccessToken = async (req, res, next) => {
+exports.checkAccessToken = (req, res, next) => {
   // clear user
   req.user = null;
   let accessToken = req.get('authorization');
   if (!accessToken) ({ accessToken } = req.cookies);
-  if (!accessToken) {
-    return next();
-  }
+  if (!accessToken) return next();
 
   try {
     if (accessToken.startsWith('Bearer ')) accessToken = accessToken.slice(7, accessToken.length);
-    const decoded = await decodeAccessToken(accessToken);
+    const decoded = decodeAccessToken(accessToken);
     req.user = decoded.user;
     next();
   } catch (err) {
@@ -24,10 +22,9 @@ exports.checkAccessToken = async (req, res, next) => {
 };
 
 exports.checkRefreshToken = async (req, res, next) => {
+  if (req.user) return next();
   const { refreshToken } = req.cookies;
-  if (!refreshToken) {
-    return next();
-  }
+  if (!refreshToken) return next();
 
   try {
     const user = await User.findByLocalRefreshToken(refreshToken);
@@ -49,7 +46,7 @@ exports.checkRefreshToken = async (req, res, next) => {
     }
 
     req.user = user.toJSON();
-    const accessToken = await generateAccessToken({ user: req.user });
+    const accessToken = generateAccessToken({ user: req.user });
     res.cookie('accessToken', accessToken);
 
     // extended your refresh token so they do not expire while using your site

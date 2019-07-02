@@ -54,7 +54,7 @@ router.post('/register', async ({ body }, res, next) => {
 
     const userJson = user.toJSON();
     // access token and refresh token set cookie
-    const accessToken = await generateAccessToken({ user: userJson });
+    const accessToken =generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
     await user.updateOne({
       $set: {
@@ -97,7 +97,7 @@ router.post('/login', async ({ body }, res, next) => {
 
     const userJson = user.toJSON();
     // access token and refresh token set cookie
-    const accessToken = await generateAccessToken({ user: userJson });
+    const accessToken = generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
     await user.updateOne({
       $set: {

@@ -25,21 +25,21 @@ describe('Test checkAccessToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkAccessToken(req, res, (err) => {
+    await checkAccessToken(req, res, err => {
       if (err) console.error(err);
       expect(req.user).toBeNull();
     });
   });
   test('Success-2', async () => {
-    const token = await generateAccessToken({ user });
+    const token = generateAccessToken({ user });
     const req = httpMocks.createRequest({
       headers: {
-        'x-access-token': token,
+        authorization: `Bearer ${token}`,
       },
     });
     const res = httpMocks.createResponse();
 
-    await checkAccessToken(req, res, (err) => {
+    await checkAccessToken(req, res, err => {
       if (err) console.error(err);
       expect(req.user).toEqual(user);
     });
@@ -55,18 +55,17 @@ describe('Test checkAccessToken', () => {
     );
     const req = httpMocks.createRequest({
       headers: {
-        'x-access-token': token,
+        authorization: `Bearer ${token}`,
       },
     });
     const res = httpMocks.createResponse();
 
-    await checkAccessToken(req, res, (err) => {
+    await checkAccessToken(req, res, err => {
       if (err) console.error(err);
       expect(req.user).toBeNull();
     });
   });
 });
-
 
 describe('Test checkRefreshToken', () => {
   let refreshToken;
@@ -89,7 +88,7 @@ describe('Test checkRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkRefreshToken(req, res, (err) => {
+    await checkRefreshToken(req, res, err => {
       if (err) console.error(err);
       expect(req.user).toEqual(user.toJSON());
     });
@@ -105,7 +104,7 @@ describe('Test checkRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkRefreshToken(req, res, (err) => {
+    await checkRefreshToken(req, res, err => {
       if (err) console.error(err);
       expect(req.user).toEqual(user.toJSON());
     });
@@ -123,7 +122,7 @@ describe('Test checkRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkRefreshToken(req, res, (err) => {
+    await checkRefreshToken(req, res, err => {
       if (err) console.error(err);
       expect(req.user).toBeNull();
     });

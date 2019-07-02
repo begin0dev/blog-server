@@ -10,24 +10,18 @@ const user = {
 };
 const expiresIn = '1h';
 
-describe('Test generateToken', () => {
-  test('Success', async () => {
-    await expect(generateAccessToken({ user }, expiresIn)).resolves;
-    await expect(generateAccessToken({ user })).resolves;
-  });
-});
-
 describe('Test decodeToken', () => {
-  test('Success', async () => {
-    const token = await generateAccessToken({ user }, expiresIn);
+  test('Success', () => {
+    const token = generateAccessToken({ user }, expiresIn);
 
-    const decode = await decodeAccessToken(token);
-    ['user', 'iat', 'exp', 'iss'].forEach((key) => {
+    const decode = decodeAccessToken(token);
+    ['user', 'iat', 'exp', 'iss'].forEach(key => {
       expect(decode).toHaveProperty(key);
     });
   });
-  test('Failed', async () => {
-    const expiredToken = await jwt.sign(
+
+  test('Failed', () => {
+    const expiredToken = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) - 60,
         data: user,
@@ -35,13 +29,10 @@ describe('Test decodeToken', () => {
       JWT_SECRET,
       { issuer: 'beginner' },
     );
-    await expect(decodeAccessToken(expiredToken)).rejects.toMatch('TokenExpiredError');
 
-    const invalidToken = await jwt.sign(
-      { user },
-      `wrong${JWT_SECRET}`,
-      { issuer: 'beginner', expiresIn: '1d' },
-    );
-    await expect(decodeAccessToken(invalidToken)).rejects.toMatch('JsonWebTokenError');
+    expect(() => decodeAccessToken(expiredToken)).toThrowError('jwt expired');
+
+    const invalidToken = jwt.sign({ user }, `wrong${JWT_SECRET}`, { issuer: 'beginner', expiresIn: '1d' });
+    expect(() => decodeAccessToken(invalidToken)).toThrowError('invalid signature');
   });
 });
