@@ -22,6 +22,7 @@ describe('Test Oauth use', () => {
 
 describe('Test Oauth authenticate', () => {
   const app = express();
+
   Oauth.use(new Strategy({
     name: 'facebook',
     clientID: 'test-id',
@@ -37,10 +38,11 @@ describe('Test Oauth authenticate', () => {
   test('Success', async () => {
     await agent
       .get('/facebook')
+      .set('Host', 'test.com')
       .expect(302)
-      .expect(
-        'Location',
-        'https://www.facebook.com/dialog/oauth?client_id=test-id&redirect_uri=http://127.0.0.1/test&response_type=code',
-      );
+      .expect((res) => {
+        expect(decodeURIComponent(res.header.location))
+          .toEqual('https://www.facebook.com/dialog/oauth?client_id=test-id&redirect_uri=http://test.com/test&response_type=code');
+      });
   });
 });
