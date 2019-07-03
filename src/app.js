@@ -1,5 +1,6 @@
 require('dotenv').config(); // LOAD CONFIG
 
+const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
@@ -18,6 +19,7 @@ connectDB();
 
 const app = express();
 const port = PORT || 3000;
+app.use(cors({ origin: true }));
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
 if (NODE_ENV === 'production') {
