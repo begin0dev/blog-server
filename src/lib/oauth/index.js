@@ -37,7 +37,7 @@ class Oauth {
           return res.redirect(successRedirect);
         }
         req.user = user;
-        next();
+        return next();
       };
 
       if (error) {

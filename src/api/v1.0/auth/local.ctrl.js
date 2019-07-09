@@ -8,20 +8,11 @@ const { generateAccessToken, generateRefreshToken } = require('lib/token');
 
 const router = express.Router();
 
-router.get('/check', (req, res) => {
-  const { user } = req;
-  if (user) {
-    res.status(200).json({ status: 'success', data: { user } });
-  } else {
-    res.status(401).json({ status: 'error', message: 'Unauthorized' });
-  }
-});
-
 router.post('/register', async ({ body }, res, next) => {
   const { email, password, displayName } = body;
 
   // check validate user info
-  const schema = Joi.object({
+  const schema = Joi.object().keys({
     email: Joi.string()
       .email()
       .required(),
@@ -37,8 +28,8 @@ router.post('/register', async ({ body }, res, next) => {
       .max(10)
       .required(),
   });
-  const validate = Joi.validate(body, schema);
-  if (validate.error) return res.status(409).json({ status: 'fail', message: validate.error.details[0].message });
+  const { error } = Joi.validate(body, schema);
+  if (error) return res.status(409).json({ status: 'fail', message: error.details[0].message });
 
   try {
     // check email
@@ -54,7 +45,7 @@ router.post('/register', async ({ body }, res, next) => {
 
     const userJson = user.toJSON();
     // access token and refresh token set cookie
-    const accessToken =generateAccessToken({ user: userJson });
+    const accessToken = generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
     await user.updateOne({
       $set: {
@@ -64,9 +55,9 @@ router.post('/register', async ({ body }, res, next) => {
     });
     res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.status(201).json({ status: 'success', data: null });
+    return res.status(201).json({ status: 'success', data: null });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 
@@ -74,7 +65,7 @@ router.post('/login', async ({ body }, res, next) => {
   const { email, password } = body;
 
   // check validate user info
-  const schema = Joi.object({
+  const schema = Joi.object().keys({
     email: Joi.string()
       .email()
       .required(),
@@ -83,17 +74,17 @@ router.post('/login', async ({ body }, res, next) => {
       .max(15)
       .required(),
   });
-  const validate = Joi.validate(body, schema);
-  if (validate.error) return res.status(409).json({ status: 'fail', message: validate.error.details[0].message });
+  const { error } = Joi.validate(body, schema);
+  if (error) return res.status(409).json({ status: 'fail', message: error.details[0].message });
 
   try {
     // find by username
     const user = await User.findByEmail(email);
-    if (!user) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+    if (!user) return res.status(401).json({ status: 'error', message: '로그인에 실패하였습니다.' });
 
     // find one user compare password
     const result = await comparePassword(password, user.password);
-    if (!result) return res.status(401).json({ status: 'error', message: 'Unauthorized' });
+    if (!result) return res.status(401).json({ status: 'error', message: '로그인에 실패하였습니다.' });
 
     const userJson = user.toJSON();
     // access token and refresh token set cookie
@@ -107,9 +98,9 @@ router.post('/login', async ({ body }, res, next) => {
     });
     res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.status(200).json({ status: 'success', data: null });
+    return res.status(200).json({ status: 'success', data: null });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 });
 

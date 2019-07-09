@@ -19,13 +19,14 @@ connectDB();
 
 const app = express();
 const port = PORT || 3000;
-app.use(cors({ origin: true }));
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
 if (NODE_ENV === 'production') {
   app.use(morgan('combined'));
+  app.use(cors({ origin: 'https://begin0devBlog.com', credentials: true }));
 } else {
   app.use(morgan('dev')); // server logger
+  app.use(cors({ origin: true, credentials: true }));
 }
 
 /* SETUP MIDDLEWARE */
@@ -47,8 +48,7 @@ app.use(
 app.use(flash());
 
 /* SETUP ROUTER */
-app.use(checkAccessToken);
-app.use(checkRefreshToken);
+app.use(checkAccessToken, checkRefreshToken);
 app.use('/api', api);
 
 /* 404 error */
