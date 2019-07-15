@@ -20,15 +20,14 @@ router.delete('/logout', async (req, res, next) => {
       { _id },
       {
         $set: {
-          'oAuth.local.refreshToken': null,
-          'oAuth.local.expiredAt': null,
+          'oAuth.local': {},
         },
       },
     );
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     req.user = null;
-    return res.status(200);
+    return res.status(200).end();
   } catch (err) {
     return next(err);
   }

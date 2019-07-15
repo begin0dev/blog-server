@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 const { NODE_ENV, MONGO_URI, MONGO_USER, MONGO_PWD } = process.env;
 
 module.exports = () => {
-  const connectMongoDB = () => {
-    // mongoose setting
-    mongoose.set('debug', NODE_ENV !== 'production');
-    mongoose.set('useCreateIndex', true);
+  // mongoose setting
+  mongoose.set('debug', NODE_ENV !== 'production');
+  mongoose.set('useCreateIndex', true);
 
+  const connectMongoDB = () => {
     console.log('Mongodb connected');
     return mongoose.connect(MONGO_URI, {
       user: MONGO_USER,
@@ -19,7 +19,7 @@ module.exports = () => {
 
   try {
     connectMongoDB();
-    mongoose.connection.on('error', (err) => {
+    mongoose.connection.on('error', err => {
       console.error('Mongodb connection error', err);
     });
     mongoose.connection.on('disconnected', () => {

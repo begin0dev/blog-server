@@ -1,56 +1,67 @@
 const mongoose = require('mongoose');
 const { generatePassword } = require('lib/bcryptHelper');
 
-const User = new mongoose.Schema({
-  email: {
-    type: String,
-    unique: true,
-    sparse: true,
-    index: true,
+const User = new mongoose.Schema(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      index: true,
+    },
+    password: String,
+    commonProfile: {
+      displayName: {
+        type: String,
+        required: true,
+      },
+    },
+    oAuth: {
+      local: {
+        refreshToken: {
+          type: String,
+          sparse: true,
+          unique: true,
+          index: true,
+        },
+        expiredAt: Date,
+      },
+      github: {
+        id: {
+          type: String,
+          sparse: true,
+          unique: true,
+          index: true,
+        },
+      },
+      facebook: {
+        id: {
+          type: String,
+          sparse: true,
+          unique: true,
+          index: true,
+        },
+      },
+      google: {
+        id: {
+          type: String,
+          sparse: true,
+          unique: true,
+          index: true,
+        },
+      },
+      kakao: {
+        id: {
+          type: String,
+          sparse: true,
+          unique: true,
+          index: true,
+        },
+      },
+    },
   },
-  password: String,
-  commonProfile: {
-    displayName: String,
-  },
-  oAuth: {
-    local: {
-      refreshToken: {
-        type: String,
-        unique: true,
-        index: true,
-      },
-      expiredAt: Date,
-    },
-    github: {
-      id: {
-        type: String,
-        unique: true,
-        index: true,
-      },
-    },
-    facebook: {
-      id: {
-        type: String,
-        unique: true,
-        index: true,
-      },
-    },
-    google: {
-      id: {
-        type: String,
-        unique: true,
-        index: true,
-      },
-    },
-    kakao: {
-      id: {
-        type: String,
-        unique: true,
-        index: true,
-      },
-    },
-  },
-}, { timestamps: true });
+  { timestamps: true },
+);
 
 User.set('toJSON', {
   transform(doc) {
