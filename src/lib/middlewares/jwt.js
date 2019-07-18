@@ -35,8 +35,8 @@ exports.checkRefreshToken = async (req, res, next) => {
     const { expiredAt } = user.oAuth.local;
     if (moment() > moment(expiredAt)) {
       await user.updateOne({
-        $set: {
-          'oAuth.local': {},
+        $unset: {
+          'oAuth.local': '',
         },
       });
       res.clearCookie('refreshToken');

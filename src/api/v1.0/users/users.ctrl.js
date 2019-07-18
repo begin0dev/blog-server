@@ -1,5 +1,6 @@
 const express = require('express');
 
+const { isLoggedIn } = require('lib/middlewares/auth');
 const User = require('datebase/models/user');
 
 const router = express.Router();
@@ -10,6 +11,8 @@ router.get('/check', (req, res) => {
   return res.status(401).json({ status: 'error', message: 'Unauthorized' });
 });
 
+router.use(isLoggedIn);
+
 router.delete('/logout', async (req, res, next) => {
   try {
     const {
@@ -19,8 +22,8 @@ router.delete('/logout', async (req, res, next) => {
     await User.findOneAndUpdate(
       { _id },
       {
-        $set: {
-          'oAuth.local': {},
+        $unset: {
+          'oAuth.local': '',
         },
       },
     );
@@ -31,6 +34,10 @@ router.delete('/logout', async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
+});
+
+router.delete('/', (req, res) => {
+  return res.status(204).send();
 });
 
 module.exports = router;

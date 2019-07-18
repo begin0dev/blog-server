@@ -17,7 +17,7 @@ class Oauth {
     return this;
   }
 
-  authenticate(name, { failureRedirect, successRedirect }) {
+  authenticate(name, { failureUrl, successUrl }) {
     return async (req, res, next) => {
       const strategy = this.strategires[name];
       const { callbackURL } = strategy;
@@ -29,31 +29,28 @@ class Oauth {
       const redirectURI = url.resolve(originalURL, callbackURL);
 
       const verified = (err, user) => {
-        if (err && failureRedirect) {
+        if (err && failureUrl) {
           req.flash('message', err.message);
-          return res.redirect(failureRedirect);
+          return res.redirect(failureUrl);
         }
-        if (user && successRedirect) {
-          return res.redirect(successRedirect);
-        }
+        if (err) return next(err);
+        if (user && successUrl) return res.redirect(successUrl);
         req.user = user;
         return next();
       };
 
-      if (error) {
-        verified({ message: req.query.error_description });
-      }
+      if (error) return verified({ message: req.query.error_description });
       if (code) {
         try {
           const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
-          const profile = await strategy.getUserProfile(accessToken);
-          strategy.verify(accessToken, profile, verified);
+          const { data } = await strategy.getUserProfile(accessToken);
+          return strategy.verify(accessToken, data, verified);
         } catch (err) {
-          verified(err);
+          return verified(err);
         }
       } else {
         const authorizeEndPoint = strategy.authorizeEndPoint(redirectURI);
-        res.redirect(authorizeEndPoint);
+        return res.redirect(authorizeEndPoint);
       }
     };
   }

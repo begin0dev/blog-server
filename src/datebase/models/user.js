@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
+const mongooseDelete = require('mongoose-delete');
+
 const { generatePassword } = require('lib/bcryptHelper');
 
 const User = new mongoose.Schema(
   {
     email: {
       type: String,
-      required: true,
+      sparse: true,
       unique: true,
       index: true,
     },
@@ -62,6 +64,8 @@ const User = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
   transform(doc) {

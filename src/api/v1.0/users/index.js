@@ -1,9 +1,9 @@
 const express = require('express');
 
-const userCtrl = require('./user.ctrl');
+const usersCtrl = require('./users.ctrl');
 
 const router = express.Router();
 
-router.use('/', userCtrl);
+router.use('/', usersCtrl);
 
 module.exports = router;

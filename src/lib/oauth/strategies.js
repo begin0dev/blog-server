@@ -16,16 +16,15 @@ const {
 const socialLogin = async (provider, id, email, displayName, done) => {
   try {
     let user = await User.findBySocialId(provider, id);
-    if (!user) {
-      try {
-        user = await User.socialRegister({ provider, id, email, displayName });
-      } catch (err) {
-        return done({ message: '중복된 이메일이 존재합니다. 해당 이메일로 로그인하여 SNS를 통합하세요.' });
-      }
+    if (user) return done(null, user.toJSON());
+    if (email) {
+      user = await User.findByEmail(email);
+      if (user) return done({ message: '중복된 이메일이 존재합니다. 해당 이메일로 로그인하여 SNS를 통합해주세요.' });
     }
-    done(null, user.toJSON());
+    user = await User.socialRegister({ provider, id, email, displayName });
+    return done(null, user.toJSON());
   } catch (err) {
-    done(err);
+    return done(err);
   }
 };
 
