@@ -1,7 +1,7 @@
 const _ = require('lodash');
+const qs = require('qs');
 const url = require('url');
 const axios = require('axios');
-const querystring = require('querystring');
 
 const SOCIAL_BASE_URL = {
   facebook: {
@@ -100,7 +100,7 @@ class Strategy {
       } = await axios({
         method: 'post',
         url: tokenURL,
-        data: querystring.stringify(params),
+        data: qs.stringify(params),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },

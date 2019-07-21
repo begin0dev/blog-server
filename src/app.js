@@ -5,7 +5,6 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const flash = require('connect-flash');
 
 const api = require('api');
 const connectDB = require('datebase');
@@ -45,7 +44,6 @@ app.use(
     },
   }),
 );
-app.use(flash());
 
 /* SETUP ROUTER */
 app.use(checkAccessToken, checkRefreshToken);

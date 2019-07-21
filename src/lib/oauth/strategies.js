@@ -14,6 +14,7 @@ const {
 } = process.env;
 
 const socialLogin = async (provider, id, email, displayName, done) => {
+  console.log('socialLogin');
   try {
     let user = await User.findBySocialId(provider, id);
     if (user) return done(null, user.toJSON());
@@ -56,7 +57,7 @@ oAuth.use(
       const { id, properties, kakao_account: kakaoAccount } = profile;
       const nickname = properties && properties.nickname;
       const email = kakaoAccount && kakaoAccount.email;
-      return socialLogin('kakao', id, accessToken, email, nickname, done);
+      return socialLogin('kakao', id, email, nickname, done);
     },
   ),
 );

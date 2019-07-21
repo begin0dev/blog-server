@@ -1,5 +1,7 @@
-const express = require('express');
+const qs = require('qs');
+const url = require('url');
 const moment = require('moment');
+const express = require('express');
 
 const oAuth = require('lib/oauth');
 const User = require('datebase/models/user');
@@ -8,6 +10,18 @@ const { generateAccessToken, generateRefreshToken } = require('lib/token');
 const router = express.Router();
 
 const socialCallback = async (req, res) => {
+  const failureRedirectUrlParser = (referrer, message) => {
+    const { query } = url.parse(referrer);
+    const queryString = {
+      form: 'logIn',
+      message,
+    };
+    return `${referrer}${query ? '&' : '?'}${qs.stringify(queryString)}`;
+  };
+  const referrer = req.get('Referrer');
+  if (res.locals.message) {
+    return res.redirect(failureRedirectUrlParser(referrer, res.locals.message));
+  }
   try {
     const { user: userJson } = req;
     // access token and refresh token set cookie
@@ -21,10 +35,10 @@ const socialCallback = async (req, res) => {
     });
     res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.redirect('');
+    return res.redirect(referrer);
   } catch (err) {
-    req.flash('message', '소셜 로그인에 실패하였습니다. 다시 시도해주세요.');
-    res.redirect('');
+    console.error(err);
+    return res.redirect(failureRedirectUrlParser(referrer, err.message));
   }
 };
 

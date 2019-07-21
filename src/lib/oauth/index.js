@@ -30,27 +30,28 @@ class Oauth {
 
       const verified = (err, user) => {
         if (err && failureUrl) {
-          req.flash('message', err.message);
           return res.redirect(failureUrl);
         }
-        if (err) return next(err);
+        if (err) {
+          res.locals.message = err.message;
+          return next();
+        }
         if (user && successUrl) return res.redirect(successUrl);
         req.user = user;
         return next();
       };
 
       if (error) return verified({ message: req.query.error_description });
-      if (code) {
-        try {
-          const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
-          const { data } = await strategy.getUserProfile(accessToken);
-          return strategy.verify(accessToken, data, verified);
-        } catch (err) {
-          return verified(err);
-        }
-      } else {
+      if (!code) {
         const authorizeEndPoint = strategy.authorizeEndPoint(redirectURI);
         return res.redirect(authorizeEndPoint);
+      }
+      try {
+        const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
+        const { data } = await strategy.getUserProfile(accessToken);
+        return strategy.verify(accessToken, data, verified);
+      } catch (err) {
+        return verified(err);
       }
     };
   }
