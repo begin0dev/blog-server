@@ -10,6 +10,7 @@ const { generateAccessToken, generateRefreshToken } = require('lib/token');
 const router = express.Router();
 
 const socialCallback = async (req, res) => {
+  console.log('socialCallback', req.session.id);
   const failureRedirectUrlParser = (referrer, message) => {
     const { query } = url.parse(referrer);
     const queryString = {

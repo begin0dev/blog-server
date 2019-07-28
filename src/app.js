@@ -1,5 +1,7 @@
 require('dotenv').config(); // LOAD CONFIG
 
+const hpp = require('hpp');
+const helmet = require('helmet');
 const cors = require('cors');
 const express = require('express');
 const morgan = require('morgan');
@@ -9,18 +11,23 @@ const session = require('express-session');
 const api = require('api');
 const connectDB = require('datebase');
 const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
-require('lib/oauth/strategies'); // Set Oauth strategies
+/* SETUP AUTH MIDDLEWARE */
+require('lib/middlewares/strategies');
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
 
-/* mongoose connected */
-connectDB();
+const isProd = NODE_ENV === 'production';
 
 const app = express();
 const port = PORT || 3000;
 
+/* mongoose connected */
+connectDB();
+
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
-if (NODE_ENV === 'production') {
+if (isProd) {
+  app.use(hpp());
+  app.use(helmet());
   app.use(morgan('combined'));
   app.use(cors({ origin: 'https://begin0devBlog.com', credentials: true }));
 } else {
@@ -40,13 +47,15 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: NODE_ENV === 'production',
+      secure: isProd,
     },
+    name: '', // TODO: 나중에 실서버 배포전에 넣어주기
   }),
 );
 
-/* SETUP ROUTER */
+/* SETUP JWT TOKEN MIDDLEWARE */
 app.use(checkAccessToken, checkRefreshToken);
+/* SETUP ROUTER */
 app.use('/api', api);
 
 /* 404 error */

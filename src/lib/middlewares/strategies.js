@@ -14,7 +14,6 @@ const {
 } = process.env;
 
 const socialLogin = async (provider, id, email, displayName, done) => {
-  console.log('socialLogin');
   try {
     let user = await User.findBySocialId(provider, id);
     if (user) return done(null, user.toJSON());

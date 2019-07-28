@@ -10,7 +10,7 @@ class Oauth {
     if (!strategy) {
       /* eslint-disable */
       strategy = name;
-      name = strategy.name;
+      ({ name } = strategy);
       /* eslint-enable */
     }
     this.strategires[name] = strategy;
@@ -19,9 +19,10 @@ class Oauth {
 
   authenticate(name, { failureUrl, successUrl }) {
     return async (req, res, next) => {
+      console.log('authenticate', req.session.id);
       const strategy = this.strategires[name];
       const { callbackURL } = strategy;
-      const { error, code } = req.query;
+      const { error, error_description: errorDescription, code } = req.query;
       const originalURL = url.format({
         protocol: req.protocol,
         host: req.get('host'),
@@ -41,7 +42,7 @@ class Oauth {
         return next();
       };
 
-      if (error) return verified({ message: req.query.error_description });
+      if (error) return verified({ message: errorDescription });
       if (!code) {
         const authorizeEndPoint = strategy.authorizeEndPoint(redirectURI);
         return res.redirect(authorizeEndPoint);

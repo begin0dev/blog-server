@@ -78,9 +78,8 @@ class Strategy {
       redirect_uri: redirectURI,
       response_type: 'code',
     };
-    const parsed = url.parse(authorizationURL);
-    parsed.query = query;
-    return url.format(parsed);
+    const parseUrl = url.parse(authorizationURL);
+    return url.format({ ...parseUrl, query });
   }
 
   async getOauthAccessToken(code, redirectURI) {
@@ -92,15 +91,10 @@ class Strategy {
         redirect_uri: redirectURI,
         code,
       };
-      if (this.grantType) {
-        params.grant_type = this.grantType;
-      }
+      if (this.grantType) params.grant_type = this.grantType;
       const {
         data: { access_token: accessToken },
-      } = await axios({
-        method: 'post',
-        url: tokenURL,
-        data: qs.stringify(params),
+      } = await axios.post(tokenURL, qs.stringify(params), {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
