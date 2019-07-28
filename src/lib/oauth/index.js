@@ -17,7 +17,7 @@ class Oauth {
     return this;
   }
 
-  authenticate(name, { failureUrl, successUrl }) {
+  authenticate(name, { failureUrl, successUrl } = {}) {
     return async (req, res, next) => {
       console.log('authenticate', req.session.id);
       const strategy = this.strategires[name];
