@@ -10,22 +10,23 @@ const session = require('express-session');
 
 const api = require('api');
 const connectDB = require('datebase');
+const oAuthConfig = require('lib/middlewares/strategies');
 const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
-/* SETUP AUTH MIDDLEWARE */
-require('lib/middlewares/strategies');
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
 
-const isProd = NODE_ENV === 'production';
+const isProduction = NODE_ENV === 'production';
 
 const app = express();
 const port = PORT || 3000;
 
 /* mongoose connected */
 connectDB();
+/* oAuth strategies */
+oAuthConfig();
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
-if (isProd) {
+if (isProduction) {
   app.use(hpp());
   app.use(helmet());
   app.use(morgan('combined'));
@@ -47,7 +48,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: isProd,
+      secure: isProduction,
     },
     name: '', // TODO: 나중에 실서버 배포전에 넣어주기
   }),

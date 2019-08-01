@@ -6,6 +6,7 @@ module.exports = () => {
   // mongoose setting
   mongoose.set('debug', NODE_ENV !== 'production');
   mongoose.set('useCreateIndex', true);
+  mongoose.set('useFindAndModify', false);
 
   const connectMongoDB = () => {
     console.log('Mongodb connected');

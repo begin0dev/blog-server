@@ -79,7 +79,8 @@ class Strategy {
       response_type: 'code',
     };
     const parseUrl = url.parse(authorizationURL);
-    return url.format({ ...parseUrl, query });
+    parseUrl.query = query;
+    return url.format(parseUrl);
   }
 
   async getOauthAccessToken(code, redirectURI) {

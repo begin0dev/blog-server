@@ -4,13 +4,13 @@ const User = require('datebase/models/user');
 
 const {
   FACEBOOK_APP_ID,
-  FACEBOOK_SECRET,
+  FACEBOOK_APP_SECRET,
   KAKAO_APP_ID,
-  KAKAO_SECRET,
+  KAKAO_APP_SECRET,
   GITHUB_APP_ID,
-  GITHUB_SECRET,
+  GITHUB_APP_SECRET,
   GOOGLE_APP_ID,
-  GOOGLE_SECRET,
+  GOOGLE_APP_SECRET,
 } = process.env;
 
 const socialLogin = async (provider, id, email, displayName, done) => {
@@ -28,61 +28,63 @@ const socialLogin = async (provider, id, email, displayName, done) => {
   }
 };
 
-oAuth.use(
-  new Strategy(
-    {
-      name: 'facebook',
-      clientID: FACEBOOK_APP_ID,
-      clientSecret: FACEBOOK_SECRET,
-      callbackURL: '/api/v1.0/auth/social/facebook',
-    },
-    (accessToken, profile, done) => {
-      const { id, name, email } = profile;
-      return socialLogin('facebook', id, email, name, done);
-    },
-  ),
-);
+module.exports = () => {
+  oAuth.use(
+    new Strategy(
+      {
+        name: 'facebook',
+        clientID: FACEBOOK_APP_ID,
+        clientSecret: FACEBOOK_APP_SECRET,
+        callbackURL: '/api/v1.0/auth/social/facebook',
+      },
+      (accessToken, profile, done) => {
+        const { id, name, email } = profile;
+        return socialLogin('facebook', id, email, name, done);
+      },
+    ),
+  );
 
-oAuth.use(
-  new Strategy(
-    {
-      name: 'kakao',
-      clientID: KAKAO_APP_ID,
-      clientSecret: KAKAO_SECRET,
-      callbackURL: '/api/v1.0/auth/social/kakao',
-      grantType: 'authorization_code',
-    },
-    (accessToken, profile, done) => {
-      const { id, properties, kakao_account: kakaoAccount } = profile;
-      const nickname = properties && properties.nickname;
-      const email = kakaoAccount && kakaoAccount.email;
-      return socialLogin('kakao', id, email, nickname, done);
-    },
-  ),
-);
+  oAuth.use(
+    new Strategy(
+      {
+        name: 'kakao',
+        clientID: KAKAO_APP_ID,
+        clientSecret: KAKAO_APP_SECRET,
+        callbackURL: '/api/v1.0/auth/social/kakao',
+        grantType: 'authorization_code',
+      },
+      (accessToken, profile, done) => {
+        const { id, properties, kakao_account: kakaoAccount } = profile;
+        const nickname = properties && properties.nickname;
+        const email = kakaoAccount && kakaoAccount.email;
+        return socialLogin('kakao', id, email, nickname, done);
+      },
+    ),
+  );
 
-// oAuth.use(
-//   new Strategy({
-//     name: 'github',
-//     clientID: GITHUB_APP_ID,
-//     clientSecret: GITHUB_SECRET,
-//     callbackURL: '/api/v1.0/auth/social/github',
-//     grantType: 'authorization_code',
-//   },
-//   (accessToken, profile) => {
-//
-//   }),
-// );
+  // oAuth.use(
+  //   new Strategy({
+  //     name: 'github',
+  //     clientID: GITHUB_APP_ID,
+  //     clientSecret: GITHUB_APP_SECRET,
+  //     callbackURL: '/api/v1.0/auth/social/github',
+  //     grantType: 'authorization_code',
+  //   },
+  //   (accessToken, profile) => {
+  //
+  //   }),
+  // );
 
-// oAuth.use(
-//   new Strategy({
-//     name: 'google',
-//     clientID: GOOGLE_APP_ID,
-//     clientSecret: GOOGLE_SECRET,
-//     callbackURL: '/api/v1.0/auth/social/google',
-//     grantType: 'authorization_code',
-//   },
-//   (accessToken, profile) => {
-//
-//   }),
-// );
+  // oAuth.use(
+  //   new Strategy({
+  //     name: 'google',
+  //     clientID: GOOGLE_APP_ID,
+  //     clientSecret: GOOGLE_APP_SECRET,
+  //     callbackURL: '/api/v1.0/auth/social/google',
+  //     grantType: 'authorization_code',
+  //   },
+  //   (accessToken, profile) => {
+  //
+  //   }),
+  // );
+};

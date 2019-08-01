@@ -19,7 +19,6 @@ class Oauth {
 
   authenticate(name, { failureUrl, successUrl } = {}) {
     return async (req, res, next) => {
-      console.log('authenticate', req.session.id);
       const strategy = this.strategires[name];
       const { callbackURL } = strategy;
       const { error, error_description: errorDescription, code } = req.query;
@@ -30,9 +29,7 @@ class Oauth {
       const redirectURI = url.resolve(originalURL, callbackURL);
 
       const verified = (err, user) => {
-        if (err && failureUrl) {
-          return res.redirect(failureUrl);
-        }
+        if (err && failureUrl) return res.redirect(failureUrl);
         if (err) {
           res.locals.message = err.message;
           return next();
