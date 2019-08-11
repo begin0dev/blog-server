@@ -42,8 +42,10 @@ const socialCallback = async (req, res) => {
   }
 };
 
-router.get('/facebook', oAuth.authenticate('facebook'), socialCallback);
+router.get('/facebook', oAuth.authenticate('facebook', { auth_type: 'rerequest' }));
+router.get('/facebook/callback', oAuth.authenticate('facebook'), socialCallback);
 
-router.get('/kakao', oAuth.authenticate('kakao'), socialCallback);
+router.get('/kakao', oAuth.authenticate('kakao'));
+router.get('/kakao/callback', oAuth.authenticate('kakao'), socialCallback);
 
 module.exports = router;

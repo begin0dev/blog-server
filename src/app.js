@@ -14,7 +14,6 @@ const oAuthConfig = require('lib/middlewares/strategies');
 const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
-
 const isProduction = NODE_ENV === 'production';
 
 const app = express();
@@ -39,7 +38,7 @@ if (isProduction) {
 /* SETUP MIDDLEWARE */
 // Allows express to read `x-www-form-urlencoded` data:
 app.use(express.json()); // parses json
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(COOKIE_SECRET));
 app.use(
   session({

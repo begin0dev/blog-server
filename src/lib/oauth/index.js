@@ -17,7 +17,7 @@ class Oauth {
     return this;
   }
 
-  authenticate(name, { failureUrl, successUrl } = {}) {
+  authenticate(name, { failureUrl, successUrl, ...options } = {}) {
     return async (req, res, next) => {
       const strategy = this.strategires[name];
       const { callbackURL } = strategy;
@@ -41,7 +41,7 @@ class Oauth {
 
       if (error) return verified({ message: errorDescription });
       if (!code) {
-        const authorizeEndPoint = strategy.authorizeEndPoint(redirectURI);
+        const authorizeEndPoint = strategy.authorizeEndPoint(redirectURI, options);
         return res.redirect(authorizeEndPoint);
       }
       try {

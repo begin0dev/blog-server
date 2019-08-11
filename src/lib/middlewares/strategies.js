@@ -35,7 +35,7 @@ module.exports = () => {
         name: 'facebook',
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: '/api/v1.0/auth/social/facebook',
+        callbackURL: '/api/v1.0/auth/social/facebook/callback',
       },
       (accessToken, profile, done) => {
         const { id, name, email } = profile;

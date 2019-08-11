@@ -71,12 +71,13 @@ class Strategy {
     }
   }
 
-  authorizeEndPoint(redirectURI) {
+  authorizeEndPoint(redirectURI, options) {
     const { clientID, authorizationURL } = this;
     const query = {
       client_id: clientID,
       redirect_uri: redirectURI,
       response_type: 'code',
+      ...options,
     };
     const parseUrl = url.parse(authorizationURL);
     parseUrl.query = query;
