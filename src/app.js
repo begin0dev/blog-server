@@ -43,8 +43,8 @@ app.use(cookieParser(COOKIE_SECRET));
 app.use(
   session({
     resave: false,
-    secret: COOKIE_SECRET,
     saveUninitialized: false,
+    secret: COOKIE_SECRET,
     cookie: {
       httpOnly: true,
       secure: isProduction,

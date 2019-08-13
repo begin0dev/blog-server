@@ -50,7 +50,7 @@ module.exports = () => {
         name: 'kakao',
         clientID: KAKAO_APP_ID,
         clientSecret: KAKAO_APP_SECRET,
-        callbackURL: '/api/v1.0/auth/social/kakao',
+        callbackURL: '/api/v1.0/auth/social/kakao/callback',
         grantType: 'authorization_code',
       },
       (accessToken, profile, done) => {

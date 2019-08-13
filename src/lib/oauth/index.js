@@ -22,11 +22,11 @@ class Oauth {
       const strategy = this.strategires[name];
       const { callbackURL } = strategy;
       const { error, error_description: errorDescription, code } = req.query;
-      const originalURL = url.format({
+      const redirectURI = url.format({
         protocol: req.protocol,
         host: req.get('host'),
+        pathname: callbackURL,
       });
-      const redirectURI = url.resolve(originalURL, callbackURL);
 
       const verified = (err, user) => {
         if (err && failureUrl) return res.redirect(failureUrl);
