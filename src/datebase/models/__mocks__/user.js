@@ -4,7 +4,9 @@ const MockUserData = () => {
   return {
     email: faker.internet.email(),
     password: faker.internet.password(),
-    displayName: faker.internet.userName(),
+    commonProfile: {
+      displayName: faker.internet.userName(),
+    },
   };
 };
 

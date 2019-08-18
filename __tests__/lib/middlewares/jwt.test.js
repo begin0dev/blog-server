@@ -17,20 +17,15 @@ describe('Test checkAccessToken', () => {
     displayName: 'displayName',
   };
 
-  test('Success-1', async () => {
-    const req = httpMocks.createRequest({
-      headers: {
-        'x-access-token': null,
-      },
-    });
+  test('Success: user is null if exist authorization in the header', () => {
+    const req = httpMocks.createRequest({ headers: {} });
     const res = httpMocks.createResponse();
 
-    await checkAccessToken(req, res, err => {
-      if (err) console.error(err);
+    checkAccessToken(req, res, () => {
       expect(req.user).toBeNull();
     });
   });
-  test('Success-2', async () => {
+  test('Success: user is exist if a valid token exists in the header', () => {
     const token = generateAccessToken({ user });
     const req = httpMocks.createRequest({
       headers: {
@@ -39,13 +34,12 @@ describe('Test checkAccessToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkAccessToken(req, res, err => {
-      if (err) console.error(err);
+    checkAccessToken(req, res, () => {
       expect(req.user).toEqual(user);
     });
   });
-  test('Success-3', async () => {
-    const token = await jwt.sign(
+  test('Success: user is null if a invalid token exists in the header', () => {
+    const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) - 60,
         data: user,
@@ -60,8 +54,7 @@ describe('Test checkAccessToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkAccessToken(req, res, err => {
-      if (err) console.error(err);
+    checkAccessToken(req, res, () => {
       expect(req.user).toBeNull();
     });
   });
@@ -73,13 +66,13 @@ describe('Test checkRefreshToken', () => {
 
   beforeEach(async () => {
     const mockUserData = MockUserData();
+    user = await User.create(mockUserData);
     refreshToken = await generateRefreshToken();
-    user = await User.localRegister({
-      ...mockUserData,
-    });
   });
-  test('Success-1', async () => {
-    await user.updateOne({ $set: { oAuth: { local: { refreshToken, expiredAt: moment().add(12, 'hour') } } } });
+  test('Success: user is exist if refresh token is equal and expiredAt is valid', async () => {
+    await user.updateOne({
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(12, 'hour') },
+    });
     const req = httpMocks.createRequest({
       user: null,
       cookies: {
@@ -88,14 +81,15 @@ describe('Test checkRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkRefreshToken(req, res, err => {
-      if (err) console.error(err);
+    await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
     });
   });
 
-  test('Success-2', async () => {
-    await user.updateOne({ $set: { oAuth: { local: { refreshToken, expiredAt: moment().add(3, 'minute') } } } });
+  test('Success: update expiredAt if refresh token is equal and expiredAt is less then 10 minutes', async () => {
+    await user.updateOne({
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(3, 'minute') },
+    });
     const req = httpMocks.createRequest({
       user: null,
       cookies: {
@@ -104,16 +98,17 @@ describe('Test checkRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkRefreshToken(req, res, err => {
-      if (err) console.error(err);
+    await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
     });
     const updateUser = await User.findByLocalRefreshToken(refreshToken);
     expect(moment(updateUser.oAuth.local.expiredAt).diff(moment(), 'minute') > 5).toBeTruthy();
   });
 
-  test('Success-3', async () => {
-    await user.updateOne({ $set: { oAuth: { local: { refreshToken, expiredAt: moment().subtract(10, 'minute') } } } });
+  test('Success: user is null if expiredAt is expired', async () => {
+    await user.updateOne({
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().subtract(10, 'minute') },
+    });
     const req = httpMocks.createRequest({
       user: null,
       cookies: {
@@ -122,12 +117,11 @@ describe('Test checkRefreshToken', () => {
     });
     const res = httpMocks.createResponse();
 
-    await checkRefreshToken(req, res, err => {
-      if (err) console.error(err);
+    await checkRefreshToken(req, res, () => {
       expect(req.user).toBeNull();
     });
     const updateUser = await User.findById(user._id);
-    expect(updateUser.oAuth.local.refreshToken).toBeNull();
-    expect(updateUser.oAuth.local.expiredAt).toBeNull();
+    expect(updateUser.oAuth.local.refreshToken).toBeUndefined();
+    expect(updateUser.oAuth.local.expiredAt).toBeUndefined();
   });
 });

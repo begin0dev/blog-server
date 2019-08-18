@@ -3,6 +3,9 @@ require('dotenv').config({ path: './.env.test' });
 const mongoose = require('mongoose');
 const MongodbMemoryServer = require('mongodb-memory-server');
 
+mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
+
 let mongoServer;
 
 beforeEach(async () => {

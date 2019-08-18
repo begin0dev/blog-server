@@ -60,7 +60,7 @@ describe('Test Strategy authorizeEndPoint', () => {
 
 describe('Test Strategy getOauthAccessToken', () => {
   test('Success', async () => {
-    axios.mockResolvedValue({ data: { access_token: 'test-access-token' } });
+    axios.post.mockResolvedValue({ data: { access_token: 'test-access-token' } });
     const strategy = new Strategy(
       {
         name: 'facebook',

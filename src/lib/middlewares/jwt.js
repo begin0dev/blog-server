@@ -34,11 +34,7 @@ exports.checkRefreshToken = async (req, res, next) => {
 
     const { expiredAt } = user.oAuth.local;
     if (moment() > moment(expiredAt)) {
-      await user.updateOne({
-        $unset: {
-          'oAuth.local': '',
-        },
-      });
+      await user.updateOne({ $unset: { 'oAuth.local': '' } });
       res.clearCookie('refreshToken');
       return next();
     }
@@ -50,9 +46,7 @@ exports.checkRefreshToken = async (req, res, next) => {
     // extended your refresh token so they do not expire while using your site
     if (moment(expiredAt).diff(moment(), 'minute') <= 5) {
       await user.updateOne({
-        $set: {
-          'oAuth.local.expiredAt': moment().add(1, 'hour'),
-        },
+        $set: { 'oAuth.local.expiredAt': moment().add(1, 'hour') },
       });
     }
     return next();

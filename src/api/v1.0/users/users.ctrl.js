@@ -19,11 +19,7 @@ router.delete('/logout', async (req, res, next) => {
       user: { _id },
     } = req;
 
-    await User.findByIdAndUpdate(_id, {
-      $unset: {
-        'oAuth.local': '',
-      },
-    });
+    await User.findByIdAndUpdate(_id, { $unset: { 'oAuth.local': '' } });
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
     req.user = null;
