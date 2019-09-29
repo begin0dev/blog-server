@@ -7,10 +7,10 @@ const {
   FACEBOOK_APP_SECRET,
   KAKAO_APP_ID,
   KAKAO_APP_SECRET,
-  GITHUB_APP_ID,
-  GITHUB_APP_SECRET,
-  GOOGLE_APP_ID,
-  GOOGLE_APP_SECRET,
+  // GITHUB_APP_ID,
+  // GITHUB_APP_SECRET,
+  // GOOGLE_APP_ID,
+  // GOOGLE_APP_SECRET,
 } = process.env;
 
 const socialLogin = async (provider, id, email, displayName, done) => {
@@ -35,7 +35,7 @@ module.exports = () => {
         name: 'facebook',
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: '/api/v1.0/auth/social/facebook/callback',
+        callbackURL: '/api/v1/auth/social/facebook/callback',
       },
       (accessToken, profile, done) => {
         const { id, name, email } = profile;
@@ -50,7 +50,7 @@ module.exports = () => {
         name: 'kakao',
         clientID: KAKAO_APP_ID,
         clientSecret: KAKAO_APP_SECRET,
-        callbackURL: '/api/v1.0/auth/social/kakao/callback',
+        callbackURL: '/api/v1/auth/social/kakao/callback',
         grantType: 'authorization_code',
       },
       (accessToken, profile, done) => {
@@ -67,7 +67,7 @@ module.exports = () => {
   //     name: 'github',
   //     clientID: GITHUB_APP_ID,
   //     clientSecret: GITHUB_APP_SECRET,
-  //     callbackURL: '/api/v1.0/auth/social/github',
+  //     callbackURL: '/api/v1/auth/social/github',
   //     grantType: 'authorization_code',
   //   },
   //   (accessToken, profile) => {
@@ -80,7 +80,7 @@ module.exports = () => {
   //     name: 'google',
   //     clientID: GOOGLE_APP_ID,
   //     clientSecret: GOOGLE_APP_SECRET,
-  //     callbackURL: '/api/v1.0/auth/social/google',
+  //     callbackURL: '/api/v1/auth/social/google',
   //     grantType: 'authorization_code',
   //   },
   //   (accessToken, profile) => {

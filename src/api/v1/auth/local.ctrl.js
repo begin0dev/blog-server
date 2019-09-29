@@ -1,4 +1,3 @@
-const _ = require('lodash');
 const express = require('express');
 const moment = require('moment');
 const Joi = require('@hapi/joi');
@@ -9,7 +8,7 @@ const { generateAccessToken, generateRefreshToken } = require('lib/token');
 
 const router = express.Router();
 
-const validationObject = {
+const loginObject = {
   email: Joi.string()
     .email()
     .required(),
@@ -17,6 +16,10 @@ const validationObject = {
     .min(6)
     .max(15)
     .required(),
+};
+
+const registerObject = {
+  ...loginObject,
   passwordConfirm: Joi.string()
     .valid(Joi.ref('password'))
     .required(),
@@ -43,9 +46,8 @@ const setUserToken = async (res, user) => {
 
 router.post('/register', async ({ body }, res, next) => {
   const { email, password, displayName } = body;
-
   // check validate user info
-  const schema = Joi.object(validationObject);
+  const schema = Joi.object(loginObject);
   const { error } = schema.validate(body);
   if (error) return res.status(409).json({ status: 'fail', message: error.details[0].message });
 
@@ -72,7 +74,7 @@ router.post('/login', async ({ body }, res, next) => {
   const { email, password } = body;
 
   // check validate user info
-  const schema = Joi.object(_.pick(validationObject, ['email', 'password']));
+  const schema = Joi.object(registerObject);
   const { error } = schema.validate(body);
   if (error) return res.status(409).json({ status: 'fail', message: error.details[0].message });
 
