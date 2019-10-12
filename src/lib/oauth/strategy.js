@@ -66,9 +66,7 @@ class Strategy {
       .join(',')
       .value();
     this.verify = verify;
-    if (grantType) {
-      this.grantType = grantType;
-    }
+    if (grantType) this.grantType = grantType;
   }
 
   authorizeEndPoint(redirectURI, options) {

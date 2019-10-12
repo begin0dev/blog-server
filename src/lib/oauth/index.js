@@ -28,28 +28,20 @@ class Oauth {
         pathname: callbackURL,
       });
 
-      const verified = (err, user) => {
-        if (err && failureUrl) return res.redirect(failureUrl);
-        if (err) {
-          res.locals.message = err.message;
-          return next();
-        }
-        if (user && successUrl) return res.redirect(successUrl);
-        req.user = user;
+      const done = (err, profile) => {
+        if (err) res.locals.message = err;
+        if (profile) res.locals.profile = profile;
         return next();
       };
 
-      if (error) return verified({ message: errorDescription });
-      if (!code) {
-        const authorizeEndPoint = strategy.authorizeEndPoint(redirectURI, options);
-        return res.redirect(authorizeEndPoint);
-      }
+      if (error) return done({ message: errorDescription });
+      if (!code) return res.redirect(strategy.authorizeEndPoint(redirectURI, options));
       try {
         const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
         const { data } = await strategy.getUserProfile(accessToken);
-        return strategy.verify(accessToken, data, verified);
+        return strategy.verify(accessToken, data, done);
       } catch (err) {
-        return verified(err);
+        return done(err);
       }
     };
   }

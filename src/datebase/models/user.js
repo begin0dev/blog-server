@@ -1,23 +1,13 @@
 const mongoose = require('mongoose');
 const mongooseDelete = require('mongoose-delete');
 
-const { generatePassword } = require('lib/bcryptHelper');
-
 const User = new mongoose.Schema(
   {
-    email: {
+    displayName: {
       type: String,
-      sparse: true,
-      unique: true,
-      index: true,
+      required: true,
     },
-    password: String,
-    commonProfile: {
-      displayName: {
-        type: String,
-        required: true,
-      },
-    },
+    profileImageUrl: String,
     oAuth: {
       local: {
         refreshToken: {
@@ -68,22 +58,16 @@ const User = new mongoose.Schema(
 User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
-  transform(doc) {
+  transform({ _id, displayNamem, profileImageUrl }) {
     return {
-      _id: doc._id,
-      email: doc.email,
-      commonProfile: {
-        displayName: doc.commonProfile.displayName,
-      },
+      _id,
+      displayNamem,
+      profileImageUrl,
     };
   },
 });
 
 // static methods
-User.statics.findByEmail = function findByEmail(email) {
-  return this.findOne({ email });
-};
-
 User.statics.findBySocialId = function findBySocialId(provider, id) {
   return this.findOne({
     [`oAuth.${provider}.id`]: id,
@@ -94,25 +78,10 @@ User.statics.findByLocalRefreshToken = function findByLocalRefreshToken(refreshT
   return this.findOne({ 'oAuth.local.refreshToken': refreshToken });
 };
 
-User.statics.localRegister = async function localRegister({ email, password, displayName }) {
-  // generate password
-  const hashPassword = await generatePassword(password);
+User.statics.socialRegister = async function socialRegister({ provider, id, displayName, profileImageUrl = '' }) {
   const user = new this({
-    email,
-    password: hashPassword,
-    commonProfile: {
-      displayName,
-    },
-  });
-  return user.save();
-};
-
-User.statics.socialRegister = async function socialRegister({ provider, id, email, displayName }) {
-  const user = new this({
-    email,
-    commonProfile: {
-      displayName,
-    },
+    displayName,
+    profileImageUrl,
     oAuth: {
       [provider]: {
         id,

@@ -11,9 +11,7 @@ router.get('/check', (req, res) => {
   return res.status(401).json({ status: 'error', message: 'Unauthorized' });
 });
 
-router.use(isLoggedIn);
-
-router.delete('/logout', async (req, res, next) => {
+router.delete('/logout', isLoggedIn, async (req, res, next) => {
   try {
     const {
       user: { _id },
@@ -27,10 +25,6 @@ router.delete('/logout', async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-});
-
-router.delete('/', (req, res) => {
-  return res.status(204).send();
 });
 
 module.exports = router;

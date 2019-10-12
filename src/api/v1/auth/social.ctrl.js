@@ -10,19 +10,22 @@ const { generateAccessToken, generateRefreshToken } = require('lib/token');
 const router = express.Router();
 
 const socialCallback = async (req, res) => {
-  const failureRedirectUrlParser = (redirectUrl, message) => {
-    const { query } = url.parse(redirectUrl);
-    const queryString = qs.stringify({
-      form: 'logIn',
-      message,
-    });
-    return `${redirectUrl}${query ? '&' : '?'}${queryString}`;
-  };
   const redirectUrl = req.session.redirectUrl || 'http://localhost:3000';
   req.session.redirectUrl = null;
-  if (res.locals.message) return res.redirect(failureRedirectUrlParser(redirectUrl, res.locals.message));
+
+  const failureRedirect = (formName, qsObject) => {
+    const { query } = url.parse(redirectUrl);
+    const queryString = qs.stringify({ formName, ...qsObject });
+    return res.redirect(`${redirectUrl}${query ? '&' : '?'}${queryString}`);
+  };
+
+  if (res.locals.message) return failureRedirect('logIn', res.locals.message);
   try {
-    const { user: userJson } = req;
+    const { provider, id, displayName } = res.locals.profile;
+    let user = await User.findBySocialId(provider, id);
+    if (!user) user = await User.socialRegister({ provider, id, displayName });
+
+    const userJson = user.toJSON();
     // access token and refresh token set cookie
     const accessToken = generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
@@ -37,12 +40,12 @@ const socialCallback = async (req, res) => {
     return res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
-    return res.redirect(failureRedirectUrlParser(redirectUrl, err.message));
+    return failureRedirect('logIn', err.message);
   }
 };
 
 router.use((req, res, next) => {
-  if (req.session && !req.session.redirectUrl) req.session.redirectUrl = req.get('Referrer') || req.originalUrl;
+  if (!req.session.redirectUrl) req.session.redirectUrl = req.get('Referrer') || req.originalUrl;
   return next();
 });
 
