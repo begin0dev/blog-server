@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
 const api = require('api');
-const connectDB = require('datebase');
+const connectDB = require('database');
 const oAuthConfig = require('lib/middlewares/strategies');
 const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
 

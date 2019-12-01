@@ -8,24 +8,24 @@ module.exports = () => {
   mongoose.set('useCreateIndex', true);
   mongoose.set('useFindAndModify', false);
 
-  const connectMongoDB = () => {
-    console.log('Mongodb connected');
-    return mongoose.connect(MONGO_URI, {
+  const connectMongoDB = url =>
+    mongoose.connect(url, {
       user: MONGO_USER,
       pass: MONGO_PWD,
       dbName: 'beginner-blog',
       useNewUrlParser: true,
+      useUnifiedTopology: true,
     });
-  };
 
   try {
-    connectMongoDB();
+    console.log('Mongodb connected');
+    connectMongoDB(MONGO_URI);
     mongoose.connection.on('error', err => {
       console.error('Mongodb connection error', err);
     });
     mongoose.connection.on('disconnected', () => {
       console.error('The connection to the Mongodb has been lost. Retry the connection');
-      connectMongoDB();
+      connectMongoDB(MONGO_URI);
     });
   } catch (err) {
     console.error('Mongodb connection error', err);

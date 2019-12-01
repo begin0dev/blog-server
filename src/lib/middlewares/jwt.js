@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-const User = require('datebase/models/user');
+const User = require('database/models/user');
 const { decodeAccessToken, generateAccessToken } = require('lib/token');
 
 exports.checkAccessToken = (req, res, next) => {

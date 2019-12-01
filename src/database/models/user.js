@@ -58,10 +58,10 @@ const User = new mongoose.Schema(
 User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
-  transform({ _id, displayNamem, profileImageUrl }) {
+  transform({ _id, displayName, profileImageUrl }) {
     return {
       _id,
-      displayNamem,
+      displayName,
       profileImageUrl,
     };
   },

@@ -4,7 +4,7 @@ const moment = require('moment');
 const express = require('express');
 
 const oAuth = require('lib/oauth');
-const User = require('datebase/models/user');
+const User = require('database/models/user');
 const { generateAccessToken, generateRefreshToken } = require('lib/token');
 
 const router = express.Router();

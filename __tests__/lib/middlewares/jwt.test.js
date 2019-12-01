@@ -4,8 +4,8 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const httpMocks = require('node-mocks-http');
 
-const User = require('datebase/models/user');
-const MockUserData = require('datebase/models/__mocks__/user');
+const User = require('database/models/user');
+const MockUserData = require('database/models/__mocks__/user');
 const { generateAccessToken, generateRefreshToken } = require('lib/token');
 const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
 
