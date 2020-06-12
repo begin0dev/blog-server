@@ -95,9 +95,7 @@ class Strategy {
       const {
         data: { access_token: accessToken },
       } = await axios.post(tokenURL, qs.stringify(params), {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       });
       return accessToken;
     } catch (err) {

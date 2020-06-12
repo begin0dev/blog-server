@@ -6,8 +6,8 @@ const httpMocks = require('node-mocks-http');
 
 const User = require('database/models/user');
 const MockUserData = require('database/models/__mocks__/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/token');
-const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
+const { generateAccessToken, generateRefreshToken } = require('lib/helper/token');
+const { checkAccessToken, checkRefreshToken } = require('middlewares/jwt');
 
 const { JWT_SECRET } = process.env;
 
@@ -101,7 +101,7 @@ describe('Test checkRefreshToken', () => {
     await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
     });
-    const updateUser = await User.findByLocalRefreshToken(refreshToken);
+    const updateUser = await User.findByRefreshToken(refreshToken);
     expect(moment(updateUser.oAuth.local.expiredAt).diff(moment(), 'minute') > 5).toBeTruthy();
   });
 

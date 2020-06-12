@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb-base",
+  "extends": ["airbnb-base", "prettier"],
   "plugins": ["jest"],
   "settings": {
     "import/resolver": {
@@ -27,6 +27,7 @@
         "allow": ["_id"]
       }
     ],
+    "func-names": 0,
     "max-len": 0
   }
 }

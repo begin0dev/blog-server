@@ -8,10 +8,10 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-const api = require('api');
-const connectDB = require('database');
-const oAuthConfig = require('lib/middlewares/strategies');
-const { checkAccessToken, checkRefreshToken } = require('lib/middlewares/jwt');
+const api = require('./api');
+const connectDB = require('./database');
+const oAuthConfig = require('./middlewares/strategies');
+const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -49,7 +49,7 @@ app.use(
       httpOnly: true,
       secure: isProduction,
     },
-    name: '', // TODO: 나중에 실서버 배포전에 넣어주기
+    name: '', // TODO: 나중에 실서버 배포 전에 넣어주기
   }),
 );
 
@@ -66,10 +66,11 @@ app.use((req, res, next) => {
 });
 
 /* handle error */
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err);
   res.status(err.status || 500);
-  return res.json({
+  res.json({
     status: 'error',
     message: err.message,
   });

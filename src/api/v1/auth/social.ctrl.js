@@ -5,7 +5,7 @@ const express = require('express');
 
 const oAuth = require('lib/oauth');
 const User = require('database/models/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/token');
+const { generateAccessToken, generateRefreshToken } = require('lib/helper/token');
 
 const router = express.Router();
 
@@ -37,16 +37,16 @@ const socialCallback = async (req, res) => {
     });
     res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    return res.redirect(redirectUrl);
+    res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
-    return failureRedirect('logIn', err.message);
+    failureRedirect('logIn', err.message);
   }
 };
 
 router.use((req, res, next) => {
   if (!req.session.redirectUrl) req.session.redirectUrl = req.get('Referrer') || req.originalUrl;
-  return next();
+  next();
 });
 
 router.get('/facebook', oAuth.authenticate('facebook', { auth_type: 'rerequest' }));

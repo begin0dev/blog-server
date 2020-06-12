@@ -12,7 +12,7 @@ const {
   // GOOGLE_APP_SECRET,
 } = process.env;
 
-const callbacUrl = name => `/api/v1/auth/social/${name}/callback`;
+const callbackUrl = name => `/api/v1/auth/social/${name}/callback`;
 
 module.exports = () => {
   oAuth.use(
@@ -21,7 +21,7 @@ module.exports = () => {
         name: 'facebook',
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: callbacUrl('facebook'),
+        callbackURL: callbackUrl('facebook'),
       },
       (accessToken, profile, done) => {
         const { id, name: displayName, email } = profile;
@@ -36,7 +36,7 @@ module.exports = () => {
         name: 'kakao',
         clientID: KAKAO_APP_ID,
         clientSecret: KAKAO_APP_SECRET,
-        callbackURL: callbacUrl('kakao'),
+        callbackURL: callbackUrl('kakao'),
         grantType: 'authorization_code',
       },
       (accessToken, profile, done) => {
@@ -53,7 +53,7 @@ module.exports = () => {
   //     name: 'github',
   //     clientID: GITHUB_APP_ID,
   //     clientSecret: GITHUB_APP_SECRET,
-  //     callbackURL: callbacUrl('github'),
+  //     callbackURL: callbackUrl('github'),
   //     grantType: 'authorization_code',
   //   },
   //   (accessToken, profile) => {
@@ -66,7 +66,7 @@ module.exports = () => {
   //     name: 'google',
   //     clientID: GOOGLE_APP_ID,
   //     clientSecret: GOOGLE_APP_SECRET,
-  //     callbackURL: callbacUrl('google'),
+  //     callbackURL: callbackUrl('google'),
   //     grantType: 'authorization_code',
   //   },
   //   (accessToken, profile) => {

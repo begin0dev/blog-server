@@ -3,10 +3,7 @@ const mongooseDelete = require('mongoose-delete');
 
 const User = new mongoose.Schema(
   {
-    displayName: {
-      type: String,
-      required: true,
-    },
+    displayName: { type: String, required: true },
     profileImageUrl: String,
     oAuth: {
       local: {
@@ -68,25 +65,19 @@ User.set('toJSON', {
 });
 
 // static methods
-User.statics.findBySocialId = function findBySocialId(provider, id) {
-  return this.findOne({
-    [`oAuth.${provider}.id`]: id,
-  });
+User.statics.findBySocialId = function(provider, id) {
+  return this.findOne({ [`oAuth.${provider}.id`]: id });
 };
 
-User.statics.findByLocalRefreshToken = function findByLocalRefreshToken(refreshToken) {
+User.statics.findByRefreshToken = function(refreshToken) {
   return this.findOne({ 'oAuth.local.refreshToken': refreshToken });
 };
 
-User.statics.socialRegister = async function socialRegister({ provider, id, displayName, profileImageUrl = '' }) {
+User.statics.socialRegister = async function({ provider, id, displayName, profileImageUrl = '' }) {
   const user = new this({
     displayName,
     profileImageUrl,
-    oAuth: {
-      [provider]: {
-        id,
-      },
-    },
+    oAuth: { [provider]: { id } },
   });
   return user.save();
 };

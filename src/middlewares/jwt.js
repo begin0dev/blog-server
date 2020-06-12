@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const User = require('database/models/user');
-const { decodeAccessToken, generateAccessToken } = require('lib/token');
+const { decodeAccessToken, generateAccessToken } = require('lib/helper/token');
 
 exports.checkAccessToken = (req, res, next) => {
   // clear user
@@ -13,20 +13,21 @@ exports.checkAccessToken = (req, res, next) => {
   try {
     const decoded = decodeAccessToken(accessToken);
     req.user = decoded.user;
-    return next();
+    next();
   } catch (err) {
     res.clearCookie('accessToken');
-    return next();
+    next();
   }
 };
 
 exports.checkRefreshToken = async (req, res, next) => {
   if (req.user) return next();
+
   const { refreshToken } = req.cookies;
   if (!refreshToken) return next();
 
   try {
-    const user = await User.findByLocalRefreshToken(refreshToken);
+    const user = await User.findByRefreshToken(refreshToken);
     if (!user) {
       res.clearCookie('refreshToken');
       return next();
@@ -45,13 +46,11 @@ exports.checkRefreshToken = async (req, res, next) => {
 
     // extended your refresh token so they do not expire while using your site
     if (moment(expiredAt).diff(moment(), 'minute') <= 5) {
-      await user.updateOne({
-        $set: { 'oAuth.local.expiredAt': moment().add(1, 'hour') },
-      });
+      await user.updateOne({ $set: { 'oAuth.local.expiredAt': moment().add(1, 'hour') } });
     }
-    return next();
+    next();
   } catch (err) {
     res.clearCookie('refreshToken');
-    return next(err);
+    next(err);
   }
 };

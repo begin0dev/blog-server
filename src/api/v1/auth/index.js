@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { isNotLoggedIn } = require('lib/middlewares/auth');
+const { isNotLoggedIn } = require('middlewares/auth');
 const socialCtrl = require('./social.ctrl');
 
 const router = express.Router();
