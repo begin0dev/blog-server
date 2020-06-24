@@ -1,4 +1,4 @@
-require('../../testHelper');
+require('../../test_helper');
 
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
@@ -6,7 +6,7 @@ const httpMocks = require('node-mocks-http');
 
 const User = require('database/models/user');
 const MockUserData = require('database/models/__mocks__/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/helper/token');
+const { generateAccessToken, generateRefreshToken } = require('lib/token_helper');
 const { checkAccessToken, checkRefreshToken } = require('middlewares/jwt');
 
 const { JWT_SECRET } = process.env;

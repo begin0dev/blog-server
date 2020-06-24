@@ -1,4 +1,4 @@
-require('dotenv').config(); // LOAD CONFIG
+require('dotenv').config({ path: './config/.env' }); // LOAD CONFIG
 
 const hpp = require('hpp');
 const helmet = require('helmet');
@@ -8,10 +8,10 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-const api = require('./api');
-const connectDB = require('./database');
-const oAuthConfig = require('./middlewares/strategies');
-const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
+const api = require('./src/api');
+const connectDB = require('./src/database');
+const oAuthConfig = require('./src/middlewares/strategies');
+const { checkAccessToken, checkRefreshToken } = require('./src/middlewares/jwt');
 
 const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -53,6 +53,11 @@ app.use(
   }),
 );
 
+/* custom function */
+app.response.jsend = function({ message, data, meta }) {
+  return this.json({ message, meta, data });
+};
+
 /* SETUP JWT TOKEN MIDDLEWARE */
 app.use(checkAccessToken, checkRefreshToken);
 /* SETUP ROUTER */
@@ -69,11 +74,7 @@ app.use((req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(err.status || 500);
-  res.json({
-    status: 'error',
-    message: err.message,
-  });
+  res.status(err.status || 500).jsend({ message: err.message });
 });
 
 app.listen(port, () => {

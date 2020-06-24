@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const User = require('database/models/user');
-const { decodeAccessToken, generateAccessToken } = require('lib/helper/token');
+const { decodeAccessToken, generateAccessToken } = require('lib/token_helper');
 
 exports.checkAccessToken = (req, res, next) => {
   // clear user

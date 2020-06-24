@@ -1,7 +1,7 @@
-require('../testHelper');
+require('../test_helper');
 
 const jwt = require('jsonwebtoken');
-const { generateAccessToken, decodeAccessToken } = require('lib/helper/token');
+const { generateAccessToken, decodeAccessToken } = require('lib/token_helper');
 
 const { JWT_SECRET } = process.env;
 const user = {

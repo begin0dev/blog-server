@@ -31,7 +31,7 @@ describe('Test Oauth authenticate', () => {
   }, (accessToken, profile, done) => { done(); }));
 
   app.get('/facebook', Oauth.authenticate('facebook', {}), (req, res) => {
-    res.status(201).json({ status: 'success' });
+    res.status(201);
   });
   const agent = request.agent(app);
 
