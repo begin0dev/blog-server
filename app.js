@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
-const api = require('./src/api');
+const controllers = require('./src/controllers');
 const connectDB = require('./src/database');
 const oAuthConfig = require('./src/middlewares/strategies');
 const { checkAccessToken, checkRefreshToken } = require('./src/middlewares/jwt');
@@ -54,14 +54,14 @@ app.use(
 );
 
 /* custom function */
-app.response.jsend = function({ message, data, meta }) {
+app.response.jsend = function ({ message, data, meta }) {
   return this.json({ message, meta, data });
 };
 
 /* SETUP JWT TOKEN MIDDLEWARE */
 app.use(checkAccessToken, checkRefreshToken);
 /* SETUP ROUTER */
-app.use('/api', api);
+app.use('/api', controllers);
 
 /* 404 error */
 app.use((req, res, next) => {

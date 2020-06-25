@@ -4,8 +4,6 @@ const User = require('database/models/user');
 const { decodeAccessToken, generateAccessToken } = require('lib/token_helper');
 
 exports.checkAccessToken = (req, res, next) => {
-  // clear user
-  req.user = null;
   let accessToken = req.get('authorization') || req.cookies.accessToken;
   if (!accessToken) return next();
   if (accessToken.startsWith('Bearer ')) accessToken = accessToken.slice(7, accessToken.length);

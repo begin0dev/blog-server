@@ -65,15 +65,15 @@ User.set('toJSON', {
 });
 
 // static methods
-User.statics.findBySocialId = function(provider, id) {
+User.statics.findBySocialId = function (provider, id) {
   return this.findOne({ [`oAuth.${provider}.id`]: id });
 };
 
-User.statics.findByRefreshToken = function(refreshToken) {
+User.statics.findByRefreshToken = function (refreshToken) {
   return this.findOne({ 'oAuth.local.refreshToken': refreshToken });
 };
 
-User.statics.socialRegister = async function({ provider, id, displayName, profileImageUrl = '' }) {
+User.statics.socialRegister = async function ({ provider, id, displayName, profileImageUrl = '' }) {
   const user = new this({
     displayName,
     profileImageUrl,
