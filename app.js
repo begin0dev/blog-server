@@ -26,9 +26,8 @@ oAuthConfig();
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
 if (isProduction) {
-  app.use(hpp());
   app.use(helmet());
-  app.use(morgan('combined'));
+  app.use(morgan('short'));
   app.use(cors({ origin: 'https://begin0devBlog.com', credentials: true }));
 } else {
   app.use(morgan('dev')); // server logger
@@ -39,6 +38,7 @@ if (isProduction) {
 // Allows express to read `x-www-form-urlencoded` data:
 app.use(express.json()); // parses json
 app.use(express.urlencoded({ extended: true }));
+app.use(hpp());
 app.use(cookieParser(COOKIE_SECRET));
 app.use(
   session({

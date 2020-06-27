@@ -8,8 +8,8 @@ module.exports = () => {
   mongoose.set('useCreateIndex', true);
   mongoose.set('useFindAndModify', false);
 
-  const connectMongoDB = url =>
-    mongoose.connect(url, {
+  const connectMongoDB = () =>
+    mongoose.connect(MONGO_URI, {
       user: MONGO_USER,
       pass: MONGO_PWD,
       dbName: 'beginner-blog',
@@ -19,13 +19,13 @@ module.exports = () => {
 
   try {
     console.log('Mongodb connected');
-    connectMongoDB(MONGO_URI);
-    mongoose.connection.on('error', err => {
+    connectMongoDB();
+    mongoose.connection.on('error', (err) => {
       console.error('Mongodb connection error', err);
     });
     mongoose.connection.on('disconnected', () => {
       console.error('The connection to the Mongodb has been lost. Retry the connection');
-      connectMongoDB(MONGO_URI);
+      connectMongoDB();
     });
   } catch (err) {
     console.error('Mongodb connection error', err);
