@@ -19,10 +19,8 @@ exports.checkAccessToken = (req, res, next) => {
 };
 
 exports.checkRefreshToken = async (req, res, next) => {
-  if (req.user) return next();
-
   const { refreshToken } = req.cookies;
-  if (!refreshToken) return next();
+  if (req.user || !refreshToken) return next();
 
   try {
     const user = await User.findByRefreshToken(refreshToken);
@@ -33,7 +31,7 @@ exports.checkRefreshToken = async (req, res, next) => {
 
     const { expiredAt } = user.oAuth.local;
     if (moment() > moment(expiredAt)) {
-      await user.updateOne({ $unset: { 'oAuth.local': '' } });
+      await user.updateOne({ $unset: { 'oAuth.local': 1 } });
       res.clearCookie('refreshToken');
       return next();
     }

@@ -17,12 +17,12 @@ describe('Test checkAccessToken', () => {
     displayName: 'displayName',
   };
 
-  test('Success: user is null if exist authorization in the header', () => {
+  test('Success: user is undefined if exist authorization in the header', () => {
     const req = httpMocks.createRequest({ headers: {} });
     const res = httpMocks.createResponse();
 
     checkAccessToken(req, res, () => {
-      expect(req.user).toBeNull();
+      expect(req.user).toBeUndefined();
     });
   });
   test('Success: user is exist if a valid token exists in the header', () => {
@@ -38,7 +38,7 @@ describe('Test checkAccessToken', () => {
       expect(req.user).toEqual(user);
     });
   });
-  test('Success: user is null if a invalid token exists in the header', () => {
+  test('Success: user is undefined if a invalid token exists in the header', () => {
     const token = jwt.sign(
       {
         exp: Math.floor(Date.now() / 1000) - 60,
@@ -55,7 +55,7 @@ describe('Test checkAccessToken', () => {
     const res = httpMocks.createResponse();
 
     checkAccessToken(req, res, () => {
-      expect(req.user).toBeNull();
+      expect(req.user).toBeUndefined();
     });
   });
 });
