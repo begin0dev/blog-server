@@ -11,7 +11,7 @@ let mongoServer;
 beforeEach(async () => {
   try {
     mongoServer = new MongodbMemoryServer.MongoMemoryServer();
-    const mongoUri = await mongoServer.getConnectionString();
+    const mongoUri = await mongoServer.getUri();
     await mongoose.connect(mongoUri, { useNewUrlParser: true, useUnifiedTopology: true });
   } catch (err) {
     console.error('Mongodb connection error', err);

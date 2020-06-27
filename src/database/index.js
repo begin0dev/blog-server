@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const { NODE_ENV, MONGO_URI, MONGO_USER, MONGO_PWD } = process.env;
+const { NODE_ENV, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 
 module.exports = () => {
   // mongoose setting
@@ -12,7 +12,7 @@ module.exports = () => {
     mongoose.connect(MONGO_URI, {
       user: MONGO_USER,
       pass: MONGO_PWD,
-      dbName: 'beginner-blog',
+      dbName: MONGO_DB_NAME,
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
