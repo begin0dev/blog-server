@@ -1,4 +1,4 @@
-require('../../test_helper');
+require('../test-helper');
 
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
@@ -6,7 +6,7 @@ const httpMocks = require('node-mocks-http');
 
 const User = require('database/models/user');
 const MockUserData = require('database/models/__mocks__/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/token_helper');
+const { generateAccessToken, generateRefreshToken } = require('lib/token-helper');
 const { checkAccessToken, checkRefreshToken } = require('middlewares/jwt');
 
 const { JWT_SECRET } = process.env;
@@ -25,6 +25,7 @@ describe('Test checkAccessToken', () => {
       expect(req.user).toBeUndefined();
     });
   });
+
   test('Success: user is exist if a valid token exists in the header', () => {
     const token = generateAccessToken({ user });
     const req = httpMocks.createRequest({
@@ -38,6 +39,7 @@ describe('Test checkAccessToken', () => {
       expect(req.user).toEqual(user);
     });
   });
+
   test('Success: user is undefined if a invalid token exists in the header', () => {
     const token = jwt.sign(
       {
@@ -69,6 +71,7 @@ describe('Test checkRefreshToken', () => {
     user = await User.create(mockUserData);
     refreshToken = await generateRefreshToken();
   });
+
   test('Success: user is exist if refresh token is equal and expiredAt is valid', async () => {
     await user.updateOne({
       $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(12, 'hour') },

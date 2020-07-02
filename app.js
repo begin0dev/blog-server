@@ -13,16 +13,18 @@ const connectDB = require('./src/database');
 const oAuthConfig = require('./src/middlewares/strategies');
 const { checkAccessToken, checkRefreshToken } = require('./src/middlewares/jwt');
 
-const { NODE_ENV, PORT, COOKIE_SECRET } = process.env;
+const { NODE_ENV, PORT, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
 
 const app = express();
 const port = PORT || 3000;
 
 /* mongoose connected */
-connectDB();
-/* oAuth strategies */
-oAuthConfig();
+connectDB(MONGO_URI, {
+  user: MONGO_USER,
+  pass: MONGO_PWD,
+  dbName: MONGO_DB_NAME,
+});
 
 /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
 if (isProduction) {
@@ -57,6 +59,9 @@ app.use(
 app.response.jsend = function ({ message, data, meta }) {
   return this.json({ message, meta, data });
 };
+
+/* oAuth strategies */
+oAuthConfig();
 
 /* SETUP JWT TOKEN MIDDLEWARE */
 app.use(checkAccessToken, checkRefreshToken);

@@ -7,6 +7,7 @@ module.exports = {
       instances: 'max',
       env: {
         NODE_ENV: 'production',
+        NODE_PATH: 'src',
       },
     },
   ],
