@@ -1,4 +1,4 @@
-require('dotenv').config({ path: './config/.env' }); // LOAD CONFIG
+require('dotenv').config({ path: './config/.env' });
 
 const hpp = require('hpp');
 const helmet = require('helmet');
@@ -51,7 +51,6 @@ app.use(
       httpOnly: true,
       secure: isProduction,
     },
-    name: '', // TODO: 나중에 실서버 배포 전에 넣기
   }),
 );
 
