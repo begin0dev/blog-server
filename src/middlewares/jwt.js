@@ -1,7 +1,7 @@
 const moment = require('moment');
 
 const User = require('database/models/user');
-const { decodeAccessToken, generateAccessToken } = require('lib/token-helper');
+const { decodeAccessToken, generateAccessToken } = require('lib/helpers');
 
 exports.checkAccessToken = (req, res, next) => {
   let accessToken = req.get('authorization') || req.cookies.accessToken;

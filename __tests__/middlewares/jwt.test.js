@@ -2,11 +2,11 @@ require('../test-helper');
 
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
-const httpMocks = require('node-mocks-http');
+const { createRequest, createResponse } = require('node-mocks-http');
 
 const User = require('database/models/user');
 const MockUserData = require('database/models/__mocks__/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/token-helper');
+const { generateAccessToken, generateRefreshToken } = require('lib/helpers');
 const { checkAccessToken, checkRefreshToken } = require('middlewares/jwt');
 
 const { JWT_SECRET } = process.env;
@@ -18,8 +18,8 @@ describe('Test checkAccessToken', () => {
   };
 
   test('Success: user is undefined if exist authorization in the header', () => {
-    const req = httpMocks.createRequest({ headers: {} });
-    const res = httpMocks.createResponse();
+    const req = createRequest({ headers: {} });
+    const res = createResponse();
 
     checkAccessToken(req, res, () => {
       expect(req.user).toBeUndefined();
@@ -28,12 +28,12 @@ describe('Test checkAccessToken', () => {
 
   test('Success: user is exist if a valid token exists in the header', () => {
     const token = generateAccessToken({ user });
-    const req = httpMocks.createRequest({
+    const req = createRequest({
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
-    const res = httpMocks.createResponse();
+    const res = createResponse();
 
     checkAccessToken(req, res, () => {
       expect(req.user).toEqual(user);
@@ -49,12 +49,12 @@ describe('Test checkAccessToken', () => {
       JWT_SECRET,
       { issuer: 'beginner' },
     );
-    const req = httpMocks.createRequest({
+    const req = createRequest({
       headers: {
         authorization: `Bearer ${token}`,
       },
     });
-    const res = httpMocks.createResponse();
+    const res = createResponse();
 
     checkAccessToken(req, res, () => {
       expect(req.user).toBeUndefined();
@@ -76,13 +76,13 @@ describe('Test checkRefreshToken', () => {
     await user.updateOne({
       $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(12, 'hour') },
     });
-    const req = httpMocks.createRequest({
+    const req = createRequest({
       user: null,
       cookies: {
         refreshToken,
       },
     });
-    const res = httpMocks.createResponse();
+    const res = createResponse();
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
@@ -93,13 +93,13 @@ describe('Test checkRefreshToken', () => {
     await user.updateOne({
       $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(3, 'minute') },
     });
-    const req = httpMocks.createRequest({
+    const req = createRequest({
       user: null,
       cookies: {
         refreshToken,
       },
     });
-    const res = httpMocks.createResponse();
+    const res = createResponse();
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
@@ -112,13 +112,13 @@ describe('Test checkRefreshToken', () => {
     await user.updateOne({
       $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().subtract(10, 'minute') },
     });
-    const req = httpMocks.createRequest({
+    const req = createRequest({
       user: null,
       cookies: {
         refreshToken,
       },
     });
-    const res = httpMocks.createResponse();
+    const res = createResponse();
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toBeNull();

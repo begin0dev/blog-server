@@ -7,8 +7,8 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_PATH=src node app.js",
-    "dev": "NODE_PATH=src nodemon app.js",
+    "start": "cross-env NODE_PATH=src node src/app.js",
+    "dev": "nodemon",
     "test": "jest"
   },
   "dependencies": {
@@ -29,9 +29,12 @@
     "mongoose": "^5.9.24",
     "mongoose-delete": "^0.5.2",
     "morgan": "^1.10.0",
-    "qs": "^6.9.4"
+    "path-to-regexp": "^6.1.0",
+    "qs": "^6.9.4",
+    "swagger-ui-express": "^4.1.4"
   },
   "devDependencies": {
+    "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.4.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",

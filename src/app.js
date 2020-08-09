@@ -7,11 +7,13 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
+const swaggerUi = require('swagger-ui-express');
 
-const controllers = require('./src/controllers');
-const connectDB = require('./src/database');
-const oAuthConfig = require('./src/middlewares/strategies');
-const { checkAccessToken, checkRefreshToken } = require('./src/middlewares/jwt');
+const swaggerDocument = require('./swagger/index.json');
+const controllers = require('./controllers');
+const connectDB = require('./database');
+const oAuthConfig = require('./middlewares/strategies');
+const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
 
 const { NODE_ENV, PORT, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -65,6 +67,7 @@ oAuthConfig();
 /* SETUP JWT TOKEN MIDDLEWARE */
 app.use(checkAccessToken, checkRefreshToken);
 /* SETUP ROUTER */
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api', controllers);
 
 /* 404 error */

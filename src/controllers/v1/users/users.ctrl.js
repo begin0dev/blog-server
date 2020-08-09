@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { isLoggedIn } = require('middlewares/auth');
-const { asyncErrorHelper } = require('lib/base-helper');
+const { asyncErrorHelper } = require('lib/helpers');
 const User = require('database/models/user');
 
 const router = express.Router();

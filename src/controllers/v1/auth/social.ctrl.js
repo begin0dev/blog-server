@@ -5,7 +5,7 @@ const express = require('express');
 
 const oAuth = require('lib/oauth');
 const User = require('database/models/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/token-helper');
+const { generateAccessToken, generateRefreshToken } = require('lib/helpers/token-helper');
 
 const router = express.Router();
 
