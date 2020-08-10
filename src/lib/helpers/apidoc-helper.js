@@ -1,5 +1,7 @@
 const Joi = require('@hapi/joi');
 
+const { setPathParameters } = require('./swagger-handler');
+
 const errorTypeTextMap = (err) => {
   if (!err.details) return err.message;
   const types = {
@@ -13,6 +15,7 @@ const errorTypeTextMap = (err) => {
 
 exports.apiDoc = (schema = {}) => async (req, res, next) => {
   try {
+    if (process.env.NODE_ENV === 'test') await setPathParameters(req, schema);
     req.validParams = (
       await Promise.all(
         ['params', 'query', 'body'].map((key) =>
@@ -22,7 +25,6 @@ exports.apiDoc = (schema = {}) => async (req, res, next) => {
     ).reduce((acc, cur) => Object.assign(acc, cur), {});
     next();
   } catch (err) {
-    console.error(err);
     res.status(400).jsend({ message: errorTypeTextMap(err) });
   }
 };

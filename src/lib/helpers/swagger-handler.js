@@ -4,7 +4,7 @@ const pathToRegexp = require('path-to-regexp');
 
 const { name: title, version, description } = require('../../../package.json');
 
-const swaggerPath = path.resolve(__dirname, '../swagger/index.json');
+const swaggerPath = path.resolve(process.cwd(), './src/swagger/index.json');
 
 const swaggerJson = {
   swagger: '2.0',
@@ -37,6 +37,8 @@ const writeJSON = async (json) => {
   }
 };
 
+const initSwaggerJson = () => writeJSON(swaggerJson);
+
 const swaggerPathGenerator = (routePath) => {
   const tokens = pathToRegexp.parse(routePath);
   return tokens
@@ -48,20 +50,21 @@ const swaggerPathGenerator = (routePath) => {
     .join('');
 };
 
-const setPathParameters = async (req, desc, schema) => {
-  try {
-    const {
-      method,
-      headers,
-      baseUrl,
-      route: { path: routePath },
-    } = req;
-    const json = await readJSON();
-    const swaggerPath = swaggerPathGenerator(`${baseUrl}${routePath}`);
-    // await writeJSON(json);
-  } catch (err) {
-    console.error(err);
-  }
+const setPathParameters = async (req, schema) => {
+  console.log('test');
+  // try {
+  //   const {
+  //     method,
+  //     headers,
+  //     baseUrl,
+  //     route: { path: routePath },
+  //   } = req;
+  //   const json = await readJSON();
+  //   const swaggerPath = swaggerPathGenerator(`${baseUrl}${routePath}`);
+  //   // await writeJSON(json);
+  // } catch (err) {
+  //   console.error(err);
+  // }
 };
 
-module.exports = { setPathParameters };
+module.exports = { initSwaggerJson, setPathParameters };
