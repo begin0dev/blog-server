@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi');
 const { createRequest, createResponse } = require('node-mocks-http');
 
 jest.mock('lib/helpers/swagger-handler');
-const {setPathParameters} = require('lib/helpers/swagger-handler');
+const { setPathParameters } = require('lib/helpers/swagger-handler');
 const { apiDoc } = require('lib/helpers/apidoc-helper');
 
 describe('Test apiDoc function', () => {
@@ -25,7 +25,7 @@ describe('Test apiDoc function', () => {
   };
 
   beforeEach(() => {
-    setPathParameters.mockImplementation(() =>  Promise.resolve());
+    setPathParameters.mockImplementation(() => Promise.resolve());
     schema = {
       params: {
         id: Joi.string().required(),
