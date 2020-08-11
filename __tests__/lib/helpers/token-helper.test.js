@@ -1,5 +1,3 @@
-require('../../test-helper');
-
 const jwt = require('jsonwebtoken');
 
 const { generateAccessToken, decodeAccessToken } = require('lib/helpers/token-helper');

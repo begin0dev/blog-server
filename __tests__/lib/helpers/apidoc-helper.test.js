@@ -1,5 +1,3 @@
-require('../../test-helper');
-
 const Joi = require('@hapi/joi');
 const { createRequest, createResponse } = require('node-mocks-http');
 

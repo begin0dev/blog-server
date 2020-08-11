@@ -1,5 +1,3 @@
-require('../test-helper');
-
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const { createRequest, createResponse } = require('node-mocks-http');

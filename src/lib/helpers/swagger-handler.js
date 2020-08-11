@@ -20,21 +20,14 @@ const swaggerJson = {
 };
 
 const readJSON = async () => {
-  try {
-    const data = await fs.readFileSync(swaggerPath);
-    return JSON.parse(data);
-  } catch (err) {
-    console.error(err);
-  }
+  console.log('readJSON')
+  const data = await fs.readFileSync(swaggerPath);
+  return JSON.parse(data);
 };
 
 const writeJSON = async (json) => {
-  try {
-    await fs.writeFileSync(swaggerPath, JSON.stringify(json));
-    return null;
-  } catch (err) {
-    console.error(err);
-  }
+  await fs.writeFileSync(swaggerPath, JSON.stringify(json));
+  return null;
 };
 
 const initSwaggerJson = () => writeJSON(swaggerJson);
@@ -51,20 +44,20 @@ const swaggerPathGenerator = (routePath) => {
 };
 
 const setPathParameters = async (req, schema) => {
-  console.log('test');
-  // try {
-  //   const {
-  //     method,
-  //     headers,
-  //     baseUrl,
-  //     route: { path: routePath },
-  //   } = req;
-  //   const json = await readJSON();
-  //   const swaggerPath = swaggerPathGenerator(`${baseUrl}${routePath}`);
-  //   // await writeJSON(json);
-  // } catch (err) {
-  //   console.error(err);
-  // }
+  try {
+    // const {
+    //   method,
+    //   headers,
+    //   baseUrl,
+    //   route: { path: routePath },
+    // } = req;
+    const json = await readJSON();
+    console.log(json);
+    // const swaggerPath = swaggerPathGenerator(`${baseUrl}${routePath}`);
+    // await writeJSON(json);
+  } catch (err) {
+    console.error(err);
+  }
 };
 
-module.exports = { initSwaggerJson, setPathParameters };
+module.exports = { initSwaggerJson, setPathParameters, readJSON };
