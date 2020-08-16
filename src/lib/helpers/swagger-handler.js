@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const pathToRegexp = require('path-to-regexp');
+const Joi = require('@hapi/joi');
+const { set, get } = require('lodash');
+const { convert } = require('@yeongjet/joi-to-json-schema');
 
 const { name: title, version, description } = require('../../../package.json');
 
@@ -13,15 +16,14 @@ const swaggerJson = {
     version,
     description,
   },
-  host: '',
+  host: 'localhost:3001',
   schemes: ['https', 'http'],
   paths: {},
   definitions: {},
 };
 
 const readJSON = async () => {
-  console.log('readJSON')
-  const data = await fs.readFileSync(swaggerPath);
+  const data = await fs.readFileSync(swaggerPath, 'utf8');
   return JSON.parse(data);
 };
 
@@ -43,21 +45,58 @@ const swaggerPathGenerator = (routePath) => {
     .join('');
 };
 
+const paramMap = {
+  params: 'path',
+  query: 'query',
+  body: 'body',
+};
+
 const setPathParameters = async (req, schema) => {
   try {
-    // const {
-    //   method,
-    //   headers,
-    //   baseUrl,
-    //   route: { path: routePath },
-    // } = req;
+    const {
+      method,
+      baseUrl,
+      route: { path: routePath },
+    } = req;
     const json = await readJSON();
-    console.log(json);
-    // const swaggerPath = swaggerPathGenerator(`${baseUrl}${routePath}`);
-    // await writeJSON(json);
+
+    const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
+    const parameters = [];
+
+    ['params', 'query', 'body'].forEach((paramKey) => {
+      if (!schema[paramKey]) return;
+
+      const { properties, required } = convert(Joi.object(schema[paramKey]));
+      const paramType = paramMap[paramKey];
+
+      Object.entries(properties).forEach(([name, property]) => {
+        const param = {
+          name,
+          in: paramType,
+          required: required && required.indexOf(name) >= 0,
+        };
+        if (paramType === 'body') {
+          param.schema = property;
+        } else {
+          Object.assign(param, property);
+        }
+        parameters.push(param);
+      });
+    });
+
+    if (!get(json, urlPath)) {
+      set(json, urlPath, {
+        tags: [baseUrl.split('/')[3]],
+        summary: schema.summary,
+        description: schema.description,
+        parameters,
+      });
+    }
+
+    await writeJSON(json);
   } catch (err) {
     console.error(err);
   }
 };
 
-module.exports = { initSwaggerJson, setPathParameters, readJSON };
+module.exports = { initSwaggerJson, setPathParameters };

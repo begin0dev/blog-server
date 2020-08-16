@@ -1,12 +1,12 @@
 const express = require('express');
 
 const { isLoggedIn } = require('middlewares/auth');
-const { asyncErrorHelper } = require('lib/helpers');
+const { asyncErrorHelper, apiDoc } = require('lib/helpers');
 const User = require('database/models/user');
 
 const router = express.Router();
 
-router.get('/check', (req, res) => {
+router.get('/check', apiDoc({}), (req, res) => {
   const { user } = req;
   if (user) return res.status(200).jsend({ data: user });
   res.status(401).jsend({ message: 'Unauthorized' });
