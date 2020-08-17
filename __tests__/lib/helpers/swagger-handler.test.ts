@@ -1,21 +1,18 @@
-jest.mock('fs');
-
-const fs = require('fs');
-const Joi = require('@hapi/joi');
-const { createRequest } = require('node-mocks-http');
+import fs from 'fs';
+import Joi from 'joi';
+import { createRequest } from 'node-mocks-http';
 
 const { setPathParameters } = require('lib/helpers/swagger-handler');
 
+jest.mock('fs');
+const mockFs = fs as jest.Mocked<typeof fs>;
+
 describe('Test setPathParameters function', () => {
   test('swagger json', async () => {
-    const bufferJson = Buffer.from(
-      JSON.stringify({
-        paths: {},
-      }),
-    );
-    fs.readFileSync.mockResolvedValue(bufferJson);
+    const bufferJson = Buffer.from(JSON.stringify({ paths: {} }));
+    mockFs.readFileSync.mockImplementation(() => bufferJson);
     const writeMock = jest.fn((x, y) => y);
-    fs.writeFileSync.mockImplementation(writeMock);
+    mockFs.writeFileSync.mockImplementation(writeMock);
 
     const req = createRequest({
       method: 'PUT',

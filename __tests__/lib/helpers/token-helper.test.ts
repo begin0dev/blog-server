@@ -1,20 +1,20 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
 
-const { generateAccessToken, decodeAccessToken } = require('lib/helpers/token-helper');
+import { generateAccessToken, decodeAccessToken } from '@app/lib/helpers/token-helper';
 
 const { JWT_SECRET } = process.env;
+
 const user = {
   _id: 'id',
   displayName: 'displayName',
 };
-const expiresIn = '1h';
 
 describe('Test decodeToken', () => {
   test('Success', () => {
-    const token = generateAccessToken({ user }, expiresIn);
+    const token = generateAccessToken({ user }, '1h');
 
     const decode = decodeAccessToken(token);
-    ['user', 'iat', 'exp', 'iss'].forEach(key => {
+    ['user', 'iat', 'exp', 'iss'].forEach((key) => {
       expect(decode).toHaveProperty(key);
     });
   });
@@ -25,7 +25,7 @@ describe('Test decodeToken', () => {
         exp: Math.floor(Date.now() / 1000) - 60,
         data: user,
       },
-      JWT_SECRET,
+      JWT_SECRET as string,
       { issuer: 'beginner' },
     );
 

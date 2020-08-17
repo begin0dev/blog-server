@@ -1,4 +1,4 @@
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const { createRequest, createResponse } = require('node-mocks-http');
 
 jest.mock('lib/helpers/swagger-handler');

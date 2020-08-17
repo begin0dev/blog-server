@@ -1,9 +1,10 @@
-const faker = require('faker');
-const axios = require('axios');
+import axios from 'axios';
+import * as faker from 'faker';
 
-const Strategy = require('lib/oauth/strategy');
+const Strategy = require('@app/lib/oauth/strategy');
 
 jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('Test Strategy constructor', () => {
   test('Success', () => {
@@ -60,7 +61,7 @@ describe('Test Strategy authorizeEndPoint', () => {
 
 describe('Test Strategy getOauthAccessToken', () => {
   test('Success', async () => {
-    axios.post.mockResolvedValue({ data: { access_token: 'test-access-token' } });
+    mockedAxios.post.mockResolvedValue({ data: { access_token: 'test-access-token' } });
     const strategy = new Strategy(
       {
         name: 'facebook',
@@ -80,7 +81,7 @@ describe('Test Strategy getOauthAccessToken', () => {
 describe('Test Strategy getUserProfile', () => {
   test('Success', async () => {
     const expectProfile = { id: 1, name: 'test', email: faker.internet.email() };
-    axios.get.mockResolvedValue({ data: expectProfile });
+    mockedAxios.get.mockResolvedValue({ data: expectProfile });
     const strategy = new Strategy(
       {
         name: 'facebook',

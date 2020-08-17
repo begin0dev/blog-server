@@ -1,7 +1,7 @@
 {
   "watch": ["src", "nodemon.json"],
-  "exec": "node src/app",
-  "ext": "js json",
+  "exec": "ts-node src/app",
+  "ext": "js ts json",
   "ignore": ["src/swagger/*", "__tests__/*", "coverage/*"],
   "env": {
     "NODE_ENV": "development",

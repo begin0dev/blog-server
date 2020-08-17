@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const pathToRegexp = require('path-to-regexp');
-const Joi = require('@hapi/joi');
+const Joi = require('joi');
 const { set, get } = require('lodash');
 const { convert } = require('@yeongjet/joi-to-json-schema');
 
