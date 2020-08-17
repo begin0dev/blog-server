@@ -1,4 +1,5 @@
 jest.mock('fs');
+
 const fs = require('fs');
 const Joi = require('@hapi/joi');
 const { createRequest } = require('node-mocks-http');
@@ -29,9 +30,9 @@ describe('Test setPathParameters function', () => {
       body: { image: Joi.binary() },
     });
 
-    console.log(writeMock.mock.results[0].value);
     const swaggerJson = JSON.parse(writeMock.mock.results[0].value);
     expect(swaggerJson.paths['/api/v1/users/{id}']).not.toBeNull();
     expect(swaggerJson.paths['/api/v1/users/{id}'].put).not.toBeNull();
+    expect(swaggerJson.paths['/api/v1/users/{id}'].put.parameters.length).toBe(3);
   });
 });

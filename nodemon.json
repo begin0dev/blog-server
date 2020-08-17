@@ -1,6 +1,6 @@
 {
   "watch": ["src", "nodemon.json"],
-  "exec": "node src/app.js",
+  "exec": "node src/app",
   "ext": "js json",
   "ignore": ["src/swagger/*", "__tests__/*", "coverage/*"],
   "env": {

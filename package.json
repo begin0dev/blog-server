@@ -7,7 +7,7 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env NODE_PATH=src node src/app.js",
+    "start": "cross-env NODE_PATH=src node src/app",
     "dev": "nodemon",
     "test": "jest"
   },

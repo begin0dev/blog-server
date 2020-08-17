@@ -6,14 +6,23 @@ const User = require('database/models/user');
 
 const router = express.Router();
 
-router.get('/check', apiDoc({}), (req, res) => {
-  const { user } = req;
-  if (user) return res.status(200).jsend({ data: user });
-  res.status(401).jsend({ message: 'Unauthorized' });
-});
+router.get(
+  '/check',
+  apiDoc({
+    summary: '유저 정보 확인 api',
+  }),
+  (req, res) => {
+    const { user } = req;
+    if (user) return res.status(200).jsend({ data: user });
+    res.status(401).jsend({ message: 'Unauthorized' });
+  },
+);
 
 router.delete(
   '/logout',
+  apiDoc({
+    summary: '유저 로그아웃',
+  }),
   isLoggedIn,
   asyncErrorHelper(async (req, res) => {
     const {
@@ -21,9 +30,9 @@ router.delete(
     } = req;
 
     await User.findByIdAndUpdate(_id, { $unset: { 'oAuth.local': 1 } });
+    req.user = null;
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
-    req.user = null;
     res.status(200).end();
   }),
 );

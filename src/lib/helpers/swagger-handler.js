@@ -91,9 +91,8 @@ const setPathParameters = async (req, schema) => {
         description: schema.description,
         parameters,
       });
+      await writeJSON(json);
     }
-
-    await writeJSON(json);
   } catch (err) {
     console.error(err);
   }
