@@ -40,6 +40,8 @@
     "@types/faker": "^4.1.12",
     "@types/jest": "^26.0.10",
     "@types/jsonwebtoken": "^8.5.0",
+    "@types/lodash": "^4.14.159",
+    "@types/supertest": "^2.0.10",
     "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.6.0",
     "eslint-config-airbnb-base": "^14.2.0",

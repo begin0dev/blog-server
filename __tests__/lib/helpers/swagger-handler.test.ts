@@ -2,7 +2,7 @@ import fs from 'fs';
 import Joi from 'joi';
 import { createRequest } from 'node-mocks-http';
 
-const { setPathParameters } = require('lib/helpers/swagger-handler');
+import { setPathParameters } from '@app/lib/helpers/swagger-handler';
 
 jest.mock('fs');
 const mockFs = fs as jest.Mocked<typeof fs>;

@@ -1,11 +1,12 @@
-const fs = require('fs');
-const path = require('path');
-const pathToRegexp = require('path-to-regexp');
-const Joi = require('joi');
-const { set, get } = require('lodash');
-const { convert } = require('@yeongjet/joi-to-json-schema');
+import fs from 'fs';
+import Joi from 'joi';
+import path from 'path';
+import * as pathToRegexp from 'path-to-regexp';
+import { set, get } from 'lodash';
+import { convert } from '@yeongjet/joi-to-json-schema';
+import { Request } from 'express';
 
-const { name: title, version, description } = require('../../../package.json');
+import { name as title, version, description } from '../../../package.json';
 
 const swaggerPath = path.resolve(process.cwd(), './src/swagger/index.json');
 
@@ -22,19 +23,14 @@ const swaggerJson = {
   definitions: {},
 };
 
-const readJSON = async () => {
-  const data = await fs.readFileSync(swaggerPath, 'utf8');
+const readJSON = async (): Promise<object> => {
+  const data: string = await fs.readFileSync(swaggerPath, 'utf8');
   return JSON.parse(data);
 };
 
-const writeJSON = async (json) => {
-  await fs.writeFileSync(swaggerPath, JSON.stringify(json));
-  return null;
-};
+const writeJSON = (json: object): void => fs.writeFileSync(swaggerPath, JSON.stringify(json));
 
-const initSwaggerJson = () => writeJSON(swaggerJson);
-
-const swaggerPathGenerator = (routePath) => {
+const swaggerPathGenerator = (routePath: string): string => {
   const tokens = pathToRegexp.parse(routePath);
   return tokens
     .map((token) => {
@@ -51,7 +47,29 @@ const paramMap = {
   body: 'body',
 };
 
-const setPathParameters = async (req, schema) => {
+interface Params {
+  name: string;
+  in: string;
+  required?: boolean;
+  schema?: any;
+}
+
+interface PathSchema {
+  [key: string]: Joi.AnySchema;
+}
+
+interface ValidationSchema {
+  params?: PathSchema;
+  query?: PathSchema;
+  body?: PathSchema;
+}
+
+export interface ControllerSchema extends ValidationSchema {
+  summary: string;
+  description?: string;
+}
+
+export const setPathParameters = async (req: Request, schema: ControllerSchema) => {
   try {
     const {
       method,
@@ -61,16 +79,17 @@ const setPathParameters = async (req, schema) => {
     const json = await readJSON();
 
     const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
-    const parameters = [];
+    const parameters: Array<any> = [];
 
-    ['params', 'query', 'body'].forEach((paramKey) => {
+    const validationKeys: Array<keyof ValidationSchema> = ['params', 'query', 'body'];
+    validationKeys.forEach((paramKey) => {
       if (!schema[paramKey]) return;
 
       const { properties, required } = convert(Joi.object(schema[paramKey]));
       const paramType = paramMap[paramKey];
 
       Object.entries(properties).forEach(([name, property]) => {
-        const param = {
+        const param: Params = {
           name,
           in: paramType,
           required: required && required.indexOf(name) >= 0,
@@ -98,4 +117,4 @@ const setPathParameters = async (req, schema) => {
   }
 };
 
-module.exports = { initSwaggerJson, setPathParameters };
+export const initSwaggerJson = (): void => writeJSON(swaggerJson);
