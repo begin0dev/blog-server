@@ -8,6 +8,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
+import { ExpressError } from './types/index';
 
 const controllers = require('@app/controllers');
 const connectDB = require('@app/database');
@@ -80,7 +81,7 @@ app.use((req, res, next) => {
 
 /* handle error */
 // eslint-disable-next-line no-unused-vars
-app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+app.use((err: ExpressError, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err);
   res.status(err.status || 500).jsend({ message: err.message });
 });
