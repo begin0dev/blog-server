@@ -2,11 +2,10 @@ import Joi from 'joi';
 import { createRequest, createResponse } from 'node-mocks-http';
 
 import { apiDoc } from '@app/lib/helpers/apidoc-helper';
-jest.mock('@app/lib/helpers/swagger-handler', () => {
-  return {
-    setPathParameters: jest.fn(() => Promise.resolve()),
-  };
-});
+
+jest.mock('@app/lib/helpers/swagger-handler', () => ({
+  setPathParameters: jest.fn(() => Promise.resolve()),
+}));
 
 describe('Test apiDoc function', () => {
   const mockReq = {
