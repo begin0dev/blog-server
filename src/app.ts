@@ -1,19 +1,20 @@
-require('dotenv').config({ path: './config/.env' });
+import '../config/index.ts';
 
-const hpp = require('hpp');
-const helmet = require('helmet');
-const cors = require('cors');
-const express = require('express');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const session = require('express-session');
-const swaggerUi = require('swagger-ui-express');
+import hpp from 'hpp';
+import helmet from 'helmet';
+import cors from 'cors';
+import express from 'express';
+import morgan from 'morgan';
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import swaggerUi from 'swagger-ui-express';
 
-const swaggerDocument = require('./swagger/index.json');
-const controllers = require('./controllers');
-const connectDB = require('./database');
-const oAuthConfig = require('./middlewares/strategies');
-const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
+const controllers = require('@app/controllers');
+const connectDB = require('@app/database');
+const oAuthConfig = require('@app/middlewares/strategies');
+const { checkAccessToken, checkRefreshToken } = require('@app/middlewares/jwt');
+
+const swaggerDocument = require('@app/swagger/index.json');
 
 const { NODE_ENV, PORT, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -48,7 +49,7 @@ app.use(
   session({
     resave: false,
     saveUninitialized: false,
-    secret: COOKIE_SECRET,
+    secret: COOKIE_SECRET as string,
     cookie: {
       httpOnly: true,
       secure: isProduction,
@@ -73,13 +74,13 @@ app.use('/api', controllers);
 /* 404 error */
 app.use((req, res, next) => {
   const err = new Error('Not Found');
-  err.status = 404;
+  // err.status = 404;
   next(err);
 });
 
 /* handle error */
 // eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err);
   res.status(err.status || 500).jsend({ message: err.message });
 });

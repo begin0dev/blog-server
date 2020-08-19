@@ -1,22 +1,22 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es6",
-    "skipLibCheck": true,
-    "strict": true,
+    "baseUrl": ".",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
+    "module": "commonjs",
     "moduleResolution": "node",
-    "sourceMap": true,
     "outDir": "dist",
-    "baseUrl": ".",
     "paths": {
       "@app/*": ["src/*"],
       "*": ["node_modules/*"]
-    }
-  },
-  "include": ["src"]
+    },
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "es6",
+    "typeRoots": ["src/types", "node_modules/@types"]
+  }
 }

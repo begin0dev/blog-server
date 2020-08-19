@@ -1,12 +1,21 @@
 {
   "extends": ["airbnb-base", "prettier"],
+  "parser": "@typescript-eslint/parser",
   "plugins": ["jest"],
   "settings": {
     "import/resolver": {
       "node": {
+        "extensions": [".js", ".jsx", ".ts", ".tsx"],
         "paths": ["src"]
+      },
+      "alias": {
+        "map": [["@app", "./src"]],
+        "extensions": [".ts", ".js", ".jsx", ".json"]
       }
     }
+  },
+  "parserOptions": {
+    "project": "./tsconfig.json"
   },
   "env": {
     "jest/globals": true

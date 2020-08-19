@@ -1,44 +1,40 @@
-const Joi = require('joi');
-const { createRequest, createResponse } = require('node-mocks-http');
+import Joi from 'joi';
+import { createRequest, createResponse } from 'node-mocks-http';
 
-jest.mock('lib/helpers/swagger-handler');
-const { setPathParameters } = require('lib/helpers/swagger-handler');
-const { apiDoc } = require('lib/helpers/apidoc-helper');
+import { apiDoc } from '@app/lib/helpers/apidoc-helper';
+jest.mock('@app/lib/helpers/swagger-handler', () => {
+  return {
+    setPathParameters: jest.fn(() => Promise.resolve()),
+  };
+});
 
 describe('Test apiDoc function', () => {
-  let schema;
-  let next;
-  let res;
   const mockReq = {
-    params: {
-      id: '35',
-    },
-    query: {
-      type: 'admin',
-    },
+    params: { id: '35' },
+    query: { type: 'admin' },
     body: {
       title: 'test',
       content: '...',
     },
   };
+  const schema = {
+    summary: 'test',
+    params: {
+      id: Joi.string().required(),
+    },
+    query: {
+      type: Joi.string().required(),
+    },
+    body: {
+      title: Joi.string().required(),
+      content: Joi.string(),
+    },
+  };
+  const res = createResponse();
+  let next: jest.Mock;
 
   beforeEach(() => {
-    setPathParameters.mockImplementation(() => Promise.resolve());
-    schema = {
-      params: {
-        id: Joi.string().required(),
-      },
-      query: {
-        type: Joi.string().required(),
-      },
-      body: {
-        title: Joi.string().required(),
-        content: Joi.string(),
-      },
-    };
-
     next = jest.fn();
-    res = createResponse();
     res.status = jest.fn().mockReturnValue(res);
     res.jsend = jest.fn().mockReturnValue(res);
   });
