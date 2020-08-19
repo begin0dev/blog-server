@@ -1,13 +1,10 @@
 declare global {
-  namespace Express {
-    export interface Request {
-      jsend: Jsend;
+  module 'express-serve-static-core' {
+    interface Response {
+      jsend<D, M>(params: { message?: string; data?: D; meta?: M }): this;
+    }
+    export interface ExpressError extends Error {
+      status?: number;
     }
   }
-
-  export interface ExpressError extends Error{
-    status?: Number;
-  }
 }
-
-type Jsend<D, M> = ({ message, data, meta }: { message?: string; data?: D; meta?: M }) => void;
