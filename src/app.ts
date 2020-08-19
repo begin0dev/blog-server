@@ -1,4 +1,4 @@
-import '../config/index.ts';
+import '../config/index';
 
 import hpp from 'hpp';
 import helmet from 'helmet';
