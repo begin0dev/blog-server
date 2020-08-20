@@ -10,13 +10,13 @@
     "moduleResolution": "node",
     "outDir": "dist",
     "paths": {
-      "@app/*": ["src/*"],
-      "*": ["node_modules/*"]
+      "@app/*": ["src/*"]
     },
     "sourceMap": true,
     "skipLibCheck": true,
     "strict": true,
     "target": "es6",
     "typeRoots": ["src/types", "node_modules/@types"]
-  }
+  },
+  "exclude": ["node_modules"]
 }

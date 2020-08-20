@@ -1,42 +1,47 @@
 {
   "extends": ["airbnb-base", "prettier"],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["jest"],
+  "parserOptions": {
+    "project": "tsconfig.json"
+  },
+  "plugins": ["import", "@typescript-eslint", "jest"],
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx"],
-        "paths": ["src"]
+        "paths": ["src"],
+        "extensions": [".js", ".ts"]
       },
       "alias": {
         "map": [["@app", "./src"]],
-        "extensions": [".ts", ".js", ".jsx", ".json"]
+        "extensions": [".ts", ".js", ".json"]
       }
     }
   },
-  "parserOptions": {
-    "project": "./tsconfig.json"
-  },
-  "env": {
-    "jest/globals": true
-  },
+  "env": { "jest/globals": true },
   "rules": {
-    "arrow-parens": 0,
-    "arrow-body-style": 0,
-    "consistent-return": 0,
-    "object-property-newline": 0,
-    "object-curly-newline": 0,
-    "import/no-extraneous-dependencies": 0,
-    "import/prefer-default-export": 0,
-    "implicit-arrow-linebreak": 0,
-    "no-console": 0,
+    "arrow-parens": "off",
+    "arrow-body-style": "off",
+    "consistent-return": "off",
+    "object-property-newline": "off",
+    "object-curly-newline": "off",
+    "import/no-extraneous-dependencies": "off",
+    "import/prefer-default-export": "off",
+    "implicit-arrow-linebreak": "off",
+    "no-console": "off",
     "no-underscore-dangle": [
       "error",
       {
         "allow": ["_id"]
       }
     ],
-    "func-names": 0,
-    "max-len": 0
+    "func-names": "off",
+    "max-len": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "args": "none",
+        "ignoreRestSiblings": true
+      }
+    ]
   }
 }

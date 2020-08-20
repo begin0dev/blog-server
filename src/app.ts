@@ -8,7 +8,8 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
-import { ExpressError } from './types/index';
+
+import { ExpressError } from '@app/types/error.d';
 
 const controllers = require('@app/controllers');
 const connectDB = require('@app/database');
