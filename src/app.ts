@@ -11,12 +11,12 @@ import swaggerUi from 'swagger-ui-express';
 
 import { ExpressError } from '@app/types/error.d';
 
-const controllers = require('@app/controllers');
-const connectDB = require('@app/database');
-const oAuthConfig = require('@app/middlewares/strategies');
-const { checkAccessToken, checkRefreshToken } = require('@app/middlewares/jwt');
+const controllers = require('./controllers');
+const connectDB = require('./database');
+const oAuthConfig = require('./middlewares/strategies');
+const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
 
-const swaggerDocument = require('@app/swagger/index.json');
+const swaggerDocument = require('./swagger/index.json');
 
 const { NODE_ENV, PORT, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';

@@ -1,6 +1,6 @@
 {
   "watch": ["src", "nodemon.json"],
-  "exec": "ts-node src/app",
+  "exec": "ts-node --files src/app.ts",
   "ext": "js ts json",
   "ignore": ["src/swagger/*", "__tests__/*", "coverage/*"],
   "env": {
