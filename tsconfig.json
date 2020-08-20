@@ -18,5 +18,5 @@
     "target": "es6",
     "typeRoots": ["src/types", "node_modules/@types"]
   },
-  "exclude": ["node_modules"]
+  "include": ["src"]
 }

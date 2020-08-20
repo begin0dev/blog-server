@@ -60,7 +60,7 @@ app.use(
 );
 
 /* custom function */
-app.response.jsend = function ({ message, data, meta }) {
+app.response.jsend = function jsend({ message, data, meta }) {
   return this.json({ message, meta, data });
 };
 
