@@ -11,10 +11,10 @@ import swaggerUi from 'swagger-ui-express';
 
 import { ExpressError } from '@app/types/error.d';
 import { connectDB } from '@app/database';
+import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const controllers = require('./controllers');
 const oAuthConfig = require('./middlewares/strategies');
-const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
 
 const swaggerDocument = require('./swagger/index.json');
 
