@@ -1,10 +1,10 @@
-const faker = require('faker');
+import faker from 'faker';
 
-const MockUserData = () => {
+const MockUser = () => {
   return {
     displayName: faker.internet.userName(),
     profileImageUrl: faker.internet.url(),
   };
 };
 
-module.exports = MockUserData;
+export default MockUser;

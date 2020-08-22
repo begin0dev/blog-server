@@ -1,11 +1,11 @@
-const jwt = require('jsonwebtoken');
-const moment = require('moment');
-const { createRequest, createResponse } = require('node-mocks-http');
+import jwt from 'jsonwebtoken';
+import moment from 'moment';
+import { createRequest, createResponse } from 'node-mocks-http';
 
-const User = require('database/models/user');
-const MockUserData = require('database/models/__mocks__/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/helpers');
-const { checkAccessToken, checkRefreshToken } = require('middlewares/jwt');
+import User, { UserSchema } from '@app/database/models/user';
+import MockUser from '@app/database/models/__mocks__/user';
+import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers';
+import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const { JWT_SECRET } = process.env;
 
@@ -44,7 +44,7 @@ describe('Test checkAccessToken', () => {
         exp: Math.floor(Date.now() / 1000) - 60,
         data: user,
       },
-      JWT_SECRET,
+      JWT_SECRET as string,
       { issuer: 'beginner' },
     );
     const req = createRequest({
@@ -61,11 +61,11 @@ describe('Test checkAccessToken', () => {
 });
 
 describe('Test checkRefreshToken', () => {
-  let refreshToken;
-  let user;
+  let refreshToken: string;
+  let user: UserSchema;
 
   beforeEach(async () => {
-    const mockUserData = MockUserData();
+    const mockUserData = MockUser();
     user = await User.create(mockUserData);
     refreshToken = await generateRefreshToken();
   });
@@ -76,9 +76,7 @@ describe('Test checkRefreshToken', () => {
     });
     const req = createRequest({
       user: null,
-      cookies: {
-        refreshToken,
-      },
+      cookies: { refreshToken },
     });
     const res = createResponse();
 
@@ -103,7 +101,7 @@ describe('Test checkRefreshToken', () => {
       expect(req.user).toEqual(user.toJSON());
     });
     const updateUser = await User.findByRefreshToken(refreshToken);
-    expect(moment(updateUser.oAuth.local.expiredAt).diff(moment(), 'minute') > 5).toBeTruthy();
+    expect(moment(updateUser?.oAuth?.local?.expiredAt).diff(moment(), 'minute') > 5).toBeTruthy();
   });
 
   test('Success: user is null if expiredAt is expired', async () => {
@@ -122,7 +120,7 @@ describe('Test checkRefreshToken', () => {
       expect(req.user).toBeNull();
     });
     const updateUser = await User.findById(user._id);
-    expect(updateUser.oAuth.local.refreshToken).toBeUndefined();
-    expect(updateUser.oAuth.local.expiredAt).toBeUndefined();
+    expect(updateUser?.oAuth?.local?.refreshToken).toBeUndefined();
+    expect(updateUser?.oAuth?.local?.expiredAt).toBeUndefined();
   });
 });

@@ -1,9 +1,11 @@
-const moment = require('moment');
+import moment from 'moment';
+import { Request, Response, NextFunction } from 'express';
 
-const User = require('database/models/user');
+import User from '@app/database/models/user';
+
 const { decodeAccessToken, generateAccessToken } = require('lib/helpers');
 
-exports.checkAccessToken = (req, res, next) => {
+export const checkAccessToken = (req: Request, res: Response, next: NextFunction) => {
   let accessToken = req.get('authorization') || req.cookies.accessToken;
   if (!accessToken) return next();
   if (accessToken.startsWith('Bearer ')) accessToken = accessToken.slice(7, accessToken.length);
@@ -18,7 +20,7 @@ exports.checkAccessToken = (req, res, next) => {
   }
 };
 
-exports.checkRefreshToken = async (req, res, next) => {
+export const checkRefreshToken = async (req: Request, res: Response, next: NextFunction) => {
   const { refreshToken } = req.cookies;
   if (req.user || !refreshToken) return next();
 
@@ -29,7 +31,7 @@ exports.checkRefreshToken = async (req, res, next) => {
       return next();
     }
 
-    const { expiredAt } = user.oAuth.local;
+    const { expiredAt } = user?.oAuth?.local || {};
     if (moment() > moment(expiredAt)) {
       await user.updateOne({ $unset: { 'oAuth.local': 1 } });
       res.clearCookie('refreshToken');
