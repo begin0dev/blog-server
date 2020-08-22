@@ -10,9 +10,9 @@ import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
 
 import { ExpressError } from '@app/types/error.d';
+import { connectDB } from '@app/database';
 
 const controllers = require('./controllers');
-const connectDB = require('./database');
 const oAuthConfig = require('./middlewares/strategies');
 const { checkAccessToken, checkRefreshToken } = require('./middlewares/jwt');
 
@@ -25,7 +25,7 @@ const app = express();
 const port = PORT || 3000;
 
 /* mongoose connected */
-connectDB(MONGO_URI, {
+connectDB(MONGO_URI as string, {
   user: MONGO_USER,
   pass: MONGO_PWD,
   dbName: MONGO_DB_NAME,

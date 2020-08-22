@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const { NODE_ENV } = process.env;
 
@@ -7,7 +7,7 @@ mongoose.set('debug', NODE_ENV === 'development');
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 
-module.exports = async (uri, options) => {
+export const connectDB = async (uri: string, options = {}) => {
   const connect = () =>
     mongoose.connect(uri, {
       ...options,
@@ -28,5 +28,6 @@ module.exports = async (uri, options) => {
     return mongoose;
   } catch (err) {
     console.error('Mongodb connection error', err);
+    process.exit(1);
   }
 };
