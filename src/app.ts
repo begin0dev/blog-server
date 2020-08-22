@@ -1,4 +1,4 @@
-import '../config/index';
+import '../config';
 
 import hpp from 'hpp';
 import helmet from 'helmet';

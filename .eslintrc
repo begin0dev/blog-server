@@ -1,20 +1,43 @@
 {
-  "extends": ["airbnb-base", "prettier"],
+  "extends": [
+    "airbnb-base",
+    "prettier"
+  ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["import", "@typescript-eslint", "jest"],
+  "plugins": [
+    "import",
+    "@typescript-eslint",
+    "jest"
+  ],
   "settings": {
     "import/resolver": {
       "node": {
-        "paths": ["src"],
-        "extensions": [".js", ".ts"]
+        "paths": [
+          "src"
+        ],
+        "extensions": [
+          ".js",
+          ".ts"
+        ]
       },
       "alias": {
-        "map": [["@app", "./src"]],
-        "extensions": [".ts", ".js", ".json"]
+        "map": [
+          [
+            "@app",
+            "./src"
+          ]
+        ],
+        "extensions": [
+          ".ts",
+          ".js",
+          ".json"
+        ]
       }
     }
   },
-  "env": { "jest/globals": true },
+  "env": {
+    "jest/globals": true
+  },
   "rules": {
     "arrow-parens": "off",
     "arrow-body-style": "off",
@@ -28,7 +51,9 @@
     "no-underscore-dangle": [
       "error",
       {
-        "allow": ["_id"]
+        "allow": [
+          "_id"
+        ]
       }
     ],
     "func-names": "off",
