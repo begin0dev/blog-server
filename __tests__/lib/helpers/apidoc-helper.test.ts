@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { Response } from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
 
 import { apiDoc } from '@app/lib/helpers/apidoc-helper';
@@ -6,6 +7,11 @@ import { apiDoc } from '@app/lib/helpers/apidoc-helper';
 jest.mock('@app/lib/helpers/swagger-handler', () => ({
   setPathParameters: jest.fn(() => Promise.resolve()),
 }));
+
+interface MockResponse extends Response {
+  status: jest.Mock;
+  jsend: jest.Mock;
+}
 
 describe('Test apiDoc function', () => {
   const mockReq = {
@@ -29,7 +35,7 @@ describe('Test apiDoc function', () => {
       content: Joi.string(),
     },
   };
-  const res = createResponse();
+  const res = createResponse<MockResponse>();
   let next: jest.Mock;
 
   beforeEach(() => {
