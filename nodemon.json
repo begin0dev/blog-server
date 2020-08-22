@@ -1,8 +1,15 @@
 {
-  "watch": ["src", "nodemon.json"],
-  "exec": "ts-node --files src/app.ts",
+  "watch": [
+    "src",
+    "nodemon.json"
+  ],
+  "exec": "ts-node -r tsconfig-paths/register --files src/app.ts",
   "ext": "js ts json",
-  "ignore": ["src/swagger/*", "__tests__/*", "coverage/*"],
+  "ignore": [
+    "src/swagger/*",
+    "__tests__/*",
+    "coverage/*"
+  ],
   "env": {
     "NODE_ENV": "development",
     "NODE_PATH": "src"

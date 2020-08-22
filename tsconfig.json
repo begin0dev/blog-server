@@ -2,15 +2,15 @@
   "compilerOptions": {
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": ".",
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
+    "baseUrl": "./src",
     "paths": {
-      "@app/*": ["src/*"]
+      "@app/*": ["*"]
     },
     "sourceMap": true,
     "skipLibCheck": true,
