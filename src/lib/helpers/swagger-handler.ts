@@ -30,35 +30,27 @@ const readJSON = async (): Promise<object> => {
 
 const writeJSON = (json: object): void => fs.writeFileSync(swaggerPath, JSON.stringify(json));
 
-const swaggerPathGenerator = (routePath: string): string => {
-  const tokens = pathToRegexp.parse(routePath);
-  return tokens
+const swaggerPathGenerator = (routePath: string): string =>
+  pathToRegexp
+    .parse(routePath)
     .map((token) => {
       if (typeof token === 'string') return token;
       if (token.pattern === '[^\\/#\\?]+?') return `${token.prefix}{${token.name}}${token.suffix}`;
       return `${token.prefix}${token.name}${token.suffix}`;
     })
     .join('');
-};
 
-const paramMap = {
+export const paramMap = {
   params: 'path',
   query: 'query',
   body: 'body',
-};
-
-interface Params {
-  name: string;
-  in: string;
-  required?: boolean;
-  schema?: any;
 }
 
 interface PathSchema {
   [key: string]: Joi.AnySchema;
 }
 
-interface ValidationSchema {
+export interface ValidationSchema {
   params?: PathSchema;
   query?: PathSchema;
   body?: PathSchema;
@@ -67,6 +59,14 @@ interface ValidationSchema {
 export interface ControllerSchema extends ValidationSchema {
   summary: string;
   description?: string;
+  [key: string]: string | PathSchema | undefined;
+}
+
+interface Params {
+  name: string;
+  in: string;
+  required?: boolean;
+  schema?: any;
 }
 
 export const setPathParameters = async (req: Request, schema: ControllerSchema) => {
@@ -79,13 +79,12 @@ export const setPathParameters = async (req: Request, schema: ControllerSchema) 
     const json = await readJSON();
 
     const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
-    const parameters: Array<any> = [];
+    const parameters: any[] = [];
 
-    const validationKeys: Array<keyof ValidationSchema> = ['params', 'query', 'body'];
-    validationKeys.forEach((paramKey) => {
+    Object.keys(paramMap).forEach((paramKey) => {
       if (!schema[paramKey]) return;
 
-      const { properties, required } = convert(Joi.object(schema[paramKey]));
+      const { properties, required } = convert(Joi.object(schema[paramKey] as PathSchema));
       const paramType = paramMap[paramKey];
 
       Object.entries(properties).forEach(([name, property]) => {

@@ -4,7 +4,7 @@ import { createRequest, createResponse } from 'node-mocks-http';
 
 import User, { UserSchema } from '@app/database/models/user';
 import MockUser from '@app/database/models/__mocks__/user';
-import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers';
+import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const { JWT_SECRET } = process.env;
