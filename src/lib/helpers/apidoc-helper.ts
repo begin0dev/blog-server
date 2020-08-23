@@ -1,7 +1,7 @@
 import Joi, { ValidationError, ValidationErrorItem } from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
-import { setPathParameters, ControllerSchema, paramMap } from './swagger-handler';
+import { setPathParameters, ControllerSchema, ParamMap } from './swagger-handler';
 
 interface ValidationErrorTypes {
   [key: string]: ((errorItem: ValidationErrorItem) => string) | null;
@@ -24,8 +24,8 @@ export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Re
     if (process.env.NODE_ENV === 'test') await setPathParameters(req, schema);
     req.validParams = (
       await Promise.all(
-        Object.keys(paramMap).map((key) =>
-          Joi.object(schema[key]).validateAsync(req[key as keyof typeof paramMap], {
+        Object.keys(ParamMap).map((key) =>
+          Joi.object(schema[key]).validateAsync(req[key as keyof typeof ParamMap], {
             stripUnknown: true,
           }),
         ),
@@ -33,6 +33,7 @@ export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Re
     ).reduce((acc, cur) => Object.assign(acc, cur), {});
     next();
   } catch (err) {
+    console.error(err);
     res.status(400).jsend({ message: errorTypeTextMap(err) });
   }
 };

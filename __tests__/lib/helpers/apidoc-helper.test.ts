@@ -24,12 +24,8 @@ describe('Test apiDoc function', () => {
   };
   const schema = {
     summary: 'test',
-    params: {
-      id: Joi.string().required(),
-    },
-    query: {
-      type: Joi.string().required(),
-    },
+    params: { id: Joi.string().required() },
+    query: { type: Joi.string().required() },
     body: {
       title: Joi.string().required(),
       content: Joi.string(),

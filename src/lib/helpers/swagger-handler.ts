@@ -40,7 +40,7 @@ const swaggerPathGenerator = (routePath: string): string =>
     })
     .join('');
 
-export enum paramMap {
+export enum ParamMap {
   params = 'path',
   query = 'query',
   body = 'body',
@@ -51,9 +51,9 @@ interface PathSchema {
 }
 
 export interface ValidationSchema {
-  [paramMap.params]?: PathSchema;
-  [paramMap.query]?: PathSchema;
-  [paramMap.body]?: PathSchema;
+  [ParamMap.params]?: PathSchema;
+  [ParamMap.query]?: PathSchema;
+  [ParamMap.body]?: PathSchema;
 }
 
 export interface ControllerSchema extends ValidationSchema {
@@ -81,11 +81,11 @@ export const setPathParameters = async (req: Request, schema: ControllerSchema) 
     const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
     const parameters: any[] = [];
 
-    Object.keys(paramMap).forEach((paramKey) => {
+    Object.keys(ParamMap).forEach((paramKey) => {
       if (!schema[paramKey]) return;
 
       const { properties, required } = convert(Joi.object(schema[paramKey] as PathSchema));
-      const paramType = paramMap[paramKey as keyof typeof paramMap];
+      const paramType = ParamMap[paramKey as keyof typeof ParamMap];
 
       Object.entries(properties).forEach(([name, property]) => {
         const param: Params = {
