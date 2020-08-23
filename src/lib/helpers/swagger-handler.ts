@@ -46,13 +46,10 @@ export const paramMap = {
   body: 'body',
 };
 
-export type ParamMap = keyof typeof paramMap;
-
-type PathSchema<T extends Joi.Schema> = Record<string, T>;
-export type ValidationSchema<T extends Record<ParamMap | string, Joi.Schema>> = {
-  [K in keyof T]: PathSchema<T[K]>;
-};
-export type ControllerSchema<T extends Record<ParamMap, Joi.Schema>> = ValidationSchema<T> & {
+type ParamKeyTypes = keyof typeof paramMap;
+type PathSchema = Record<string, Joi.Schema>;
+export type ValidationSchema = { [K in ParamKeyTypes]?: PathSchema };
+export type ControllerSchema = ValidationSchema & {
   summary: string;
   description?: string;
 };
@@ -64,10 +61,7 @@ interface Params {
   schema?: any;
 }
 
-export const setPathParameters = async <T extends Record<ParamMap, Joi.Schema>>(
-  req: Request,
-  schema: ControllerSchema<T>,
-) => {
+export const setPathParameters = async (req: Request, schema: ControllerSchema) => {
   try {
     const {
       method,
@@ -80,7 +74,7 @@ export const setPathParameters = async <T extends Record<ParamMap, Joi.Schema>>(
     const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
     const parameters: any[] = [];
 
-    (<(keyof typeof paramMap)[]>Object.keys(paramMap)).forEach((paramKey) => {
+    (<ParamKeyTypes[]>Object.keys(paramMap)).forEach((paramKey) => {
       if (!schema[paramKey]) return;
 
       const { properties, required } = convert(Joi.object(schema[paramKey]));

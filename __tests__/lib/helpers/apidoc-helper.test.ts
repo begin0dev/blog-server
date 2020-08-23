@@ -3,10 +3,7 @@ import { Response } from 'express';
 import { createRequest, createResponse } from 'node-mocks-http';
 
 import { apiDoc } from '@app/lib/helpers/apidoc-helper';
-
-jest.mock('@app/lib/helpers/swagger-handler', () => ({
-  setPathParameters: jest.fn(() => Promise.resolve()),
-}));
+import * as swaggerHandler from '@app/lib/helpers/swagger-handler';
 
 interface MockResponse extends Response {
   status: jest.Mock;
@@ -35,6 +32,8 @@ describe('Test apiDoc function', () => {
   let next: jest.Mock;
 
   beforeEach(() => {
+    jest.spyOn(swaggerHandler, 'setPathParameters').mockImplementation(jest.fn());
+
     next = jest.fn();
     res.status = jest.fn().mockReturnValue(res);
     res.jsend = jest.fn().mockReturnValue(res);

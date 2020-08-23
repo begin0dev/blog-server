@@ -24,7 +24,7 @@ export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Re
     if (process.env.NODE_ENV === 'test') await setPathParameters(req, schema);
     req.validParams = (
       await Promise.all(
-        Object.keys(paramMap).map((key) =>
+        (<(keyof typeof paramMap)[]>Object.keys(paramMap)).map((key) =>
           Joi.object(schema[key]).validateAsync(req[key], {
             stripUnknown: true,
           }),
