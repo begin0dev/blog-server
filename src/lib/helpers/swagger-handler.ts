@@ -46,7 +46,9 @@ export enum paramMap {
   body = 'body',
 }
 
-export type PathSchema = Map<keyof typeof paramMap, Joi.AnySchema>;
+interface PathSchema {
+  [key: string]: Joi.AnySchema;
+}
 
 export interface ValidationSchema {
   [paramMap.params]?: PathSchema;
