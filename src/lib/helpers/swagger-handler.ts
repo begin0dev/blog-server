@@ -46,14 +46,16 @@ export const paramMap = {
   body: 'body',
 };
 
-type PathSchema = Record<string, Joi.AnySchema>
-export type ValidationSchema = Partial<Record<keyof typeof paramMap, PathSchema>> & {
-  [key in keyof typeof paramMap]: PathSchema;
-}
-export interface ControllerSchema extends ValidationSchema {
+export type ParamMap = keyof typeof paramMap;
+
+type PathSchema<T extends Joi.Schema> = Record<string, T>;
+export type ValidationSchema<T extends Record<ParamMap | string, Joi.Schema>> = {
+  [K in keyof T]: PathSchema<T[K]>;
+};
+export type ControllerSchema<T extends Record<ParamMap, Joi.Schema>> = ValidationSchema<T> & {
   summary: string;
   description?: string;
-}
+};
 
 interface Params {
   name: string;
@@ -62,7 +64,10 @@ interface Params {
   schema?: any;
 }
 
-export const setPathParameters = async (req: Request, schema: ControllerSchema) => {
+export const setPathParameters = async <T extends Record<ParamMap, Joi.Schema>>(
+  req: Request,
+  schema: ControllerSchema<T>,
+) => {
   try {
     const {
       method,
