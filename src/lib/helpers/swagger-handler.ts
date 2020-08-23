@@ -44,22 +44,15 @@ export const paramMap = {
   params: 'path',
   query: 'query',
   body: 'body',
-}
+};
 
-interface PathSchema {
-  [key: string]: Joi.AnySchema;
+type PathSchema = Record<string, Joi.AnySchema>
+export type ValidationSchema = Partial<Record<keyof typeof paramMap, PathSchema>> & {
+  [key in keyof typeof paramMap]: PathSchema;
 }
-
-export interface ValidationSchema {
-  params?: PathSchema;
-  query?: PathSchema;
-  body?: PathSchema;
-}
-
 export interface ControllerSchema extends ValidationSchema {
   summary: string;
   description?: string;
-  [key: string]: string | PathSchema | undefined;
 }
 
 interface Params {
@@ -76,15 +69,16 @@ export const setPathParameters = async (req: Request, schema: ControllerSchema) 
       baseUrl,
       route: { path: routePath },
     } = req;
+
     const json = await readJSON();
 
     const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
     const parameters: any[] = [];
 
-    Object.keys(paramMap).forEach((paramKey) => {
+    (<(keyof typeof paramMap)[]>Object.keys(paramMap)).forEach((paramKey) => {
       if (!schema[paramKey]) return;
 
-      const { properties, required } = convert(Joi.object(schema[paramKey] as PathSchema));
+      const { properties, required } = convert(Joi.object(schema[paramKey]));
       const paramType = paramMap[paramKey];
 
       Object.entries(properties).forEach(([name, property]) => {
