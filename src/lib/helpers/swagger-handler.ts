@@ -51,9 +51,9 @@ interface PathSchema {
 }
 
 export interface ValidationSchema {
-  [ParamMap.params]?: PathSchema;
-  [ParamMap.query]?: PathSchema;
-  [ParamMap.body]?: PathSchema;
+  params?: PathSchema;
+  query?: PathSchema;
+  body?: PathSchema;
 }
 
 export interface ControllerSchema extends ValidationSchema {
