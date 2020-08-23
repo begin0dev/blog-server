@@ -1,7 +1,7 @@
 import Joi, { ValidationError, ValidationErrorItem } from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
-import { setPathParameters, ControllerSchema, ParamMap } from '@app/lib/helpers/swagger-handler';
+import { setPathParameters, ControllerSchema, paramMap } from '@app/lib/helpers/swagger-handler';
 
 interface ValidationErrorTypes {
   [key: string]: ((errorItem: ValidationErrorItem) => string) | null;
@@ -24,8 +24,8 @@ export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Re
     if (process.env.NODE_ENV === 'test') await setPathParameters(req, schema);
     req.validParams = (
       await Promise.all(
-        Object.keys(ParamMap).map((key) =>
-          Joi.object(schema[key]).validateAsync(req[key as keyof typeof ParamMap], {
+        Object.keys(paramMap).map((key) =>
+          Joi.object(schema[key]).validateAsync(req[key], {
             stripUnknown: true,
           }),
         ),
