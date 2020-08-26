@@ -41,7 +41,7 @@ const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
 };
 
 class OAuthStrategy {
-  name: StrategiesNames;
+  name: StrategiesNames[keyof StrategiesNames];
   clientID: string;
   clientSecret: string;
   callbackURL: string;

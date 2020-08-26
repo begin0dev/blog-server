@@ -11,7 +11,7 @@ class Oauth {
     this.strategies = {};
   }
 
-  use(name: StrategiesNames | OAuthStrategy, strategy?: OAuthStrategy): this {
+  use(name: StrategiesNames[keyof StrategiesNames] | OAuthStrategy, strategy?: OAuthStrategy): this {
     if (!name) throw new Error('Authentication strategies must have a name');
     if (!strategy) {
       /* eslint-disable */
