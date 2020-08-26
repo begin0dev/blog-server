@@ -10,6 +10,7 @@ import {
   RequiredOptionsTypes,
   RequiredUrlTypes,
   GetOAuthParams,
+  VerifyFunction,
 } from './types';
 
 const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
@@ -48,10 +49,10 @@ class OAuthStrategy {
   tokenURL: string;
   profileURL: string;
   scope: string;
-  verify: (accessToken: string, data: any, done: <P>(err: Error, profile?: P) => void) => void;
+  verify: VerifyFunction;
   grantType?: string;
 
-  constructor(options: Options, scope: string[] | (() => void), verify?: () => void) {
+  constructor(options: Options, scope: string[] | VerifyFunction, verify?: VerifyFunction) {
     if (typeof scope === 'function') {
       /* eslint-disable */
       verify = scope;

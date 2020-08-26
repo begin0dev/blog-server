@@ -40,3 +40,5 @@ export interface OAuthRequest extends Request {
     error_description: string;
   };
 }
+
+export type VerifyFunction = (accessToken: string, data: any, done: <P>(err: Error, profile?: P) => void) => void;
