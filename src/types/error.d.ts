@@ -1,3 +1,3 @@
-export interface ExpressError extends Error {
+export class ExpressError extends Error {
   status?: number;
 }

@@ -6,7 +6,6 @@ import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import swaggerUi from 'swagger-ui-express';
 
 import { ExpressError } from '@app/types/error.d';
@@ -24,7 +23,7 @@ const isProduction = NODE_ENV === 'production';
 const app = express();
 const port = PORT || 3000;
 
-/* mongoose connected */
+/* CONNECT MONGO */
 connectDB(MONGO_URI as string, {
   user: MONGO_USER,
   pass: MONGO_PWD,
@@ -42,45 +41,34 @@ if (isProduction) {
 }
 
 /* SETUP MIDDLEWARE */
-// Allows express to read `x-www-form-urlencoded` data:
 app.use(express.json()); // parses json
 app.use(express.urlencoded({ extended: true }));
 app.use(hpp());
 app.use(cookieParser(COOKIE_SECRET));
-app.use(
-  session({
-    resave: false,
-    saveUninitialized: false,
-    secret: COOKIE_SECRET as string,
-    cookie: {
-      httpOnly: true,
-      secure: isProduction,
-    },
-  }),
-);
 
-/* custom function */
+/* CUSTOM FUNCTION */
 app.response.jsend = function jsend({ message, data, meta }) {
   return this.json({ message, meta, data });
 };
 
-/* oAuth strategies */
+/* SETUP OAUTH STRATEGIES */
 oAuthConfig();
 
+/* SETUP SWAGGER */
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 /* SETUP JWT TOKEN MIDDLEWARE */
 app.use(checkAccessToken, checkRefreshToken);
 /* SETUP ROUTER */
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/api', controllers);
 
-/* 404 error */
+/* SETUP 404 ERROR MIDDLEWARE */
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  // err.status = 404;
+  const err = new ExpressError('Not Found!');
+  err.status = 404;
   next(err);
 });
 
-/* handle error */
+/* RETURN ERROR */
 // eslint-disable-next-line no-unused-vars
 app.use((err: ExpressError, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err);

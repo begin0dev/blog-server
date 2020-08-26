@@ -1,23 +1,9 @@
 import express from 'express';
 import request from 'supertest';
 
-const Oauth = require('@app/lib/oauth');
-const Strategy = require('@app/lib/oauth/strategy');
-
-describe('Test Oauth use', () => {
-  test('Success: strategy', () => {
-    class MockStrategy {
-      name = 'test';
-    }
-    Oauth.use(new MockStrategy());
-    expect(typeof Oauth.strategires.test).toBe('object');
-  });
-  test('Success: name, strategy', () => {
-    class MockStrategy {}
-    Oauth.use('test', new MockStrategy());
-    expect(typeof Oauth.strategires.test).toBe('object');
-  });
-});
+import Oauth from '@app/lib/oauth';
+import Strategy from '@app/lib/oauth/strategy';
+import { StrategiesNames } from '@app/lib/oauth/types';
 
 describe('Test Oauth authenticate', () => {
   test('Success', async () => {
@@ -26,7 +12,7 @@ describe('Test Oauth authenticate', () => {
     Oauth.use(
       new Strategy(
         {
-          name: 'facebook',
+          name: StrategiesNames.FACEBOOK,
           clientID: 'test-id',
           clientSecret: 'test-secret',
           callbackURL: '/test',
@@ -34,8 +20,9 @@ describe('Test Oauth authenticate', () => {
         () => {},
       ),
     );
+    expect(typeof Oauth.strategies[StrategiesNames.FACEBOOK]).toBe('object');
 
-    app.get('/facebook', Oauth.authenticate('facebook', {}), (req, res) => {
+    app.get('/facebook', Oauth.authenticate(StrategiesNames.FACEBOOK, {}), (req, res) => {
       res.status(201);
     });
 

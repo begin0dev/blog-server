@@ -1,28 +1,37 @@
-const _ = require('lodash');
-const qs = require('qs');
-const url = require('url');
-const axios = require('axios');
+import _ from 'lodash';
+import qs from 'qs';
+import url from 'url';
+import axios from 'axios';
 
-const SOCIAL_BASE_URL = {
-  facebook: {
+import {
+  StrategiesNames,
+  SocialBaseUrlTypes,
+  Options,
+  RequiredOptionsTypes,
+  RequiredUrlTypes,
+  GetOAuthParams,
+} from './types';
+
+const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
+  [StrategiesNames.FACEBOOK]: {
     authorizationURL: 'https://www.facebook.com/dialog/oauth',
     tokenURL: 'https://graph.facebook.com/v3.2/oauth/access_token',
     profileURL: 'https://graph.facebook.com/v3.2/me',
     defaultScope: ['name', 'email'],
   },
-  kakao: {
+  [StrategiesNames.KAKAO]: {
     authorizationURL: 'https://kauth.kakao.com/oauth/authorize',
     tokenURL: 'https://kauth.kakao.com/oauth/token',
     profileURL: 'https://kapi.kakao.com/v2/user/me',
     defaultScope: [],
   },
-  github: {
+  [StrategiesNames.GITHUB]: {
     authorizationURL: '',
     tokenURL: '',
     profileURL: '',
     defaultScope: [],
   },
-  google: {
+  [StrategiesNames.GOOGLE]: {
     authorizationURL: '',
     tokenURL: '',
     profileURL: '',
@@ -30,46 +39,44 @@ const SOCIAL_BASE_URL = {
   },
 };
 
-/**
- * options
- * {
- *   name: '',
- *   clientID: '',
- *   clientSecret: '',
- *   callbackURL: '',
- *   grantType: '',
- * }
- */
+class OAuthStrategy {
+  name: StrategiesNames;
+  clientID: string;
+  clientSecret: string;
+  callbackURL: string;
+  authorizationURL: string;
+  tokenURL: string;
+  profileURL: string;
+  scope: string;
+  verify: (accessToken: string, data: any, done: <P>(err: Error, profile?: P) => void) => void;
+  grantType?: string;
 
-class Strategy {
-  constructor(options, scope, verify) {
+  constructor(options: Options, scope: string[] | (() => void), verify?: () => void) {
     if (typeof scope === 'function') {
       /* eslint-disable */
       verify = scope;
       scope = [];
       /* eslint-enable */
     }
-    if (!verify) throw new Error('Strategy requires a verify callback!');
+    if (!(verify as undefined)) throw new Error('Strategy requires a verify callback!');
     if (!Array.isArray(scope)) throw new Error('Scope type must be array!');
-    ['name', 'clientID', 'clientSecret', 'callbackURL'].forEach(key => {
+
+    (<RequiredOptionsTypes[]>['name', 'clientID', 'clientSecret', 'callbackURL']).forEach((key) => {
       if (!options[key]) throw new Error(`You must provide options the ${key} configuration value`);
       this[key] = options[key];
     });
+
     const { name, grantType } = options;
-    ['authorizationURL', 'tokenURL', 'profileURL'].forEach(key => {
+    (<RequiredUrlTypes[]>['authorizationURL', 'tokenURL', 'profileURL']).forEach((key) => {
       this[key] = SOCIAL_BASE_URL[name][key];
     });
 
-    this.scope = _.chain(SOCIAL_BASE_URL[name].defaultScope)
-      .concat(scope)
-      .uniq()
-      .join(',')
-      .value();
+    this.scope = _.chain(SOCIAL_BASE_URL[name].defaultScope).concat(scope).uniq().join(',').value();
     this.verify = verify;
     if (grantType) this.grantType = grantType;
   }
 
-  authorizeEndPoint(redirectURI, options) {
+  authorizeEndPoint(redirectURI: string, options = {}): string {
     const { clientID, authorizationURL } = this;
     const query = {
       client_id: clientID,
@@ -77,19 +84,19 @@ class Strategy {
       response_type: 'code',
       ...options,
     };
-    const parseUrl = url.parse(authorizationURL);
+    const parseUrl = url.parse(authorizationURL, true);
     parseUrl.query = query;
     return url.format(parseUrl);
   }
 
-  async getOauthAccessToken(code, redirectURI) {
+  async getOauthAccessToken(code: string, redirectURI: string): Promise<string> {
     try {
       const { clientID, clientSecret, tokenURL } = this;
-      const params = {
+      const params: GetOAuthParams = {
+        code,
         client_id: clientID,
         client_secret: clientSecret,
         redirect_uri: redirectURI,
-        code,
       };
       if (this.grantType) params.grant_type = this.grantType;
       const {
@@ -103,14 +110,11 @@ class Strategy {
     }
   }
 
-  getUserProfile(accessToken) {
+  getUserProfile<R>(accessToken: string): Promise<R> {
     const { profileURL, scope } = this;
-    const params = {
-      access_token: accessToken,
-      fields: scope,
-    };
+    const params = { access_token: accessToken, fields: scope };
     return axios.get(profileURL, { params });
   }
 }
 
-module.exports = Strategy;
+export default OAuthStrategy;

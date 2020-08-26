@@ -18,7 +18,6 @@ module.exports = () => {
   oAuth.use(
     new Strategy(
       {
-        name: 'facebook',
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
         callbackURL: callbackUrl('facebook'),
@@ -33,7 +32,6 @@ module.exports = () => {
   oAuth.use(
     new Strategy(
       {
-        name: 'kakao',
         clientID: KAKAO_APP_ID,
         clientSecret: KAKAO_APP_SECRET,
         callbackURL: callbackUrl('kakao'),
@@ -50,7 +48,6 @@ module.exports = () => {
 
   // oAuth.use(
   //   new Strategy({
-  //     name: 'github',
   //     clientID: GITHUB_APP_ID,
   //     clientSecret: GITHUB_APP_SECRET,
   //     callbackURL: callbackUrl('github'),
@@ -63,7 +60,6 @@ module.exports = () => {
 
   // oAuth.use(
   //   new Strategy({
-  //     name: 'google',
   //     clientID: GOOGLE_APP_ID,
   //     clientSecret: GOOGLE_APP_SECRET,
   //     callbackURL: callbackUrl('google'),

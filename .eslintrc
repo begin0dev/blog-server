@@ -20,6 +20,7 @@
   "rules": {
     "arrow-parens": "off",
     "arrow-body-style": "off",
+    "camelcase": "warn",
     "consistent-return": "off",
     "object-property-newline": "off",
     "object-curly-newline": "off",
@@ -27,6 +28,7 @@
     "import/prefer-default-export": "off",
     "implicit-arrow-linebreak": "off",
     "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }],
+    "lines-between-class-members": "off",
     "no-console": "off",
     "no-underscore-dangle": [
       "error",
