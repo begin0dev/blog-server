@@ -8,7 +8,7 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
-import { ExpressError } from '@app/types/error.d';
+import { ExpressError } from '@app/types/error';
 import { connectDB } from '@app/database';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 

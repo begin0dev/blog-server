@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import qs from 'qs';
 import url from 'url';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 import {
   StrategiesNames,
@@ -111,7 +111,7 @@ class OAuthStrategy {
     }
   }
 
-  getUserProfile<R>(accessToken: string): Promise<R> {
+  getUserProfile<R>(accessToken: string): Promise<AxiosResponse<R>> {
     const { profileURL, scope } = this;
     const params = { access_token: accessToken, fields: scope };
     return axios.get(profileURL, { params });

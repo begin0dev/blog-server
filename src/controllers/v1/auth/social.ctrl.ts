@@ -1,15 +1,16 @@
-const qs = require('qs');
-const url = require('url');
-const moment = require('moment');
-const express = require('express');
+import qs from 'qs';
+import url from 'url';
+import moment from 'moment';
+import express, { Request, Response } from 'express';
 
-const oAuth = require('lib/oauth');
-const User = require('database/models/user');
-const { generateAccessToken, generateRefreshToken } = require('lib/helpers/token-helper');
+import oAuth from '@app/lib/oauth';
+import { StrategiesNames } from '@app/lib/oauth/types';
+import User from '@app/database/models/user';
+import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 
 const router = express.Router();
 
-const socialCallback = async (req, res) => {
+const socialCallback = async (req: Request, res: Response) => {
   const redirectUrl = req.session.redirectUrl || 'http://localhost:3000';
   req.session.redirectUrl = null;
 
@@ -20,8 +21,11 @@ const socialCallback = async (req, res) => {
   };
 
   if (res.locals.message) return failureRedirect('logIn', res.locals.message);
+
   try {
-    const { provider, id, displayName } = res.locals.profile;
+    const {
+      profile: { provider, id, displayName },
+    } = res.locals;
     let user = await User.findBySocialId(provider, id);
     if (!user) user = await User.socialRegister({ provider, id, displayName });
 
@@ -49,10 +53,10 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/facebook', oAuth.authenticate('facebook', { auth_type: 'rerequest' }));
-router.get('/facebook/callback', oAuth.authenticate('facebook'), socialCallback);
+router.get('/facebook', oAuth.authenticate(StrategiesNames.FACEBOOK, { auth_type: 'rerequest' }));
+router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), socialCallback);
 
-router.get('/kakao', oAuth.authenticate('kakao'));
-router.get('/kakao/callback', oAuth.authenticate('kakao'), socialCallback);
+router.get('/kakao', oAuth.authenticate(StrategiesNames.KAKAO));
+router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
 
 module.exports = router;

@@ -41,4 +41,15 @@ export interface OAuthRequest extends Request {
   };
 }
 
-export type VerifyFunction = (accessToken: string, data: any, done: <P>(err: Error, profile?: P) => void) => void;
+export interface DoneProfile {
+  provider: StrategiesNames;
+  id: string;
+  displayName: string;
+  email: string;
+}
+
+export type VerifyFunction = (
+  accessToken: string,
+  data: any,
+  done: (err: Error, profile?: DoneProfile) => void,
+) => void;

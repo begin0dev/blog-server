@@ -1,7 +1,7 @@
 import url from 'url';
 import { Response, NextFunction } from 'express';
 
-import { StrategiesNames, OAuthRequest } from './types';
+import { StrategiesNames, OAuthRequest, DoneProfile } from './types';
 import OAuthStrategy from './strategy';
 
 class Oauth {
@@ -25,7 +25,7 @@ class Oauth {
 
   authenticate<P>(
     name: StrategiesNames,
-    { failureUrl, successUrl, ...options }: { failureUrl?: string; successUrl?: string },
+    { failureUrl, successUrl, ...options }: { failureUrl?: string; successUrl?: string; [key: string]: string } = {},
   ) {
     return async (req: OAuthRequest, res: Response, next: NextFunction) => {
       const strategy = this.strategies[name];
@@ -37,7 +37,7 @@ class Oauth {
         pathname: callbackURL,
       });
 
-      const done = <P>(err: Error, profile?: P) => {
+      const done = (err: Error, profile?: DoneProfile) => {
         if (err) res.locals.message = err.message;
         if (profile) res.locals.profile = profile;
         return next();
@@ -47,7 +47,7 @@ class Oauth {
       if (!code) return res.redirect(strategy.authorizeEndPoint(redirectURI, options));
       try {
         const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
-        const { data } = await strategy.getUserProfile(accessToken);
+        const { data } = await strategy.getUserProfile<P>(accessToken);
         return strategy.verify(accessToken, data, done);
       } catch (err) {
         return done(err);

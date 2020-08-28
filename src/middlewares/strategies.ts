@@ -1,5 +1,6 @@
-const oAuth = require('lib/oauth');
-const Strategy = require('lib/oauth/strategy');
+import oAuth from '@app/lib/oauth';
+import Strategy from '@app/lib/oauth/strategy';
+import { StrategiesNames } from '@app/lib/oauth/types';
 
 const {
   FACEBOOK_APP_ID,
@@ -12,19 +13,20 @@ const {
   // GOOGLE_APP_SECRET,
 } = process.env;
 
-const callbackUrl = name => `/api/v1/auth/social/${name}/callback`;
+const callbackUrl = (name: StrategiesNames) => `/api/v1/auth/social/${name}/callback`;
 
 module.exports = () => {
   oAuth.use(
     new Strategy(
       {
+        name: StrategiesNames.FACEBOOK,
         clientID: FACEBOOK_APP_ID,
         clientSecret: FACEBOOK_APP_SECRET,
-        callbackURL: callbackUrl('facebook'),
+        callbackURL: callbackUrl(StrategiesNames.FACEBOOK),
       },
       (accessToken, profile, done) => {
         const { id, name: displayName, email } = profile;
-        return done(null, { provider: 'facebook', id, displayName, email });
+        return done(null, { provider: StrategiesNames.FACEBOOK, id, displayName, email });
       },
     ),
   );
@@ -32,16 +34,17 @@ module.exports = () => {
   oAuth.use(
     new Strategy(
       {
+        name: StrategiesNames.KAKAO,
         clientID: KAKAO_APP_ID,
         clientSecret: KAKAO_APP_SECRET,
-        callbackURL: callbackUrl('kakao'),
+        callbackURL: callbackUrl(StrategiesNames.KAKAO),
         grantType: 'authorization_code',
       },
       (accessToken, profile, done) => {
         const { id, properties, kakao_account: kakaoAccount } = profile;
         const displayName = properties && properties.nickname;
         const email = kakaoAccount && kakaoAccount.email;
-        return done(null, { provider: 'kakao', id, displayName, email });
+        return done(null, { provider: StrategiesNames.KAKAO, id, displayName, email });
       },
     ),
   );
