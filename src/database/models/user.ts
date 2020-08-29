@@ -93,7 +93,7 @@ User.set('toJSON', {
 export interface UserModel extends Model<UserSchema> {
   findBySocialId(provider: Provider, id: Number): Promise<UserSchema> | null;
   findByRefreshToken(refreshToken: string): Promise<UserSchema> | null;
-  socialRegister(params: { provider: Provider; id: Number; displayName: string; profileImageUrl: string }): any;
+  socialRegister(params: { provider: Provider; id: Number; displayName: string; profileImageUrl?: string }): any;
 }
 
 User.statics.findByRefreshToken = function (refreshToken: string) {
@@ -113,7 +113,7 @@ User.statics.socialRegister = async function ({
   provider: Provider;
   id: Number;
   displayName: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
 }) {
   const user = new this({
     displayName,

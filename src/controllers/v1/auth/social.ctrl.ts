@@ -4,28 +4,26 @@ import moment from 'moment';
 import express, { Request, Response } from 'express';
 
 import oAuth from '@app/lib/oauth';
-import { StrategiesNames } from '@app/lib/oauth/types';
 import User from '@app/database/models/user';
+import { StrategiesNames } from '@app/lib/oauth/types';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 
 const router = express.Router();
 
 const socialCallback = async (req: Request, res: Response) => {
-  const redirectUrl = req.session.redirectUrl || 'http://localhost:3000';
-  req.session.redirectUrl = null;
+  const redirectUrl = res.locals.redirectUrl || 'http://localhost:3000';
 
-  const failureRedirect = (formName, qsObject) => {
+  const failureRedirect = (message: string) => {
     const { query } = url.parse(redirectUrl);
-    const queryString = qs.stringify({ formName, ...qsObject });
+    const queryString = qs.stringify({ message });
     return res.redirect(`${redirectUrl}${query ? '&' : '?'}${queryString}`);
   };
 
-  if (res.locals.message) return failureRedirect('logIn', res.locals.message);
+  if (res.locals.message) return failureRedirect(res.locals.message);
 
   try {
-    const {
-      profile: { provider, id, displayName },
-    } = res.locals;
+    const { provider, id, displayName } = res.locals.profile;
+
     let user = await User.findBySocialId(provider, id);
     if (!user) user = await User.socialRegister({ provider, id, displayName });
 
@@ -41,17 +39,17 @@ const socialCallback = async (req: Request, res: Response) => {
     });
     res.cookie('accessToken', accessToken);
     res.cookie('refreshToken', refreshToken);
-    res.redirect(redirectUrl);
+    return res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
-    failureRedirect('logIn', err.message);
+    failureRedirect(err.message);
   }
 };
 
-router.use((req, res, next) => {
-  if (!req.session.redirectUrl) req.session.redirectUrl = req.get('Referrer') || req.originalUrl;
-  next();
-});
+// router.use((req, res, next) => {
+//   if (!req.session.redirectUrl) req.session.redirectUrl = req.get('Referrer') || req.originalUrl;
+//   next();
+// });
 
 router.get('/facebook', oAuth.authenticate(StrategiesNames.FACEBOOK, { auth_type: 'rerequest' }));
 router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), socialCallback);

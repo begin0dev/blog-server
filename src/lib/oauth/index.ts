@@ -1,8 +1,8 @@
 import url from 'url';
 import { Response, NextFunction } from 'express';
 
-import { StrategiesNames, OAuthRequest, DoneProfile } from './types';
 import OAuthStrategy from './strategy';
+import { StrategiesNames, OAuthRequest, DoneProfile } from './types';
 
 class Oauth {
   strategies: Partial<Record<StrategiesNames, OAuthStrategy>>;
@@ -31,6 +31,7 @@ class Oauth {
       const strategy = this.strategies[name];
       const { callbackURL } = strategy;
       const { code, error, error_description: errorDescription } = req.query;
+
       const redirectURI = url.format({
         protocol: req.protocol,
         host: req.get('host'),

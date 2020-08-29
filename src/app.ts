@@ -8,12 +8,12 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
+import oAuthStrategies from '@app/middlewares/strategies';
 import { ExpressError } from '@app/types/error';
 import { connectDB } from '@app/database';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const controllers = require('./controllers');
-const oAuthConfig = require('./middlewares/strategies');
 
 const swaggerDocument = require('./swagger/index.json');
 
@@ -52,7 +52,7 @@ app.response.jsend = function jsend({ message, data, meta }) {
 };
 
 /* SETUP OAUTH STRATEGIES */
-oAuthConfig();
+oAuthStrategies();
 
 /* SETUP SWAGGER */
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

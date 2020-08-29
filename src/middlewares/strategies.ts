@@ -15,7 +15,7 @@ const {
 
 const callbackUrl = (name: StrategiesNames) => `/api/v1/auth/social/${name}/callback`;
 
-module.exports = () => {
+const strategies = () => {
   oAuth.use(
     new Strategy(
       {
@@ -73,3 +73,5 @@ module.exports = () => {
   //   }),
   // );
 };
+
+export default strategies;
