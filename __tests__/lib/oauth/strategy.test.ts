@@ -1,7 +1,8 @@
 import axios from 'axios';
 import * as faker from 'faker';
 
-const Strategy = require('@app/lib/oauth/strategy');
+import Strategy from '@app/lib/oauth/strategy';
+import { StrategiesNames } from '@app/lib/oauth/types';
 
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
@@ -10,7 +11,7 @@ describe('Test Strategy constructor', () => {
   test('Success', () => {
     const strategy = new Strategy(
       {
-        name: 'facebook',
+        name: StrategiesNames.FACEBOOK,
         clientID: 'test-id',
         clientSecret: 'test-secret',
         callbackURL: '/test',
@@ -19,7 +20,7 @@ describe('Test Strategy constructor', () => {
       () => {},
     );
     expect(strategy.name).toBe('facebook');
-    expect(strategy.authorizationURL).toBe('https://www.facebook.com/dialog/oauth');
+    expect(strategy.authorizationURL).toBe('https://www.facebook.com/v8.0/dialog/oauth');
     expect(typeof strategy.scope).toBe('string');
     expect(strategy.scope).toBe('name,email,test_scope');
     expect(typeof strategy.verify).toBe('function');
@@ -30,13 +31,13 @@ describe('Test Strategy constructor', () => {
       () =>
         new Strategy(
           {
-            name: 'facebook',
-            clientSecret: 'test-secret',
+            name: StrategiesNames.FACEBOOK,
+            clientID: 'test-id',
             callbackURL: '/test',
-          },
+          } as any,
           () => {},
         ),
-    ).toThrowError('You must provide options the clientID configuration value');
+    ).toThrowError('You must provide options the clientSecret configuration value');
   });
 });
 
@@ -45,7 +46,7 @@ describe('Test Strategy authorizeEndPoint', () => {
     const redirectURI = faker.internet.url();
     const strategy = new Strategy(
       {
-        name: 'facebook',
+        name: StrategiesNames.FACEBOOK,
         clientID: 'test-id',
         clientSecret: 'test-secret',
         callbackURL: '/test',
@@ -54,7 +55,7 @@ describe('Test Strategy authorizeEndPoint', () => {
       () => {},
     );
     expect(decodeURIComponent(strategy.authorizeEndPoint(redirectURI))).toBe(
-      `https://www.facebook.com/dialog/oauth?client_id=test-id&redirect_uri=${redirectURI}&response_type=code`,
+      `https://www.facebook.com/v8.0/dialog/oauth?response_type=code&client_id=test-id&redirect_uri=${redirectURI}`,
     );
   });
 });
@@ -64,7 +65,7 @@ describe('Test Strategy getOauthAccessToken', () => {
     mockedAxios.post.mockResolvedValue({ data: { access_token: 'test-access-token' } });
     const strategy = new Strategy(
       {
-        name: 'facebook',
+        name: StrategiesNames.FACEBOOK,
         clientID: 'test-id',
         clientSecret: 'test-secret',
         callbackURL: '/test',
@@ -84,7 +85,7 @@ describe('Test Strategy getUserProfile', () => {
     mockedAxios.get.mockResolvedValue({ data: expectProfile });
     const strategy = new Strategy(
       {
-        name: 'facebook',
+        name: StrategiesNames.FACEBOOK,
         clientID: 'test-id',
         clientSecret: 'test-secret',
         callbackURL: '/test',

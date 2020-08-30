@@ -34,7 +34,7 @@ describe('Test Oauth authenticate', () => {
       .expect(302)
       .expect((res) => {
         expect(decodeURIComponent(res.header.location)).toEqual(
-          'https://www.facebook.com/dialog/oauth?response_type=code&client_id=test-id&redirect_uri=http://api.test.com/test_callback?referer=test.com',
+          'https://www.facebook.com/v8.0/dialog/oauth?response_type=code&client_id=test-id&redirect_uri=http://api.test.com/test_callback',
         );
       });
   });
