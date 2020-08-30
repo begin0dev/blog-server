@@ -4,7 +4,6 @@
   "ext": "js ts json",
   "ignore": ["src/swagger/*", "__tests__/*", "coverage/*"],
   "env": {
-    "NODE_ENV": "development",
-    "NODE_PATH": "src"
+    "NODE_ENV": "development"
   }
 }

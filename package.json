@@ -7,7 +7,7 @@
   "license": "ISC",
   "main": "src/app.ts",
   "scripts": {
-    "start": "cross-env NODE_PATH=src node dist/app",
+    "start": "cross-env node dist/app",
     "dev": "nodemon",
     "build": "tsc",
     "test": "jest"

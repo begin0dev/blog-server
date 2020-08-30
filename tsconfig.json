@@ -8,9 +8,9 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "dist",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
-      "@app/*": ["*"]
+      "@app/*": ["./src/*"]
     },
     "sourceMap": true,
     "skipLibCheck": true,
