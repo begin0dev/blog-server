@@ -4,6 +4,7 @@ module.exports = {
       tsConfig: 'tsconfig.json',
     },
   },
+  globalSetup: '<rootDir>/__tests__/globalSetup.js',
   clearMocks: true,
   collectCoverage: true,
   coverageDirectory: 'coverage',
