@@ -39,8 +39,12 @@ class Oauth {
       });
 
       const done = (err: Error, profile?: DoneProfile) => {
-        if (err) res.locals.message = err.message;
+        if (err) {
+          res.locals.message = err.message;
+          if (failureUrl) return res.redirect(failureUrl);
+        }
         if (profile) res.locals.profile = profile;
+        if (successUrl) return res.redirect(successUrl);
         return next();
       };
 

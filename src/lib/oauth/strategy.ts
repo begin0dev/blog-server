@@ -97,7 +97,7 @@ class OAuthStrategy {
         code,
         client_id: clientID,
         client_secret: clientSecret,
-        redirect_uri: encodeURIComponent(redirectURI),
+        redirect_uri: redirectURI,
       };
       if (this.grantType) params.grant_type = this.grantType;
       const {
