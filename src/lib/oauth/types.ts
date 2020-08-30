@@ -63,8 +63,8 @@ export interface DoneProfile {
   email: string;
 }
 
-export type VerifyFunction = (
+export type VerifyFunction<N extends StrategiesNames> = (
   accessToken: string,
-  profile: ProfileResponses[StrategiesNames],
+  profile: ProfileResponses[N],
   done: (err: Error, profile?: DoneProfile) => void,
 ) => void;

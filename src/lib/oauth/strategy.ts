@@ -11,6 +11,7 @@ import {
   RequiredUrlTypes,
   GetOAuthParams,
   VerifyFunction,
+  ProfileResponses,
 } from './types';
 
 const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
@@ -40,7 +41,7 @@ const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
   },
 };
 
-class OAuthStrategy {
+class OAuthStrategy<N extends StrategiesNames> {
   name: StrategiesNames[keyof StrategiesNames];
   clientID: string;
   clientSecret: string;
@@ -49,10 +50,10 @@ class OAuthStrategy {
   tokenURL: string;
   profileURL: string;
   scope: string;
-  verify: VerifyFunction;
+  verify: VerifyFunction<N>;
   grantType?: string;
 
-  constructor(options: Options, scope: string[] | VerifyFunction, verify?: VerifyFunction) {
+  constructor(options: Options, scope: string[] | VerifyFunction<N>, verify?: VerifyFunction<N>) {
     if (typeof scope === 'function') {
       /* eslint-disable */
       verify = scope;
@@ -111,7 +112,7 @@ class OAuthStrategy {
     }
   }
 
-  getUserProfile(accessToken: string): Promise<AxiosResponse<any>> {
+  getUserProfile(accessToken: string): Promise<AxiosResponse<ProfileResponses[N]>> {
     const { profileURL, scope } = this;
     const params = { access_token: accessToken, fields: scope };
     return axios.get(profileURL, { params });

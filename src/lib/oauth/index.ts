@@ -5,17 +5,17 @@ import OAuthStrategy from './strategy';
 import { StrategiesNames, OAuthRequest, DoneProfile } from './types';
 
 class Oauth {
-  strategies: Partial<Record<StrategiesNames, OAuthStrategy>>;
+  strategies: Partial<Record<StrategiesNames, OAuthStrategy<StrategiesNames>>>;
 
   constructor() {
     this.strategies = {};
   }
 
-  use(name: StrategiesNames[keyof StrategiesNames] | OAuthStrategy, strategy?: OAuthStrategy): this {
+  use(name: StrategiesNames[keyof StrategiesNames] | OAuthStrategy<StrategiesNames>, strategy?: OAuthStrategy<StrategiesNames>): this {
     if (!name) throw new Error('Authentication strategies must have a name');
     if (!strategy) {
       /* eslint-disable */
-      strategy = name as OAuthStrategy;
+      strategy = name as OAuthStrategy<StrategiesNames>;
       ({ name } = strategy);
       /* eslint-enable */
     }
