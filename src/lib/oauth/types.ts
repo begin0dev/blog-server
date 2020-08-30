@@ -41,6 +41,21 @@ export interface OAuthRequest extends Request {
   };
 }
 
+export type ProfileResponses = {
+  [StrategiesNames.FACEBOOK]: {
+    id: string;
+    name: string;
+    email: string;
+  };
+  [StrategiesNames.GITHUB]: {};
+  [StrategiesNames.GOOGLE]: {};
+  [StrategiesNames.KAKAO]: {
+    id: string;
+    properties?: { nickname: string };
+    kakao_account?: { email: string };
+  };
+};
+
 export interface DoneProfile {
   provider: StrategiesNames;
   id: string;
@@ -50,6 +65,6 @@ export interface DoneProfile {
 
 export type VerifyFunction = (
   accessToken: string,
-  data: any,
+  profile: ProfileResponses[StrategiesNames],
   done: (err: Error, profile?: DoneProfile) => void,
 ) => void;

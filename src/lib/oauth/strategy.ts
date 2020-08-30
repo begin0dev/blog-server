@@ -111,7 +111,7 @@ class OAuthStrategy {
     }
   }
 
-  getUserProfile<R>(accessToken: string): Promise<AxiosResponse<R>> {
+  getUserProfile(accessToken: string): Promise<AxiosResponse<any>> {
     const { profileURL, scope } = this;
     const params = { access_token: accessToken, fields: scope };
     return axios.get(profileURL, { params });

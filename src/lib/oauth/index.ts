@@ -23,7 +23,7 @@ class Oauth {
     return this;
   }
 
-  authenticate<P>(
+  authenticate(
     name: StrategiesNames,
     { failureUrl, successUrl, ...options }: { failureUrl?: string; successUrl?: string; [key: string]: string } = {},
   ) {
@@ -53,8 +53,8 @@ class Oauth {
 
       try {
         const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
-        const { data } = await strategy.getUserProfile<P>(accessToken);
-        return strategy.verify(accessToken, data, done);
+        const { data: profile } = await strategy.getUserProfile(accessToken);
+        return strategy.verify(accessToken, profile, done);
       } catch (err) {
         return done(err);
       }

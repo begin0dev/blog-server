@@ -24,8 +24,7 @@ const strategies = () => {
         clientSecret: FACEBOOK_APP_SECRET,
         callbackURL: callbackUrl(StrategiesNames.FACEBOOK),
       },
-      (accessToken, profile, done) => {
-        const { id, name: displayName, email } = profile;
+      (accessToken, { id, name: displayName, email }, done) => {
         return done(null, { provider: StrategiesNames.FACEBOOK, id, displayName, email });
       },
     ),
@@ -40,10 +39,9 @@ const strategies = () => {
         callbackURL: callbackUrl(StrategiesNames.KAKAO),
         grantType: 'authorization_code',
       },
-      (accessToken, profile, done) => {
-        const { id, properties, kakao_account: kakaoAccount } = profile;
-        const displayName = properties && properties.nickname;
-        const email = kakaoAccount && kakaoAccount.email;
+      (accessToken, { id, properties, kakao_account: kakaoAccount }, done) => {
+        const displayName = properties?.nickname;
+        const email = kakaoAccount?.email;
         return done(null, { provider: StrategiesNames.KAKAO, id, displayName, email });
       },
     ),
