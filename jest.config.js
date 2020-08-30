@@ -8,7 +8,7 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['/node_modules/'],
-  setupFilesAfterEnv: ['<rootDir>/__tests__/test-helper.js'],
+  setupFilesAfterEnv: ['<rootDir>/__tests__/test-helper.ts'],
   moduleDirectories: ['node_modules', 'src'],
   moduleFileExtensions: ['ts', 'js'],
   moduleNameMapper: {

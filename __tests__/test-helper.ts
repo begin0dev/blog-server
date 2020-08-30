@@ -1,15 +1,15 @@
-require('dotenv').config({ path: './config/.env.test' });
+import '../config';
 
-const mongoose = require('mongoose');
-const MongodbMemoryServer = require('mongodb-memory-server');
+import mongoose from 'mongoose';
+import { MongoMemoryServer } from 'mongodb-memory-server';
 
-const { connectDB } = require('database');
+import { connectDB } from '@app/database';
 
-let mongoServer;
+let mongoServer: MongoMemoryServer;
 
 beforeEach(async () => {
   try {
-    mongoServer = new MongodbMemoryServer.MongoMemoryServer();
+    mongoServer = new MongoMemoryServer();
     const mongoUri = await mongoServer.getUri();
     await connectDB(mongoUri);
   } catch (err) {
