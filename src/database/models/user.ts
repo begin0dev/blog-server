@@ -1,12 +1,7 @@
 import { model, Schema, Document, Model } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 
-enum Provider {
-  facebook = 'facebook',
-  github = 'github',
-  google = 'google',
-  kakao = 'kakao',
-}
+import { StrategiesNames } from '@app/lib/oauth/types';
 
 export interface UserJson extends Document {
   displayName: string;
@@ -91,16 +86,16 @@ User.set('toJSON', {
 
 // static methods
 export interface UserModel extends Model<UserSchema> {
-  findBySocialId(provider: Provider, id: Number): Promise<UserSchema> | null;
+  findBySocialId(provider: StrategiesNames, id: Number): Promise<UserSchema> | null;
   findByRefreshToken(refreshToken: string): Promise<UserSchema> | null;
-  socialRegister(params: { provider: Provider; id: Number; displayName: string; profileImageUrl?: string }): any;
+  socialRegister(params: { provider: StrategiesNames; id: Number; displayName: string; profileImageUrl?: string }): any;
 }
 
 User.statics.findByRefreshToken = function (refreshToken: string) {
   return this.findOne({ 'oAuth.local.refreshToken': refreshToken });
 };
 
-User.statics.findBySocialId = function (provider: Provider, id: Number) {
+User.statics.findBySocialId = function (provider: StrategiesNames, id: Number) {
   return this.findOne({ [`oAuth.${provider}.id`]: id });
 };
 
@@ -110,7 +105,7 @@ User.statics.socialRegister = async function ({
   displayName,
   profileImageUrl = '',
 }: {
-  provider: Provider;
+  provider: StrategiesNames;
   id: Number;
   displayName: string;
   profileImageUrl?: string;

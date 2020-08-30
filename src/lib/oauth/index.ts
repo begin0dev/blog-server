@@ -46,6 +46,7 @@ class Oauth {
 
       if (error) return done(new Error(errorDescription));
       if (!code) return res.redirect(strategy.authorizeEndPoint(redirectURI, options));
+
       try {
         const accessToken = await strategy.getOauthAccessToken(code, redirectURI);
         const { data } = await strategy.getUserProfile<P>(accessToken);

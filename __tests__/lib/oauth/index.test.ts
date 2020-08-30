@@ -15,7 +15,7 @@ describe('Test Oauth authenticate', () => {
           name: StrategiesNames.FACEBOOK,
           clientID: 'test-id',
           clientSecret: 'test-secret',
-          callbackURL: '/test',
+          callbackURL: '/test_callback',
         },
         () => {},
       ),
@@ -29,11 +29,12 @@ describe('Test Oauth authenticate', () => {
     const agent = request.agent(app);
     await agent
       .get('/facebook')
-      .set('Host', 'test.com')
+      .set('Host', 'api.test.com')
+      .set('Referer', 'test.com')
       .expect(302)
       .expect((res) => {
         expect(decodeURIComponent(res.header.location)).toEqual(
-          'https://www.facebook.com/dialog/oauth?client_id=test-id&redirect_uri=http://test.com/test&response_type=code',
+          'https://www.facebook.com/dialog/oauth?response_type=code&client_id=test-id&redirect_uri=http://api.test.com/test_callback?referer=test.com',
         );
       });
   });

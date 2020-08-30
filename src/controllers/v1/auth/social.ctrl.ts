@@ -11,7 +11,7 @@ import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/toke
 const router = express.Router();
 
 const socialCallback = async (req: Request, res: Response) => {
-  const redirectUrl = res.locals.redirectUrl || 'http://localhost:3000';
+  const redirectUrl = 'http://localhost:3000';
 
   const failureRedirect = (message: string) => {
     const { query } = url.parse(redirectUrl);
@@ -45,11 +45,6 @@ const socialCallback = async (req: Request, res: Response) => {
     failureRedirect(err.message);
   }
 };
-
-// router.use((req, res, next) => {
-//   if (!req.session.redirectUrl) req.session.redirectUrl = req.get('Referrer') || req.originalUrl;
-//   next();
-// });
 
 router.get('/facebook', oAuth.authenticate(StrategiesNames.FACEBOOK, { auth_type: 'rerequest' }));
 router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), socialCallback);

@@ -15,9 +15,9 @@ import {
 
 const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
   [StrategiesNames.FACEBOOK]: {
-    authorizationURL: 'https://www.facebook.com/dialog/oauth',
-    tokenURL: 'https://graph.facebook.com/v3.2/oauth/access_token',
-    profileURL: 'https://graph.facebook.com/v3.2/me',
+    authorizationURL: 'https://www.facebook.com/v8.0/dialog/oauth',
+    tokenURL: 'https://graph.facebook.com/v8.0/oauth/access_token',
+    profileURL: 'https://graph.facebook.com/v8.0/me',
     defaultScope: ['name', 'email'],
   },
   [StrategiesNames.KAKAO]: {
@@ -80,9 +80,9 @@ class OAuthStrategy {
   authorizeEndPoint(redirectURI: string, options = {}): string {
     const { clientID, authorizationURL } = this;
     const query = {
+      response_type: 'code',
       client_id: clientID,
       redirect_uri: redirectURI,
-      response_type: 'code',
       ...options,
     };
     const parseUrl = url.parse(authorizationURL, true);
@@ -97,7 +97,7 @@ class OAuthStrategy {
         code,
         client_id: clientID,
         client_secret: clientSecret,
-        redirect_uri: redirectURI,
+        redirect_uri: encodeURIComponent(redirectURI),
       };
       if (this.grantType) params.grant_type = this.grantType;
       const {
