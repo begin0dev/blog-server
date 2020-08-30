@@ -10,9 +10,9 @@ import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/toke
 
 const router = express.Router();
 
-const socialCallback = async (req: Request, res: Response) => {
-  const redirectUrl = 'http://localhost:3000';
+const redirectUrl = 'http://localhost:3000';
 
+const socialCallback = async (req: Request, res: Response) => {
   const failureRedirect = (message: string) => {
     const { query } = url.parse(redirectUrl);
     const queryString = qs.stringify({ message });
@@ -52,4 +52,4 @@ router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), s
 router.get('/kakao', oAuth.authenticate(StrategiesNames.KAKAO));
 router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
 
-module.exports = router;
+export = router;
