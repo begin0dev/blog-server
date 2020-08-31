@@ -4,6 +4,7 @@ import mongooseDelete from 'mongoose-delete';
 import { StrategiesNames } from '@app/lib/oauth/types';
 
 export interface UserJson extends Document {
+  email: string;
   displayName: string;
   profileImageUrl: string;
 }
@@ -23,6 +24,7 @@ export interface UserSchema extends UserJson {
 
 const User = new Schema(
   {
+    email: { type: String, required: true },
     displayName: { type: String, required: true },
     profileImageUrl: String,
     oAuth: {
@@ -75,9 +77,10 @@ const User = new Schema(
 User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
-  transform({ _id, displayName, profileImageUrl }) {
+  transform({ _id, email, displayName, profileImageUrl }) {
     return {
       _id,
+      email,
       displayName,
       profileImageUrl,
     };
@@ -86,9 +89,15 @@ User.set('toJSON', {
 
 // static methods
 export interface UserModel extends Model<UserSchema> {
-  findBySocialId(provider: StrategiesNames, id: Number): Promise<UserSchema> | null;
-  findByRefreshToken(refreshToken: string): Promise<UserSchema> | null;
-  socialRegister(params: { provider: StrategiesNames; id: Number; displayName: string; profileImageUrl?: string }): any;
+  findBySocialId(provider: StrategiesNames, id: Number): Promise<UserSchema> | Promise<null>;
+  findByRefreshToken(refreshToken: string): Promise<UserSchema> | Promise<null>;
+  socialRegister(params: {
+    provider: StrategiesNames;
+    id: string;
+    email?: string;
+    displayName: string;
+    profileImageUrl?: string;
+  }): Promise<UserSchema>;
 }
 
 User.statics.findByRefreshToken = function (refreshToken: string) {
@@ -102,15 +111,18 @@ User.statics.findBySocialId = function (provider: StrategiesNames, id: Number) {
 User.statics.socialRegister = async function ({
   provider,
   id,
+  email,
   displayName,
   profileImageUrl = '',
 }: {
   provider: StrategiesNames;
-  id: Number;
+  id: string;
+  email?: string;
   displayName: string;
   profileImageUrl?: string;
 }) {
   const user = new this({
+    email,
     displayName,
     profileImageUrl,
     oAuth: { [provider]: { id } },

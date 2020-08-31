@@ -23,10 +23,10 @@ const socialCallback = async (req: Request, res: Response) => {
   if (res.locals.message) return failureRedirect(res.locals.message);
 
   try {
-    const { provider, id, displayName } = res.locals.profile;
+    const { provider, id } = res.locals.profile;
 
     let user = await User.findBySocialId(provider, id);
-    if (!user) user = await User.socialRegister({ provider, id, displayName });
+    if (!user) user = await User.socialRegister(res.locals.profile);
 
     const userJson = user.toJSON();
     // access token and refresh token set cookie
@@ -54,7 +54,11 @@ router.get(
 );
 router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), socialCallback);
 
-router.get('/kakao', apiDoc({ summary: 'kakao social login api' }), oAuth.authenticate(StrategiesNames.KAKAO));
+router.get(
+  '/kakao',
+  apiDoc({ summary: 'kakao social login api' }),
+  oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
+);
 router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
 
 export = router;

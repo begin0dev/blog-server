@@ -25,7 +25,7 @@ const strategies = () => {
         callbackURL: callbackUrl(StrategiesNames.FACEBOOK),
       },
       (accessToken, { id, name: displayName, email }, done) => {
-        return done(null, { provider: StrategiesNames.FACEBOOK, id, displayName, email });
+        return done(null, { provider: StrategiesNames.FACEBOOK, id, email, displayName });
       },
     ),
   );
@@ -42,7 +42,7 @@ const strategies = () => {
       (accessToken, { id, properties, kakao_account: kakaoAccount }, done) => {
         const displayName = properties?.nickname;
         const email = kakaoAccount?.email;
-        return done(null, { provider: StrategiesNames.KAKAO, id, displayName, email });
+        return done(null, { provider: StrategiesNames.KAKAO, id, email, displayName });
       },
     ),
   );

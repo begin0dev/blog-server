@@ -45,7 +45,7 @@ export type ProfileResponses = {
   [StrategiesNames.FACEBOOK]: {
     id: string;
     name: string;
-    email: string;
+    email?: string;
   };
   [StrategiesNames.GITHUB]: {};
   [StrategiesNames.GOOGLE]: {};
@@ -59,8 +59,8 @@ export type ProfileResponses = {
 export interface DoneProfile {
   provider: StrategiesNames;
   id: string;
+  email?: string;
   displayName: string;
-  email: string;
 }
 
 export type VerifyFunction<N extends StrategiesNames> = (
