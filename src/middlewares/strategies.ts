@@ -17,7 +17,7 @@ const callbackUrl = (name: StrategiesNames) => `/api/v1/auth/social/${name}/call
 
 const strategies = () => {
   oAuth.use(
-    new Strategy<StrategiesNames.FACEBOOK>(
+    new Strategy(
       {
         name: StrategiesNames.FACEBOOK,
         clientID: FACEBOOK_APP_ID,
@@ -31,7 +31,7 @@ const strategies = () => {
   );
 
   oAuth.use(
-    new Strategy<StrategiesNames.KAKAO>(
+    new Strategy(
       {
         name: StrategiesNames.KAKAO,
         clientID: KAKAO_APP_ID,

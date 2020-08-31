@@ -42,7 +42,7 @@ const SOCIAL_BASE_URL: SocialBaseUrlTypes = {
 };
 
 class OAuthStrategy<N extends StrategiesNames> {
-  name: StrategiesNames[keyof StrategiesNames];
+  name: N;
   clientID: string;
   clientSecret: string;
   callbackURL: string;
@@ -53,19 +53,19 @@ class OAuthStrategy<N extends StrategiesNames> {
   verify: VerifyFunction<N>;
   grantType?: string;
 
-  constructor(options: Options, scope: string[] | VerifyFunction<N>, verify?: VerifyFunction<N>) {
+  constructor(options: Options<N>, scope: string[] | VerifyFunction<N>, verify?: VerifyFunction<N>) {
     if (typeof scope === 'function') {
       /* eslint-disable */
       verify = scope;
       scope = [];
       /* eslint-enable */
     }
-    if (!(verify as undefined)) throw new Error('Strategy requires a verify callback!');
+    if (!verify) throw new Error('Strategy requires a verify callback!');
     if (!Array.isArray(scope)) throw new Error('Scope type must be array!');
 
     (<RequiredOptionsTypes[]>['name', 'clientID', 'clientSecret', 'callbackURL']).forEach((key) => {
       if (!options[key]) throw new Error(`You must provide options the ${key} configuration value`);
-      this[key] = options[key];
+      this[key] = options[key] as N & string;
     });
 
     const { name, grantType } = options;

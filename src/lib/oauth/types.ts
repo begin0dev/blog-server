@@ -7,17 +7,17 @@ export const enum StrategiesNames {
   KAKAO = 'kakao',
 }
 
-export type RequiredOptionsTypes = keyof RequiredOptions;
+export type RequiredOptionsTypes = keyof RequiredOptions<StrategiesNames>;
 export type RequiredUrlTypes = 'authorizationURL' | 'tokenURL' | 'profileURL';
 
-interface RequiredOptions {
-  name: StrategiesNames;
+interface RequiredOptions<N extends StrategiesNames> {
+  name: N;
   clientID: string;
   clientSecret: string;
   callbackURL: string;
 }
 
-export interface Options extends RequiredOptions {
+export interface Options<N extends StrategiesNames> extends RequiredOptions<N> {
   grantType?: string;
 }
 
