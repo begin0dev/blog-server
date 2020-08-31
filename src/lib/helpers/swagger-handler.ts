@@ -6,29 +6,14 @@ import { set, get } from 'lodash';
 import { convert } from '@yeongjet/joi-to-json-schema';
 import { Request } from 'express';
 
-import { name as title, version, description } from '../../../package.json';
-
 const swaggerPath = path.resolve(process.cwd(), './src/swagger/index.json');
-
-const swaggerJson = {
-  swagger: '2.0',
-  info: {
-    title,
-    version,
-    description,
-  },
-  host: 'localhost:3001',
-  schemes: ['https', 'http'],
-  paths: {},
-  definitions: {},
-};
 
 const readJSON = async (): Promise<object> => {
   const data: string = await fs.readFileSync(swaggerPath, 'utf8');
   return JSON.parse(data);
 };
 
-const writeJSON = (json: object): void => fs.writeFileSync(swaggerPath, JSON.stringify(json));
+export const writeJSON = (json: object): void => fs.writeFileSync(swaggerPath, JSON.stringify(json));
 
 const swaggerPathGenerator = (routePath: string): string =>
   pathToRegexp
@@ -108,5 +93,3 @@ export const setPathParameters = async (req: Request, schema: ControllerSchema) 
     console.error(err);
   }
 };
-
-export const initSwaggerJson = (): void => writeJSON(swaggerJson);

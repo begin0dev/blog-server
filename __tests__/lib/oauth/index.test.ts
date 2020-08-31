@@ -1,5 +1,5 @@
 import express from 'express';
-import request from 'supertest';
+import { agent } from 'supertest';
 
 import Oauth from '@app/lib/oauth';
 import Strategy from '@app/lib/oauth/strategy';
@@ -26,8 +26,7 @@ describe('Test Oauth authenticate', () => {
       res.status(201);
     });
 
-    const agent = request.agent(app);
-    await agent
+    await agent(app)
       .get('/facebook')
       .set('Host', 'api.test.com')
       .set('Referer', 'test.com')
