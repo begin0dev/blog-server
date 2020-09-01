@@ -4,9 +4,9 @@ import mongooseDelete from 'mongoose-delete';
 import { StrategiesNames } from '@app/lib/oauth/types';
 
 export interface UserJson extends Document {
-  email: string;
+  email?: string;
   displayName: string;
-  profileImageUrl: string;
+  profileImageUrl?: string;
 }
 
 export interface UserSchema extends UserJson {
@@ -24,7 +24,7 @@ export interface UserSchema extends UserJson {
 
 const User = new Schema(
   {
-    email: { type: String, required: true },
+    email: String,
     displayName: { type: String, required: true },
     profileImageUrl: String,
     oAuth: {
@@ -113,7 +113,7 @@ User.statics.socialRegister = async function ({
   id,
   email,
   displayName,
-  profileImageUrl = '',
+  profileImageUrl,
 }: {
   provider: StrategiesNames;
   id: string;

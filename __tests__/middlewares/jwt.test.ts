@@ -91,9 +91,7 @@ describe('Test checkRefreshToken', () => {
     });
     const req = createRequest({
       user: null,
-      cookies: {
-        refreshToken,
-      },
+      cookies: { refreshToken },
     });
     const res = createResponse();
 
@@ -110,9 +108,7 @@ describe('Test checkRefreshToken', () => {
     });
     const req = createRequest({
       user: null,
-      cookies: {
-        refreshToken,
-      },
+      cookies: { refreshToken },
     });
     const res = createResponse();
 
