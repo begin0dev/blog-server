@@ -21,7 +21,7 @@ const errorTypeTextMap = (err: ValidationError) => {
 
 export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (process.env.NODE_ENV === 'test') await setPathParameters(req, schema);
+    if (process.env.NODE_ENV === 'test') await setPathParameters(req, res, schema);
     req.validParams = (
       await Promise.all(
         (<(keyof typeof paramMap)[]>Object.keys(paramMap)).map((key) =>

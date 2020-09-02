@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Joi from 'joi';
-import { createRequest } from 'node-mocks-http';
+import { createRequest, createResponse } from 'node-mocks-http';
 
 import { setPathParameters } from '@app/lib/helpers/swagger-handler';
 
@@ -19,8 +19,9 @@ describe('Test setPathParameters function', () => {
       baseUrl: '/api/v1/users',
       route: { path: '/:id' },
     });
+    const res = createResponse();
 
-    await setPathParameters(req, {
+    await setPathParameters(req, res, {
       summary: 'test 용',
       params: { id: Joi.string().required().description('테스트용 아이디') },
       query: { type: Joi.string().valid('admin', 'member').required().description('유저 타입') },

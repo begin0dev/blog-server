@@ -4,7 +4,7 @@ import path from 'path';
 import * as pathToRegexp from 'path-to-regexp';
 import { set, get } from 'lodash';
 import { convert } from '@yeongjet/joi-to-json-schema';
-import { Request } from 'express';
+import { Request, Response, Send } from 'express';
 
 const swaggerPath = path.resolve(process.cwd(), './src/swagger/index.json');
 
@@ -46,7 +46,19 @@ interface Params {
   schema?: any;
 }
 
-export const setPathParameters = async (req: Request, schema: ControllerSchema) => {
+export const setPathParameters = async (req: Request, res: Response, schema: ControllerSchema) => {
+  const originEnd = res.end;
+
+  res.end = function (...chunk: any) {
+    const buffer = Buffer.from(chunk[0]).toString('utf8');
+    console.log(buffer);
+    originEnd.apply(res, chunk);
+  };
+
+  res.on('finish', () => {
+    console.log(res.statusCode);
+  });
+
   try {
     const {
       method,
