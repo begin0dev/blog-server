@@ -2,6 +2,7 @@ import Joi, { ValidationError, ValidationErrorItem } from 'joi';
 import { Request, Response, NextFunction } from 'express';
 
 import { setPathParameters, ControllerSchema, paramMap } from '@app/lib/helpers/swagger-handler';
+import { Status } from '@app/types/base';
 
 interface ValidationErrorTypes {
   [key: string]: ((errorItem: ValidationErrorItem) => string) | null;
@@ -33,6 +34,6 @@ export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Re
     ).reduce((acc, cur) => Object.assign(acc, cur), {});
     next();
   } catch (err) {
-    res.status(400).jsend({ message: errorTypeTextMap(err) });
+    res.status(400).json({ status: Status.ERROR, message: errorTypeTextMap(err) });
   }
 };

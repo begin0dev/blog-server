@@ -6,6 +6,6 @@ export module 'express-serve-static-core' {
     validParams: any;
   }
   interface Response {
-    jsend<D, M>(params: { message?: string; data?: D; meta?: M }): this;
+    // jsend<D, M>(params: { status: 'success'|'fail'|'error'; message?: string; data?: D; meta?: M }): this;
   }
 }

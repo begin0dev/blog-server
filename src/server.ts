@@ -7,7 +7,7 @@ import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
 import oAuthStrategies from '@app/middlewares/strategies';
-import { ExpressError } from '@app/types/error';
+import { ExpressError, Status } from '@app/types/base';
 import { connectDB } from '@app/database';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
@@ -39,11 +39,6 @@ class Server {
     app.use(hpp());
     app.use(cookieParser(COOKIE_SECRET));
 
-    /* CUSTOM FUNCTION */
-    app.response.jsend = function jsend({ message, data, meta }) {
-      return this.json({ message, meta, data });
-    };
-
     /* SETUP OAUTH STRATEGIES */
     oAuthStrategies();
 
@@ -65,7 +60,7 @@ class Server {
     // eslint-disable-next-line no-unused-vars
     app.use((err: ExpressError, req: express.Request, res: express.Response, next: express.NextFunction) => {
       console.error(err);
-      res.status(err.status || 500).jsend({ message: err.message });
+      res.status(err.status || 500).json({ status: Status.ERROR, message: err.message });
     });
 
     this.application = app;

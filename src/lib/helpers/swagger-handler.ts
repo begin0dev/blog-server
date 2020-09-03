@@ -55,10 +55,6 @@ export const setPathParameters = async (req: Request, res: Response, schema: Con
     originEnd.apply(res, chunk);
   };
 
-  res.on('finish', () => {
-    console.log(res.statusCode);
-  });
-
   try {
     const {
       method,

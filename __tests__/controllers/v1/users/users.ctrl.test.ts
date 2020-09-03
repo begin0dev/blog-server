@@ -9,6 +9,6 @@ describe('Test users controller', () => {
   });
 
   test('/logout', async () => {
-    await agent(Server.application).delete('/api/v1/users/logout').expect(200);
+    await agent(Server.application).delete('/api/v1/users/logout').expect(401);
   });
 });
