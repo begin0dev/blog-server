@@ -4,26 +4,35 @@ import path from 'path';
 import * as pathToRegexp from 'path-to-regexp';
 import { set, get } from 'lodash';
 import { convert } from '@yeongjet/joi-to-json-schema';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
-const swaggerPath = path.resolve(process.cwd(), './src/swagger/index.json');
+const swaggerJsonPath = path.resolve(process.cwd(), './src/swagger/index.json');
 
 const readJSON = async (): Promise<object> => {
-  const data: string = await fs.readFileSync(swaggerPath, 'utf8');
+  const data: string = await fs.readFileSync(swaggerJsonPath, 'utf8');
   return JSON.parse(data);
 };
 
-export const writeJSON = (json: object): void => fs.writeFileSync(swaggerPath, JSON.stringify(json));
+export const writeJSON = (json: object) => fs.writeFileSync(swaggerJsonPath, JSON.stringify(json));
 
-const swaggerPathGenerator = (routePath: string): string =>
-  pathToRegexp
-    .parse(routePath)
+const swaggerPathGenerator = (req: Request): string => {
+  const {
+    method,
+    baseUrl,
+    route: { path: routePath },
+  } = req;
+
+  const swaggerUrl = pathToRegexp
+    .parse(`${baseUrl}${routePath}`)
     .map((token) => {
       if (typeof token === 'string') return token;
       if (token.pattern === '[^\\/#\\?]+?') return `${token.prefix}{${token.name}}${token.suffix}`;
       return `${token.prefix}${token.name}${token.suffix}`;
     })
     .join('');
+
+  return `paths[${swaggerUrl}].${method.toLowerCase()}`;
+};
 
 export const paramMap = {
   params: 'path',
@@ -69,17 +78,25 @@ const setResponse = async (urlPath: string, example: any) => {
   }
 };
 
+function setSwaggerResponse(req: Request, res: Response, next: NextFunction) {
+  const originEnd = res.end;
+  res.end = async function (...chunk: any) {
+    let example = Buffer.from(chunk[0]).toString('utf8');
+    if (isJsonString(example)) example = JSON.parse(example);
+    // await setResponse(`${urlPath}.responses[${res.statusCode}]`, example);
+    originEnd.apply(res, chunk);
+  };
+
+  next();
+}
+
 export const setPathParameters = async (req: Request, res: Response, schema: ControllerSchema) => {
   try {
-    const {
-      method,
-      baseUrl,
-      route: { path: routePath },
-    } = req;
+    const { baseUrl } = req;
 
     const json = await readJSON();
 
-    const urlPath = `paths[${swaggerPathGenerator(`${baseUrl}${routePath}`)}].${method.toLowerCase()}`;
+    const urlPath = swaggerPathGenerator(req);
     const parameters: any[] = [];
 
     (<ParamKeyTypes[]>Object.keys(paramMap)).forEach((paramKey) => {
@@ -112,14 +129,6 @@ export const setPathParameters = async (req: Request, res: Response, schema: Con
         responses: {},
       });
       await writeJSON(json);
-
-      const originEnd = res.end;
-      res.end = function (...chunk: any) {
-        let example = Buffer.from(chunk[0]).toString('utf8');
-        if (isJsonString(example)) example = JSON.parse(example);
-        setResponse(`${urlPath}.responses[${res.statusCode}]`, example);
-        originEnd.apply(res, chunk);
-      };
     }
   } catch (err) {
     console.error(err);

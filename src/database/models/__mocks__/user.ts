@@ -1,10 +1,11 @@
 import faker from 'faker';
 
-const MockUser = () => ({
+import { generateAccessToken } from '@app/lib/helpers/token-helper';
+
+export const mockUser = () => ({
   email: faker.internet.email(),
   displayName: faker.internet.userName(),
   profileImageUrl: faker.internet.url(),
 });
 
-
-export default MockUser;
+export const mockJWT = () => generateAccessToken({ user: { _id: faker.random.uuid(), ...mockUser() } });

@@ -1,10 +1,17 @@
 import { agent } from 'supertest';
 
 import Server from '@app/server';
-import MockUser from '@app/database/models/__mocks__/user';
+import { mockJWT } from '@app/database/models/__mocks__/user';
 
 describe('Test users controller', () => {
-  test('/check', async () => {
+  test('/check when login', async () => {
+    await agent(Server.application)
+      .get('/api/v1/users/check')
+      .set('Authorization', `Bearer ${mockJWT()}`)
+      .expect(200);
+  });
+
+  test('/check when not login', async () => {
     await agent(Server.application).get('/api/v1/users/check').expect(401);
   });
 

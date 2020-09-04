@@ -3,7 +3,7 @@ import moment from 'moment';
 import { createRequest, createResponse } from 'node-mocks-http';
 
 import User, { UserSchema } from '@app/database/models/user';
-import MockUser from '@app/database/models/__mocks__/user';
+import { mockUser } from '@app/database/models/__mocks__/user';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
@@ -65,7 +65,7 @@ describe('Test checkRefreshToken', () => {
   let user: UserSchema;
 
   beforeEach(async () => {
-    const mockUserData = MockUser();
+    const mockUserData = mockUser();
     user = await User.create(mockUserData);
     refreshToken = await generateRefreshToken();
   });
