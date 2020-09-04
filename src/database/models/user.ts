@@ -3,13 +3,17 @@ import mongooseDelete from 'mongoose-delete';
 
 import { StrategiesNames } from '@app/lib/oauth/types';
 
-export interface UserJson extends Document {
+interface UserBase {
   email?: string;
   displayName: string;
   profileImageUrl?: string;
 }
 
-export interface UserSchema extends UserJson {
+export interface UserJson extends UserBase {
+  _id: string;
+}
+
+export interface UserSchema extends Document, UserBase {
   oAuth?: {
     local?: {
       refreshToken: string;

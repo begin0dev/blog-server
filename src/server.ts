@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
 import oAuthStrategies from '@app/middlewares/strategies';
+import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
 import { ExpressError, Status } from '@app/types/base';
 import { connectDB } from '@app/database';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
@@ -44,6 +45,8 @@ class Server {
 
     /* SETUP SWAGGER */
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    if (process.env.NODE_ENV === 'test') app.use(setSwaggerResponse);
+
     /* SETUP JWT TOKEN MIDDLEWARE */
     app.use(checkAccessToken, checkRefreshToken);
     /* SETUP ROUTER */

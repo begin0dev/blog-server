@@ -63,27 +63,34 @@ const isJsonString = (str: string) => {
   }
 };
 
-const setResponse = async (urlPath: string, example: any) => {
-  if (typeof example === 'object') {
-    const json = await readJSON();
-    set(json, urlPath, {
-      description: example.status,
-      content: {
-        'application/json': {
-          example,
-        },
-      },
-    });
-    await writeJSON(json);
-  }
-};
-
-function setSwaggerResponse(req: Request, res: Response, next: NextFunction) {
+export function setSwaggerResponse(req: Request, res: Response, next: NextFunction) {
   const originEnd = res.end;
+
   res.end = async function (...chunk: any) {
-    let example = Buffer.from(chunk[0]).toString('utf8');
-    if (isJsonString(example)) example = JSON.parse(example);
-    // await setResponse(`${urlPath}.responses[${res.statusCode}]`, example);
+    let value = {};
+    const json = await readJSON();
+    const urlPath = swaggerPathGenerator(req);
+
+    if (chunk?.length > 0) {
+      let example: any = Buffer.from(chunk[0]).toString('utf8');
+      if (isJsonString(example)) example = JSON.parse(example);
+      if (typeof example === 'object') {
+        value = {
+          description: example?.status,
+          content: {
+            'application/json': {
+              example,
+            },
+          },
+        };
+      }
+    }
+
+    if (get(json, urlPath)) {
+      set(json, `${urlPath}.responses[${res.statusCode}]`, value);
+      await writeJSON(json);
+    }
+
     originEnd.apply(res, chunk);
   };
 
