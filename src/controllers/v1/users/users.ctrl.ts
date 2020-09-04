@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/check', apiDoc({ summary: '유저 정보 확인 api' }), (req, res) => {
   const { user } = req;
-  if (user) return res.status(200).json({ status: Status.SUCCESS, data: user });
+  if (user) return res.status(200).json({ status: Status.SUCCESS, data: { user } });
   res.status(401).json({ status: Status.FAIL, message: 'Unauthorized' });
 });
 

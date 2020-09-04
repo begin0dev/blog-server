@@ -32,6 +32,7 @@ class Server {
       app.use(cors({ origin: 'https://begin0devBlog.com', credentials: true }));
     } else {
       app.use(morgan('dev')); // server logger
+      app.use(cors({ origin: true, credentials: true }));
     }
 
     /* SETUP MIDDLEWARE */
