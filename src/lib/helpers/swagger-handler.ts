@@ -4,7 +4,7 @@ import path from 'path';
 import * as pathToRegexp from 'path-to-regexp';
 import { set, get } from 'lodash';
 import { convert } from '@yeongjet/joi-to-json-schema';
-import { Request, Response, Send } from 'express';
+import { Request, Response } from 'express';
 
 const swaggerPath = path.resolve(process.cwd(), './src/swagger/index.json');
 
@@ -46,15 +46,30 @@ interface Params {
   schema?: any;
 }
 
+const isJsonString = (str: string) => {
+  try {
+    return !!JSON.parse(str);
+  } catch (err) {
+    return false;
+  }
+};
+
+const setResponse = async (urlPath: string, example: any) => {
+  if (typeof example === 'object') {
+    const json = await readJSON();
+    set(json, urlPath, {
+      description: example.status,
+      content: {
+        'application/json': {
+          example,
+        },
+      },
+    });
+    await writeJSON(json);
+  }
+};
+
 export const setPathParameters = async (req: Request, res: Response, schema: ControllerSchema) => {
-  const originEnd = res.end;
-
-  res.end = function (...chunk: any) {
-    const buffer = Buffer.from(chunk[0]).toString('utf8');
-    console.log(buffer);
-    originEnd.apply(res, chunk);
-  };
-
   try {
     const {
       method,
@@ -94,8 +109,17 @@ export const setPathParameters = async (req: Request, res: Response, schema: Con
         summary: schema.summary,
         description: schema.description,
         parameters,
+        responses: {},
       });
       await writeJSON(json);
+
+      const originEnd = res.end;
+      res.end = function (...chunk: any) {
+        let example = Buffer.from(chunk[0]).toString('utf8');
+        if (isJsonString(example)) example = JSON.parse(example);
+        setResponse(`${urlPath}.responses[${res.statusCode}]`, example);
+        originEnd.apply(res, chunk);
+      };
     }
   } catch (err) {
     console.error(err);
