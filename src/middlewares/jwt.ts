@@ -2,8 +2,7 @@ import moment from 'moment';
 import { Request, Response, NextFunction } from 'express';
 
 import User from '@app/database/models/user';
-
-const { decodeAccessToken, generateAccessToken } = require('@app/lib/helpers/token-helper');
+import { decodeAccessToken, generateAccessToken } from '@app/lib/helpers/token-helper';
 
 export const checkAccessToken = (req: Request, res: Response, next: NextFunction) => {
   let accessToken = req.get('authorization') || req.cookies.accessToken;
