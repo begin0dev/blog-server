@@ -6,15 +6,13 @@ import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
 
+import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
+import swaggerDocument from '@app/swagger/index.json';
 import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
 import { ExpressError, Status } from '@app/types/base';
 import { connectDB } from '@app/database';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
-
-const controllers = require('./controllers');
-
-const swaggerDocument = require('./swagger/index.json');
 
 const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
