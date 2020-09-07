@@ -6,7 +6,9 @@ import { generateAccessToken } from '@app/lib/helpers/token-helper';
 export const mockUser = () => ({
   email: faker.internet.email(),
   displayName: faker.internet.userName(),
-  profileImageUrl: faker.internet.url(),
+  profileImage: faker.internet.url(),
+  emailVerified: true,
+  isAdmin: false,
 });
 
 export const mockJWT = (user: UserJson = { _id: faker.random.uuid(), ...mockUser() }) => generateAccessToken({ user });

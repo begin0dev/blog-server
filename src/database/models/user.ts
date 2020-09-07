@@ -1,12 +1,15 @@
 import { model, Schema, Document, Model } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
+import crypto from 'crypto';
 
 import { StrategiesNames } from '@app/lib/oauth/types';
 
 interface UserBase {
   email?: string;
   displayName: string;
-  profileImageUrl?: string;
+  profileImage?: string;
+  isAdmin: boolean;
+  emailVerified: boolean;
 }
 
 export interface UserJson extends UserBase {
@@ -28,9 +31,19 @@ export interface UserSchema extends Document, UserBase {
 
 const User = new Schema(
   {
-    email: String,
+    email: {
+      type: String,
+      sparse: true,
+      unique: true,
+      index: true,
+    },
     displayName: { type: String, required: true },
-    profileImageUrl: String,
+    profileImage: String,
+    emailVerified: Boolean,
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
     oAuth: {
       local: {
         refreshToken: {
@@ -81,12 +94,14 @@ const User = new Schema(
 User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
-  transform({ _id, email, displayName, profileImageUrl }) {
+  transform({ _id, email, emailVerified, displayName, profileImage, isAdmin }) {
     return {
       _id,
       email,
+      emailVerified,
       displayName,
-      profileImageUrl,
+      profileImage,
+      isAdmin,
     };
   },
 });
@@ -100,7 +115,7 @@ export interface UserModel extends Model<UserSchema> {
     id: string;
     email?: string;
     displayName: string;
-    profileImageUrl?: string;
+    profileImage?: string;
   }): Promise<UserSchema>;
 }
 
@@ -117,18 +132,22 @@ User.statics.socialRegister = async function ({
   id,
   email,
   displayName,
-  profileImageUrl,
 }: {
   provider: StrategiesNames;
   id: string;
   email?: string;
   displayName: string;
-  profileImageUrl?: string;
 }) {
+  const emailVerified = email?.length > 0;
+  let profileImage;
+  if (emailVerified)
+    profileImage = `https://s.gravatar.com/avatar/${crypto.createHash('md5').update(email).digest('hex')}`;
+
   const user = new this({
     email,
     displayName,
-    profileImageUrl,
+    emailVerified,
+    profileImage,
     oAuth: { [provider]: { id } },
   });
   return user.save();

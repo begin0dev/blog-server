@@ -9,9 +9,9 @@ import { StrategiesNames } from '@app/lib/oauth/types';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 import { apiDoc } from '@app/lib/helpers/apidoc-helper';
 
-const router = express.Router();
+const { CLIENT_URI: redirectUrl } = process.env;
 
-const redirectUrl = 'http://localhost:3000';
+const router = express.Router();
 
 const socialCallback = async (req: Request, res: Response) => {
   const failureRedirect = (message: string) => {
