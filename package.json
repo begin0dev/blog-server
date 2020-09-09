@@ -7,7 +7,7 @@
   "license": "ISC",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node dist/app",
+    "start": "node dist/src/index.js",
     "dev": "nodemon",
     "build": "tsc",
     "test": "jest"
@@ -30,7 +30,8 @@
     "morgan": "^1.10.0",
     "path-to-regexp": "^6.1.0",
     "qs": "^6.9.4",
-    "swagger-ui-express": "^4.1.4"
+    "swagger-ui-express": "^4.1.4",
+    "typescript": "^4.0.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
@@ -64,7 +65,6 @@
     "prettier": "^2.1.1",
     "supertest": "^4.0.2",
     "ts-jest": "^26.3.0",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.2"
+    "ts-node": "^9.0.0"
   }
 }

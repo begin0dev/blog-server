@@ -2,7 +2,8 @@ FROM node:12
 
 RUN mkdir -p /app
 WORKDIR /app
-COPY . /app
+COPY ./package.json ./
+COPY ./dist ./
 
 RUN npm ci --only=production
 
