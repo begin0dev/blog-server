@@ -1,5 +1,5 @@
 config/.env
 /node_modules
-/build
+/dist
 /coverage
 /.idea
