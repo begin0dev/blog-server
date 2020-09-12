@@ -8,9 +8,9 @@ services:
     volumes:
       - ./config/nginx.conf:/etc/nginx/nginx.conf
     restart: "unless-stopped"
-  app:
-    container_name: app
-    restart: always
-    build: .
-    ports:
-      - "3001:3001"
+#  app:
+#    container_name: app
+#    restart: always
+#    build: .  # 빌드할 Dockerfile 위치 경로
+#    ports:
+#      - "3001:3001"
