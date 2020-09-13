@@ -8,4 +8,4 @@ const router = express.Router();
 router.use('/auth', auth);
 router.use('/users', users);
 
-export = router;
+export default router;
