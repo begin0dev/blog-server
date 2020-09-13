@@ -21,6 +21,22 @@ jobs:
       - name: RUN TEST
         run: npm test
 
+      - name: MAKE .env file
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_CLIENT_URI: "http://localhost:3000"
+          envkey_MONGO_URI: ${{ secrets.MONGO_URI }}
+          envkey_MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
+          envkey_MONGO_USER: ${{ secrets.MONGO_USER }}
+          envkey_MONGO_PWD: ${{ secrets.MONGO_PWD }}
+          envkey_JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          envkey_COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          envkey_FACEBOOK_APP_ID: ${{ secrets.FACEBOOK_APP_ID }}
+          envkey_FACEBOOK_APP_SECRET: ${{ secrets.FACEBOOK_APP_SECRET }}
+          envkey_KAKAO_APP_ID: ${{ secrets.KAKAO_APP_ID }}
+          envkey_KAKAO_APP_SECRET: ${{ secrets.KAKAO_APP_SECRET }}
+          file_name: config/.env
+
       - name: RUN BUILD
         run: npm run build
 

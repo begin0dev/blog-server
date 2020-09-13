@@ -8,6 +8,8 @@ mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
 
 export const connectDB = async (uri: string, options = {}) => {
+  let retryCount = 0;
+
   const connect = () =>
     mongoose.connect(uri, {
       ...options,
@@ -22,8 +24,11 @@ export const connectDB = async (uri: string, options = {}) => {
     });
     mongoose.connection.on('disconnected', () => {
       if (NODE_ENV === 'test') return;
-      console.error('The connection to the Mongodb has been lost. Retry the connection');
-      connect();
+      if (retryCount < 3) {
+        console.error('The connection to the Mongodb has been lost. Retry the connection');
+        connect();
+        retryCount += 1;
+      }
     });
     return mongoose;
   } catch (err) {
