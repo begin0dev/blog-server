@@ -4,3 +4,5 @@ import dotenv from 'dotenv';
 if (process.env.NODE_ENV === 'production') require('module-alias/register');
 
 dotenv.config({ path: `./config/.env${process.env.NODE_ENV === 'test' ? '.test' : ''}` });
+
+console.log(process.env)
