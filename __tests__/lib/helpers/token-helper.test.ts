@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { generateAccessToken, decodeAccessToken } from '@app/lib/helpers/token-helper';
 
 const { JWT_SECRET } = process.env;
-
+console.log('JWT_SECRET', JWT_SECRET)
 const user = {
   _id: 'id',
   displayName: 'displayName',
