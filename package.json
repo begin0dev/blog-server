@@ -7,12 +7,13 @@
   "license": "ISC",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node dist/src/index.js",
+    "start": "node src/index",
     "dev": "nodemon",
     "build": "tsc",
     "test": "jest"
   },
   "dependencies": {
+    "@yeongjet/joi-to-json-schema": "^1.0.4",
     "axios": "^0.20.0",
     "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.5",
@@ -50,7 +51,6 @@
     "@types/swagger-ui-express": "^4.1.2",
     "@typescript-eslint/eslint-plugin": "^3.10.1",
     "@typescript-eslint/parser": "^3.10.1",
-    "@yeongjet/joi-to-json-schema": "^1.0.4",
     "eslint": "^7.9.0",
     "eslint-config-airbnb-base": "^14.2.0",
     "eslint-config-prettier": "^6.11.0",
@@ -70,6 +70,6 @@
     "typescript-transform-paths": "^2.0.0"
   },
   "_moduleAliases": {
-    "@app": "dist/src"
+    "@app": "src"
   }
 }
