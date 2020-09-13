@@ -35,7 +35,7 @@ jobs:
           envkey_FACEBOOK_APP_SECRET: ${{ secrets.FACEBOOK_APP_SECRET }}
           envkey_KAKAO_APP_ID: ${{ secrets.KAKAO_APP_ID }}
           envkey_KAKAO_APP_SECRET: ${{ secrets.KAKAO_APP_SECRET }}
-          file_name: config/.env
+          file_name: .env
 
       - name: RUN BUILD
         run: npm run build
