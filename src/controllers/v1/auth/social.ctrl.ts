@@ -61,4 +61,4 @@ router.get(
 );
 router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
 
-export = router;
+export default router;

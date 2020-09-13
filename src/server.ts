@@ -1,7 +1,7 @@
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
-import express from 'express';
+import express, {Request, Response, NextFunction} from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
@@ -9,9 +9,9 @@ import swaggerUi from 'swagger-ui-express';
 import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
 import swaggerDocument from '@app/swagger/index.json';
+import { connectDB } from '@app/database';
 import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
 import { ExpressError, Status } from '@app/types/base';
-import { connectDB } from '@app/database';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
@@ -60,7 +60,7 @@ class Server {
 
     /* RETURN ERROR */
     // eslint-disable-next-line no-unused-vars
-    app.use((err: ExpressError, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
       console.error(err);
       res.status(err.status || 500).json({ status: Status.ERROR, message: err.message });
     });
