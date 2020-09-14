@@ -5,6 +5,8 @@ import User from '@app/database/models/user';
 import { decodeAccessToken, generateAccessToken } from '@app/lib/helpers/token-helper';
 
 export const checkAccessToken = (req: Request, res: Response, next: NextFunction) => {
+  req.user = null;
+
   let accessToken = req.get('authorization') || req.cookies.accessToken;
   if (!accessToken) return next();
   if (accessToken.startsWith('Bearer ')) accessToken = accessToken.slice(7, accessToken.length);
