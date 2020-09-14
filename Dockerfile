@@ -6,6 +6,7 @@ RUN mkdir -p /app
 WORKDIR /app
 ADD ./package*.json ./
 COPY ./dist ./
+COPY ./.env ./
 
 RUN npm ci --only=production
 
