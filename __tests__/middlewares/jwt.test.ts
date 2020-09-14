@@ -20,7 +20,7 @@ describe('Test checkAccessToken', () => {
     const res = createResponse();
 
     checkAccessToken(req, res, () => {
-      expect(req.user).toBeUndefined();
+      expect(req.user).toBeNull();
     });
   });
 
@@ -55,7 +55,7 @@ describe('Test checkAccessToken', () => {
     const res = createResponse();
 
     checkAccessToken(req, res, () => {
-      expect(req.user).toBeUndefined();
+      expect(req.user).toBeNull();
     });
   });
 });
