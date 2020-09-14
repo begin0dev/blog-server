@@ -27,7 +27,7 @@ class Server {
     if (isProduction) {
       app.use(helmet());
       app.use(morgan('short'));
-      app.use(cors({ origin: 'https://begin0devBlog.com', credentials: true }));
+      app.use(cors({ origin: ['https://begin0devBlog.com', 'http://localhost:3000'], credentials: true }));
     } else {
       app.use(morgan('dev')); // server logger
       app.use(cors({ origin: true, credentials: true }));
