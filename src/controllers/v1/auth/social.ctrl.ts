@@ -38,8 +38,8 @@ const socialCallback = async (req: Request, res: Response) => {
         'oAuth.local.expiredAt': moment().add(12, 'hour'),
       },
     });
-    res.cookie('accessToken', accessToken);
-    res.cookie('refreshToken', refreshToken);
+    res.cookie('accessToken', accessToken, { httpOnly: true });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true });
     return res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
