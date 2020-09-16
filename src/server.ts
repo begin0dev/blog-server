@@ -1,7 +1,7 @@
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
-import express, {Request, Response, NextFunction} from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import swaggerUi from 'swagger-ui-express';
@@ -52,7 +52,7 @@ class Server {
     app.use('/api', controllers);
 
     /* SETUP 404 ERROR MIDDLEWARE */
-    app.use((req, res, next) => {
+    app.use((req: Request, res: Response, next: NextFunction) => {
       const err = new ExpressError('Not Found!');
       err.status = 404;
       next(err);
