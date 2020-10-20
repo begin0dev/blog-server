@@ -5,8 +5,8 @@ MAINTAINER begin0dev <prosonic1@gmail.com>
 RUN mkdir -p /app
 WORKDIR /app
 ADD ./package*.json ./
+ADD ./.env ./
 COPY ./dist ./
-COPY .env .env
 
 RUN npm ci --only=production
 
