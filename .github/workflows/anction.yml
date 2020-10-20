@@ -5,7 +5,7 @@ on:
     branches: master
 
 jobs:
-  ci_and_cd:
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -21,6 +21,9 @@ jobs:
       - name: RUN TEST
         run: npm test
 
+  cd:
+    needs: [ci]
+    steps:
       - name: MAKE .env file
         uses: SpicyPizza/create-envfile@v1
         with:
