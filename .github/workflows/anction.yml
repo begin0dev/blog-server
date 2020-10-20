@@ -16,10 +16,10 @@ jobs:
         with:
           node-version: '12.x'
 
-      - run: npm ci
+      - name: INSTALL package.json
+        run: npm ci
 
       - name: RUN TEST
-        if: success()
         run: npm test
 
       - name: MAKE .env file
@@ -55,7 +55,6 @@ jobs:
 
       - name: BUILD and PUSH
         id: docker_build
-        if: success()
         uses: docker/build-push-action@v2
         with:
           push: true
