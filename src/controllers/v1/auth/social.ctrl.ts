@@ -40,7 +40,7 @@ const socialCallback = async (req: Request, res: Response) => {
     });
     res.cookie('accessToken', accessToken, { httpOnly: true });
     res.cookie('refreshToken', refreshToken, { httpOnly: true });
-    return res.redirect(redirectUrl);
+    res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
     failureRedirect(err.message);
