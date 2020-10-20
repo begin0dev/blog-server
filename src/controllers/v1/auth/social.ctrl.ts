@@ -57,8 +57,7 @@ router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), s
 router.get(
   '/kakao',
   apiDoc({ summary: 'kakao social login api' }),
-  oAuth.authenticate(StrategiesNames.KAKAO, {}),
-  // oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
+  oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
 );
 router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
 
