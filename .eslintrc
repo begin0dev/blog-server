@@ -5,7 +5,7 @@
   "settings": {
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".ts"]
+        "extensions": [".ts", ".js", ".json"]
       },
       "alias": {
         "map": [["@app", "./src"]],
