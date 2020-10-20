@@ -4,6 +4,9 @@ MAINTAINER begin0dev <prosonic1@gmail.com>
 
 RUN mkdir -p /app
 WORKDIR /app
+
+RUN ls -a
+
 ADD ./package*.json ./
 ADD ./.env ./
 COPY ./dist ./
