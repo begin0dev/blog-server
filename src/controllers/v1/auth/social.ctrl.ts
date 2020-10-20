@@ -40,7 +40,8 @@ const socialCallback = async (req: Request, res: Response) => {
     });
     res.cookie('accessToken', accessToken, { httpOnly: true });
     res.cookie('refreshToken', refreshToken, { httpOnly: true });
-    return res.redirect(redirectUrl);
+    console.log('redirectUrl', redirectUrl);
+    res.redirect(redirectUrl);
   } catch (err) {
     console.error(err);
     failureRedirect(err.message);
@@ -57,7 +58,8 @@ router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), s
 router.get(
   '/kakao',
   apiDoc({ summary: 'kakao social login api' }),
-  oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
+  oAuth.authenticate(StrategiesNames.KAKAO, {}),
+  // oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
 );
 router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
 

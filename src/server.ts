@@ -26,7 +26,7 @@ class Server {
     /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
     if (isProduction) {
       app.use(helmet());
-      app.use(morgan('short'));
+      app.use(morgan('tiny'));
       app.use(
         cors({
           origin: [
