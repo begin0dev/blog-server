@@ -12,6 +12,7 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/__tests__/test-helper.ts'],
   moduleDirectories: ['node_modules', 'src'],
   moduleFileExtensions: ['ts', 'js'],
+  modulePathIgnorePatterns: ['<rootDir>/dist'],
   moduleNameMapper: {
     '@app/(.*)': '<rootDir>/src/$1',
   },
