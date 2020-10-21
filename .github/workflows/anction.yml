@@ -55,10 +55,10 @@ jobs:
       - name: test
         run: ls -a
 
-      - name: BUILD and PUSH
+      - name: DOCKER BUILD and PUSH
         id: docker_build
-        if: ${{ success() }}
         uses: docker/build-push-action@v2
         with:
           push: true
+          no-cache: true
           tags: begin0dev/blog-server:latest
