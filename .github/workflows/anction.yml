@@ -21,10 +21,7 @@ jobs:
       - name: RUN TEST
         run: npm test
 
-  cd:
-    needs: [ci]
-    steps:
-      - name: MAKE .env file
+      - name: SETUP .env file
         uses: SpicyPizza/create-envfile@v1
         with:
           envkey_CLIENT_URI: "http://localhost:3000"
@@ -54,6 +51,9 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: test
+        run: ls -a
 
       - name: BUILD and PUSH
         id: docker_build
