@@ -85,7 +85,7 @@ class Server {
     });
 
     this.application.listen(port, () => {
-      console.log(`Express is running on port ${port}`);
+      console.log(`Express is running on port ${port} - ${NODE_ENV}`);
     });
 
     return this.application;
