@@ -25,7 +25,7 @@ jobs:
       - name: SETUP .env file
         uses: SpicyPizza/create-envfile@v1
         with:
-          envkey_CLIENT_URI: "http://localhost:3000"
+          envkey_CLIENT_URI: "https://localhost:3000"
           envkey_MONGO_URI: ${{ secrets.MONGO_URI }}
           envkey_MONGO_DB_NAME: ${{ secrets.MONGO_DB_NAME }}
           envkey_MONGO_USER: ${{ secrets.MONGO_USER }}
