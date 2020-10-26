@@ -27,6 +27,7 @@ router.delete(
     req.user = null;
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
+    res.cookie('test', 'test_set', { httpOnly: true });
     res.status(204).end();
   }),
 );
