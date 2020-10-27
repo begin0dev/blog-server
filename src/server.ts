@@ -29,10 +29,7 @@ class Server {
       app.use(morgan('tiny'));
       app.use(
         cors({
-          origin: [
-            'https://begin0devBlog.com',
-            'http://localhost:3000',
-          ],
+          origin: ['https://localhost:3000'],
           credentials: true,
         }),
       );
