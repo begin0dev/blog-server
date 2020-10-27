@@ -9,6 +9,8 @@ import { Status } from '@app/types/base';
 const router = express.Router();
 
 router.get('/check', apiDoc({ summary: '유저 정보 확인 api' }), (req, res) => {
+  res.cookie('test', 'test_set', { httpOnly: true });
+
   const { user } = req;
   if (user) return res.status(200).json({ status: Status.SUCCESS, data: { user } });
   res.status(401).json({ status: Status.FAIL, message: 'Unauthorized' });
@@ -27,7 +29,6 @@ router.delete(
     req.user = null;
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
-    res.cookie('test', 'test_set', { httpOnly: true });
     res.status(204).end();
   }),
 );
