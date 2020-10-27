@@ -30,7 +30,7 @@ class Server {
       app.use(morgan('tiny'));
       app.use(
         cors({
-          origin: ['https://localhost:3000'],
+          origin: ['https://stoic-torvalds-3ca74f.netlify.app/', 'https://localhost:3000'],
           credentials: true,
         }),
       );
