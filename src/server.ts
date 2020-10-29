@@ -24,7 +24,12 @@ class Server {
     const app = express();
 
     app.response.setCookie = function (key: string, value: string) {
-      return this.cookie(key, value, { httpOnly: true, secure: true, sameSite: 'none' });
+      return this.cookie(key, value, {
+        // httpOnly: true,
+        // secure: true,
+        sameSite: 'none',
+        expires: new Date(Date.now() + 3600 * 1000 * 24),
+      });
     };
 
     /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
