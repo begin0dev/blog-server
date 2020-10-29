@@ -93,12 +93,14 @@ describe('Test checkRefreshToken', () => {
       user: null,
       cookies: { refreshToken },
     });
-    const res = createResponse();
+    const res: any = createResponse();
+    res.setCookie = jest.fn().mockReturnValue(res);
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
     });
     const updateUser = await User.findByRefreshToken(refreshToken);
+
     expect(moment(updateUser?.oAuth?.local?.expiredAt).diff(moment(), 'minute') > 5).toBeTruthy();
   });
 

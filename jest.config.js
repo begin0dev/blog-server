@@ -1,9 +1,4 @@
 module.exports = {
-  globals: {
-    'ts-jest': {
-      tsConfig: 'tsconfig.json',
-    },
-  },
   globalSetup: '<rootDir>/__tests__/globalSetup.js',
   clearMocks: true,
   collectCoverage: true,

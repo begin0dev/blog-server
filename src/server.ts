@@ -23,6 +23,10 @@ class Server {
   constructor() {
     const app = express();
 
+    app.response.setCookie = function (key: string, value: string) {
+      return this.cookie(key, value, { httpOnly: true, secure: true, sameSite: 'none' });
+    };
+
     /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
     if (isProduction) {
       app.enable('trust proxy');

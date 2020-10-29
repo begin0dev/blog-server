@@ -39,7 +39,7 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
 
     req.user = user.toJSON();
     const accessToken = generateAccessToken({ user: req.user });
-    res.cookie('accessToken', accessToken, { httpOnly: true });
+    res.setCookie('accessToken', accessToken);
 
     // extended your refresh token so they do not expire while using your site
     if (moment(expiredAt).diff(moment(), 'minute') <= 5) {

@@ -1,1 +1,1 @@
-{}
+{"openapi":"3.0.0","info":{"title":"blog-server","version":"1.0.0","description":"beginner blog node server"},"host":"localhost:3001","schemes":["https","http"],"paths":{},"definitions":{}}
