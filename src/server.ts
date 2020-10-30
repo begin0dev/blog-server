@@ -14,7 +14,7 @@ import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
 import { ExpressError, Status } from '@app/types/base';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
-const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD, CLIENT_URI } = process.env;
+const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
 
 class Server {
@@ -25,10 +25,9 @@ class Server {
 
     app.response.setCookie = function (key: string, value: string) {
       return this.cookie(key, value, {
-        domain: CLIENT_URI,
-        httpOnly: true,
         secure: true,
         sameSite: 'none',
+        httpOnly: true,
         maxAge: 24 * 60 * 60,
       });
     };
