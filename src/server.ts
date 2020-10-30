@@ -23,15 +23,6 @@ class Server {
   constructor() {
     const app = express();
 
-    app.response.setCookie = function (key: string, value: string) {
-      return this.cookie(key, value, {
-        secure: true,
-        sameSite: 'none',
-        httpOnly: true,
-        maxAge: 24 * 60 * 60,
-      });
-    };
-
     /* ENABLE DEBUG WHEN DEV ENVIRONMENT */
     if (isProduction) {
       app.enable('trust proxy');
@@ -53,6 +44,16 @@ class Server {
     app.use(express.urlencoded({ extended: true }));
     app.use(hpp());
     app.use(cookieParser(COOKIE_SECRET));
+
+    /* SETUP CUSTOM FUNCTION */
+    app.response.setCookie = function (key: string, value: string) {
+      return this.cookie(key, value, {
+        secure: true,
+        sameSite: 'none',
+        httpOnly: true,
+        maxAge: 24 * 60 * 60,
+      });
+    };
 
     /* SETUP OAUTH STRATEGIES */
     oAuthStrategies();
