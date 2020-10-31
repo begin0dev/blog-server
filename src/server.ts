@@ -52,7 +52,7 @@ class Server {
       httpOnly: true,
     };
     app.response.setCookie = function (key: string, value: string) {
-      return this.cookie(key, value, { ...cookieOptions, maxAge: 24 * 60 * 60 });
+      return this.cookie(key, value, { ...cookieOptions,  });
     };
     app.response.deleteCookie = function (key: string) {
       return this.clearCookie(key, cookieOptions);
