@@ -48,7 +48,6 @@ class Server {
     /* SETUP CUSTOM FUNCTION */
     app.response.setCookie = function (key: string, value: string) {
       return this.cookie(key, value, {
-        path: '/',
         sameSite: 'none',
         secure: true,
         httpOnly: true,
