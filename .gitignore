@@ -3,4 +3,3 @@
 /dist
 /coverage
 /.idea
-/src/swagger/*.json
