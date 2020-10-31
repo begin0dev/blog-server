@@ -25,9 +25,8 @@ router.delete(
 
     await User.findByIdAndUpdate(_id, { $unset: { 'oAuth.local': 1 } });
     req.user = null;
-    const cookieOptions = { sameSite: 'none', secure: true, httpOnly: true }
-    res.clearCookie('accessToken', cookieOptions);
-    res.clearCookie('refreshToken', cookieOptions);
+    res.deleteCookie('accessToken');
+    res.deleteCookie('refreshToken');
     res.status(204).end();
   }),
 );

@@ -1,11 +1,17 @@
 import jwt from 'jsonwebtoken';
 import moment from 'moment';
 import { createRequest, createResponse } from 'node-mocks-http';
+import { Response } from 'express';
 
 import User, { UserSchema } from '@app/database/models/user';
 import { mockUser } from '@app/database/models/__mocks__/user';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
+
+interface AppResponse extends Response {
+  setCookie: jest.Mock;
+  deleteCookie: jest.Mock;
+}
 
 const { JWT_SECRET } = process.env;
 
@@ -14,10 +20,12 @@ describe('Test checkAccessToken', () => {
     _id: 'id',
     displayName: 'displayName',
   };
+  const res = createResponse<AppResponse>();
+  res.setCookie = jest.fn().mockReturnValue(res);
+  res.deleteCookie = jest.fn().mockReturnValue(res);
 
   test('Success: user is undefined if exist authorization in the header', () => {
     const req = createRequest({ headers: {} });
-    const res = createResponse();
 
     checkAccessToken(req, res, () => {
       expect(req.user).toBeUndefined();
@@ -31,7 +39,6 @@ describe('Test checkAccessToken', () => {
         authorization: `Bearer ${token}`,
       },
     });
-    const res = createResponse();
 
     checkAccessToken(req, res, () => {
       expect(req.user).toEqual(user);
@@ -52,7 +59,6 @@ describe('Test checkAccessToken', () => {
         authorization: `Bearer ${token}`,
       },
     });
-    const res = createResponse();
 
     checkAccessToken(req, res, () => {
       expect(req.user).toBeUndefined();
@@ -63,6 +69,9 @@ describe('Test checkAccessToken', () => {
 describe('Test checkRefreshToken', () => {
   let refreshToken: string;
   let user: UserSchema;
+  const res = createResponse<AppResponse>();
+  res.setCookie = jest.fn().mockReturnValue(res);
+  res.deleteCookie = jest.fn().mockReturnValue(res);
 
   beforeEach(async () => {
     const mockUserData = mockUser();
@@ -78,7 +87,6 @@ describe('Test checkRefreshToken', () => {
       user: null,
       cookies: { refreshToken },
     });
-    const res = createResponse();
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
@@ -93,8 +101,6 @@ describe('Test checkRefreshToken', () => {
       user: null,
       cookies: { refreshToken },
     });
-    const res: any = createResponse();
-    res.setCookie = jest.fn().mockReturnValue(res);
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toEqual(user.toJSON());
@@ -112,7 +118,6 @@ describe('Test checkRefreshToken', () => {
       user: null,
       cookies: { refreshToken },
     });
-    const res = createResponse();
 
     await checkRefreshToken(req, res, () => {
       expect(req.user).toBeNull();

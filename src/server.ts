@@ -46,13 +46,16 @@ class Server {
     app.use(cookieParser(COOKIE_SECRET));
 
     /* SETUP CUSTOM FUNCTION */
+    const cookieOptions = {
+      sameSite: 'none',
+      secure: true,
+      httpOnly: true,
+    };
     app.response.setCookie = function (key: string, value: string) {
-      return this.cookie(key, value, {
-        sameSite: 'none',
-        secure: true,
-        httpOnly: true,
-        maxAge: 24 * 60 * 60,
-      });
+      return this.cookie(key, value, { ...cookieOptions, maxAge: 24 * 60 * 60 });
+    };
+    app.response.deleteCookie = function (key: string) {
+      return this.clearCookie(key, cookieOptions);
     };
 
     /* SETUP OAUTH STRATEGIES */

@@ -14,7 +14,7 @@ export const checkAccessToken = (req: Request, res: Response, next: NextFunction
     req.user = decoded.user;
     next();
   } catch (err) {
-    res.clearCookie('accessToken');
+    res.deleteCookie('accessToken');
     next();
   }
 };
@@ -26,14 +26,14 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
   try {
     const user = await User.findByRefreshToken(refreshToken);
     if (!user) {
-      res.clearCookie('refreshToken');
+      res.deleteCookie('refreshToken');
       return next();
     }
 
     const { expiredAt } = user?.oAuth?.local || {};
     if (moment() > moment(expiredAt)) {
       await user.updateOne({ $unset: { 'oAuth.local': 1 } });
-      res.clearCookie('refreshToken');
+      res.deleteCookie('refreshToken');
       return next();
     }
 
@@ -47,7 +47,7 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
     }
     next();
   } catch (err) {
-    res.clearCookie('refreshToken');
+    res.deleteCookie('refreshToken');
     next(err);
   }
 };
