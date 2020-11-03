@@ -9,6 +9,7 @@ import swaggerUi from 'swagger-ui-express';
 import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
 import swaggerDocument from '@app/swagger/index.json';
+import logger from '@app/lib/logger';
 import { connectDB } from '@app/database';
 import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
 import { ExpressError, Status } from '@app/types/base';
@@ -52,7 +53,7 @@ class Server {
       httpOnly: true,
     };
     app.response.setCookie = function (key: string, value: string) {
-      return this.cookie(key, value, { ...cookieOptions,  });
+      return this.cookie(key, value, { ...cookieOptions });
     };
     app.response.deleteCookie = function (key: string) {
       return this.clearCookie(key, cookieOptions);
@@ -81,6 +82,7 @@ class Server {
     // eslint-disable-next-line no-unused-vars
     app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
       console.error(err);
+      logger.error(err);
       res.status(err.status || 500).json({ status: Status.ERROR, message: err.message });
     });
 
