@@ -13,7 +13,6 @@ const logger = createLogger({
       maxFiles: 30,
       zippedArchive: true,
     }),
-    // error 레벨 로그를 저장할 파일 설정
     new WinstonDaily({
       level: 'error',
       datePattern: 'YYYY-MM-DD',
@@ -23,6 +22,7 @@ const logger = createLogger({
       zippedArchive: true,
     }),
   ],
+  silent: process.env.NODE_ENV === 'test',
 });
 
 if (process.env.NODE_ENV !== 'production') {
