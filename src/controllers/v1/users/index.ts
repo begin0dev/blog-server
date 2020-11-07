@@ -1,9 +1,9 @@
 import express from 'express';
 
-import usersCtrl from './users.ctrl';
+import usersController from './users.controller';
 
 const router = express.Router();
 
-router.use('/', usersCtrl);
+router.use('/', usersController);
 
 export default router;

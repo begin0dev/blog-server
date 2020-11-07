@@ -1,11 +1,11 @@
 import express from 'express';
 
 import { isNotLoggedIn } from '@app/middlewares/auth';
-import socialCtrl from './social.ctrl';
+import socialController from './social.controller';
 
 const router = express.Router();
 
 router.use(isNotLoggedIn);
-router.use('/social', socialCtrl);
+router.use('/social', socialController);
 
 export default router;
