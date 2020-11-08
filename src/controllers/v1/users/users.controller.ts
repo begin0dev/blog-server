@@ -19,9 +19,7 @@ router.delete(
   apiDoc({ summary: '유저 로그아웃 api' }),
   isLoggedIn,
   asyncErrorHelper(async (req, res) => {
-    const {
-      user: { _id },
-    } = req;
+    const { _id } = req.user;
 
     await User.findByIdAndUpdate(_id, { $unset: { 'oAuth.local': 1 } });
     req.user = null;
