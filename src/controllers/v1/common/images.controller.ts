@@ -27,11 +27,16 @@ const uploader = multer({
   limits: { fileSize: 1024 * 1024 * 2 },
 });
 
-router.post('/', uploader.array('images', 3), (req: Request, res: Response) => {
-  res.status(200).json({
-    status: Status.SUCCESS,
-    data: { image_urls: (<Express.Multer.File[]>req.files).map((file) => file.path) },
-  });
-});
+router.post(
+  '/',
+  apiDoc({ summary: '이미지 등록 api' }),
+  uploader.array('images', 3),
+  (req: Request, res: Response) => {
+    res.status(200).json({
+      status: Status.SUCCESS,
+      data: { image_urls: (<Express.Multer.File[]>req.files).map((file) => file.path) },
+    });
+  },
+);
 
 export default router;
