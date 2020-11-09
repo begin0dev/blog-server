@@ -1,6 +1,6 @@
 import qs from 'qs';
 import url from 'url';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import express, { Request, Response } from 'express';
 
 import oAuth from '@app/lib/oauth';
@@ -35,7 +35,7 @@ const socialCallback = async (req: Request, res: Response) => {
     await User.findByIdAndUpdate(userJson._id, {
       $set: {
         'oAuth.local.refreshToken': refreshToken,
-        'oAuth.local.expiredAt': moment().add(12, 'hour'),
+        'oAuth.local.expiredAt': dayjs().add(12, 'hour'),
       },
     });
     res.setCookie('accessToken', accessToken);

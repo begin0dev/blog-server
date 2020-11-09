@@ -4,6 +4,6 @@ import imagesController from './images.controller';
 
 const router = express.Router();
 
-router.use('/images', imagesController);
+router.use('/', imagesController);
 
 export default router;

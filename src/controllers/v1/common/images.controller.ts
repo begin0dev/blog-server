@@ -28,13 +28,13 @@ const uploader = multer({
 });
 
 router.post(
-  '/',
+  '/images',
   apiDoc({ summary: '이미지 등록 api' }),
   uploader.array('images', 3),
   (req: Request, res: Response) => {
     res.status(200).json({
       status: Status.SUCCESS,
-      data: { image_urls: (<Express.Multer.File[]>req.files).map((file) => file.path) },
+      data: { imageUrls: (<Express.Multer.File[]>req.files).map((file) => file.path) },
     });
   },
 );

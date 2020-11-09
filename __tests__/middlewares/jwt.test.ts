@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { createRequest, createResponse } from 'node-mocks-http';
 import { Response } from 'express';
 
@@ -81,7 +81,7 @@ describe('Test checkRefreshToken', () => {
 
   test('Success: user is exist if refresh token is equal and expiredAt is valid', async () => {
     await user.updateOne({
-      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(12, 'hour') },
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': dayjs().add(12, 'hour') },
     });
     const req = createRequest({
       user: null,
@@ -95,7 +95,7 @@ describe('Test checkRefreshToken', () => {
 
   test('Success: update expiredAt if refresh token is equal and expiredAt is less then 10 minutes', async () => {
     await user.updateOne({
-      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().add(3, 'minute') },
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': dayjs().add(3, 'minute') },
     });
     const req = createRequest({
       user: null,
@@ -107,12 +107,12 @@ describe('Test checkRefreshToken', () => {
     });
     const updateUser = await User.findByRefreshToken(refreshToken);
 
-    expect(moment(updateUser?.oAuth?.local?.expiredAt).diff(moment(), 'minute') > 5).toBeTruthy();
+    expect(dayjs(updateUser?.oAuth?.local?.expiredAt).diff(dayjs(), 'minute') > 5).toBeTruthy();
   });
 
   test('Success: user is null if expiredAt is expired', async () => {
     await user.updateOne({
-      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': moment().subtract(10, 'minute') },
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': dayjs().subtract(10, 'minute') },
     });
     const req = createRequest({
       user: null,

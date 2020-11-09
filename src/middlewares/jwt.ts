@@ -1,4 +1,4 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { Request, Response, NextFunction } from 'express';
 
 import User from '@app/database/models/user';
@@ -31,7 +31,7 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
     }
 
     const { expiredAt } = user?.oAuth?.local || {};
-    if (moment() > moment(expiredAt)) {
+    if (dayjs() > dayjs(expiredAt)) {
       await user.updateOne({ $unset: { 'oAuth.local': 1 } });
       res.deleteCookie('refreshToken');
       return next();
@@ -42,8 +42,8 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
     res.setCookie('accessToken', accessToken);
 
     // extended your refresh token so they do not expire while using your site
-    if (moment(expiredAt).diff(moment(), 'minute') <= 5) {
-      await user.updateOne({ $set: { 'oAuth.local.expiredAt': moment().add(1, 'hour') } });
+    if (dayjs(expiredAt).diff(dayjs(), 'minute') <= 5) {
+      await user.updateOne({ $set: { 'oAuth.local.expiredAt': dayjs().add(1, 'hour') } });
     }
     next();
   } catch (err) {
