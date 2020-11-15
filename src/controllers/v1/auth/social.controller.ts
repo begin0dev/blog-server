@@ -33,10 +33,7 @@ const socialCallback = async (req: Request, res: Response) => {
     const accessToken = generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
     await User.findByIdAndUpdate(userJson._id, {
-      $set: {
-        'oAuth.local.refreshToken': refreshToken,
-        'oAuth.local.expiredAt': dayjs().add(12, 'hour'),
-      },
+      $set: { 'oAuth.local.refreshToken': refreshToken, 'oAuth.local.expiredAt': dayjs().add(12, 'hour') },
     });
     res.setCookie('accessToken', accessToken);
     res.setCookie('refreshToken', refreshToken);
