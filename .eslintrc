@@ -17,9 +17,6 @@
     "jest/globals": true
   },
   "rules": {
-    "arrow-parens": "off",
-    "arrow-body-style": "off",
-    "camelcase": "warn",
     "consistent-return": "off",
     "object-property-newline": "off",
     "object-curly-newline": "off",
@@ -28,6 +25,7 @@
     "implicit-arrow-linebreak": "off",
     "import/extensions": ["error", "ignorePackages", { "js": "never", "ts": "never" }],
     "lines-between-class-members": "off",
+    "max-len": "off",
     "no-console": "off",
     "no-underscore-dangle": [
       "error",
@@ -36,7 +34,6 @@
       }
     ],
     "func-names": "off",
-    "max-len": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
