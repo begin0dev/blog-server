@@ -6,6 +6,7 @@ RUN mkdir -p /app
 WORKDIR /app
 
 ADD ./package*.json ./
+ADD ./newrelic.js ./
 ADD ./.env ./
 COPY ./dist ./
 
