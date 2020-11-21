@@ -20,18 +20,18 @@ const errorTypeTextMap = (err: ValidationError) => {
   return validationErrorTypes[error.type]?.(error) || error.message;
 };
 
-export const apiDoc = (schema: ControllerSchema) => async (req: Request, res: Response, next: NextFunction) => {
+export const apiDoc = (schema: ControllerSchema) => async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     if (process.env.NODE_ENV === 'test') await setPathParameters(req, res, schema);
-    req.validParams = (
-      await Promise.all(
-        (<(keyof typeof paramMap)[]>Object.keys(paramMap)).map((key) =>
-          Joi.object(schema[key]).validateAsync(req[key], {
-            stripUnknown: true,
-          }),
-        ),
-      )
-    ).reduce((acc, cur) => Object.assign(acc, cur), {});
+    await Promise.all(
+      (<(keyof typeof paramMap)[]>Object.keys(paramMap)).map((key) =>
+        Joi.object(schema[key]).validateAsync(req[key], { stripUnknown: true }),
+      ),
+    );
     next();
   } catch (err) {
     res.status(400).json({ status: Status.ERROR, message: errorTypeTextMap(err) });

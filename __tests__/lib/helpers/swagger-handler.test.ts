@@ -25,7 +25,7 @@ describe('Test setPathParameters function', () => {
       summary: 'test 용',
       params: { id: Joi.string().required().description('테스트용 아이디') },
       query: { type: Joi.string().valid('admin', 'member').required().description('유저 타입') },
-      body: { image: Joi.binary() },
+      body: { test: Joi.string().description('테스트') },
     });
 
     const swaggerJson = JSON.parse(writeMock.mock.results[0].value);
