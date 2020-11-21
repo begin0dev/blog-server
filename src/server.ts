@@ -31,7 +31,7 @@ class Server {
       app.use(morgan('tiny'));
       app.use(
         cors({
-          origin: ['https://stoic-torvalds-3ca74f.netlify.app', 'https://begin0dev.ml', 'https://localhost:3000'],
+          origin: ['https://begin0dev.ml', 'https://localhost:3000'],
           credentials: true,
         }),
       );
