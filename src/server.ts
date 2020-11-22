@@ -9,7 +9,7 @@ import swaggerUi from 'swagger-ui-express';
 import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
 import swaggerDocument from '@app/swagger/index.json';
-import logger from '@app/lib/logger';
+import logger from '@app/lib/helpers/logger';
 import { connectDB } from '@app/database';
 import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
 import { ExpressError, Status } from '@app/types/base';

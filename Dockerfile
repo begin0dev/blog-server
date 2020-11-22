@@ -9,6 +9,7 @@ ADD ./package*.json ./
 ADD ./newrelic.js ./
 ADD ./.env ./
 COPY ./dist ./
+RUN mkdir -p /logs
 
 RUN npm ci --only=production
 
