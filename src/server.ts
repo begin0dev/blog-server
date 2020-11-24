@@ -17,6 +17,7 @@ import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
+const newrelic = isProduction ? require('newrelic') : null;
 
 class Server {
   public application: express.Application;
@@ -82,10 +83,10 @@ class Server {
     // eslint-disable-next-line no-unused-vars
     app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
       logger.error(err);
-      // if (isProduction && newrelic) {
-      //   newrelic.addCustomAttribute('query', JSON.stringify(req.query));
-      //   newrelic.addCustomAttribute('body', JSON.stringify(req.body || {}));
-      // }
+      if (isProduction && newrelic) {
+        newrelic.addCustomAttribute('query', JSON.stringify(req.query));
+        newrelic.addCustomAttribute('body', JSON.stringify(req.body || {}));
+      }
       res.status(err.status || 500).json({ status: Status.ERROR, message: err.message });
     });
 
