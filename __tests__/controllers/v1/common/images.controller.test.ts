@@ -1,27 +1,13 @@
-import { agent } from 'supertest';
-import { NextFunction } from 'express';
 import faker from 'faker';
+import { agent } from 'supertest';
+import { Express, NextFunction, Request, Response } from 'express';
 
 import Server from '@app/server';
-
-interface MulterFile {
-  filename: string;
-  fieldname: string;
-  encoding: string;
-  mimetype: string;
-  originalname: string;
-  size: number;
-  path: string;
-}
-
-interface MulterRequest extends Request {
-  files: MulterFile[];
-}
 
 jest.mock('multer', () => () => ({
   any: jest.fn(),
   array() {
-    return (req: MulterRequest, res: Response, next: NextFunction) => {
+    return (req: Request, res: Response, next: NextFunction) => {
       const filename = faker.system.commonFileName('png');
       req.files = [
         {
@@ -33,7 +19,7 @@ jest.mock('multer', () => () => ({
           size: 12311,
           path: faker.image.imageUrl(),
         },
-      ];
+      ] as Express.Multer.File[];
       return next();
     };
   },
