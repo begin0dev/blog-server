@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import express, { Request, Response } from 'express';
 
 import oAuth from '@app/lib/oauth';
-import User from '@app/database/models/user';
+import User, { UserJson } from '@app/database/models/user';
 import { StrategiesNames } from '@app/lib/oauth/types';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
 import { apiDoc } from '@app/lib/helpers/apidoc-helper';
@@ -28,7 +28,7 @@ const socialCallback = async (req: Request, res: Response) => {
     let user = await User.findBySocialId(provider, id);
     if (!user) user = await User.socialRegister(res.locals.profile);
 
-    const userJson = user.toJSON();
+    const userJson = user.toJSON() as UserJson;
     // access token and refresh token set cookie
     const accessToken = generateAccessToken({ user: userJson });
     const refreshToken = await generateRefreshToken();
