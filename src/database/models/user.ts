@@ -94,7 +94,7 @@ const User = new Schema(
 User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
-  transform({ _id, email, emailVerified, displayName, profileImage, isAdmin }) {
+  transform({ _id, email, emailVerified, displayName, profileImage, isAdmin }: UserJson) {
     return {
       _id,
       email,
