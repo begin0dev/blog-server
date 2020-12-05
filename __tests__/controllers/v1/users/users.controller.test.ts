@@ -2,7 +2,7 @@ import { agent } from 'supertest';
 
 import Server from '@app/server';
 import { mockUser, mockJWT } from '@app/database/models/__mocks__/user';
-import User from '@app/database/models/user';
+import User, { UserJson } from '@app/database/models/user';
 
 describe('Test users controller', () => {
   test('/check when login', async () => {
@@ -18,7 +18,7 @@ describe('Test users controller', () => {
 
     await agent(Server.application)
       .delete('/api/v1/users/logout')
-      .set('Authorization', `Bearer ${mockJWT(user.toJSON())}`)
+      .set('Authorization', `Bearer ${mockJWT(user.toJSON() as UserJson)}`)
       .expect(204);
   });
 

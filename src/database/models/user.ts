@@ -16,7 +16,7 @@ export interface UserJson extends UserBase {
   _id: string;
 }
 
-export interface UserSchema extends Document, UserBase {
+export interface UserSchema extends UserBase, Document {
   oAuth?: {
     local?: {
       refreshToken: string;
@@ -94,7 +94,7 @@ const User = new Schema(
 User.plugin(mongooseDelete, { deletedAt: true });
 
 User.set('toJSON', {
-  transform({ _id, email, emailVerified, displayName, profileImage, isAdmin }: UserJson) {
+  transform({ _id, email, emailVerified, displayName, profileImage, isAdmin }: UserSchema) {
     return {
       _id,
       email,

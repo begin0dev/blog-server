@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Request, Response, NextFunction } from 'express';
 
-import User from '@app/database/models/user';
+import User, { UserJson } from '@app/database/models/user';
 import { decodeAccessToken, generateAccessToken } from '@app/lib/helpers/token-helper';
 
 export const checkAccessToken = (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +37,7 @@ export const checkRefreshToken = async (req: Request, res: Response, next: NextF
       return next();
     }
 
-    req.user = user.toJSON();
+    req.user = user.toJSON() as UserJson;
     const accessToken = generateAccessToken({ user: req.user });
     res.setCookie('accessToken', accessToken);
 
