@@ -6,7 +6,12 @@ import User, { UserJson } from '@app/database/models/user';
 
 describe('Test users controller', () => {
   test('/check when login', async () => {
-    await agent(Server.application).get('/api/v1/users/check').set('Authorization', `Bearer ${mockJWT()}`).expect(200);
+    const authorization = `Bearer ${mockJWT()}`;
+
+    await agent(Server.application)
+      .get('/api/v1/users/check')
+      .set('Authorization', authorization)
+      .expect(200);
   });
 
   test('/check when not login', async () => {
@@ -15,10 +20,11 @@ describe('Test users controller', () => {
 
   test('/logout when login', async () => {
     const user = await User.create(mockUser());
+    const authorization = `Bearer ${mockJWT(user.toJSON() as UserJson)}`;
 
     await agent(Server.application)
       .delete('/api/v1/users/logout')
-      .set('Authorization', `Bearer ${mockJWT(user.toJSON() as UserJson)}`)
+      .set('Authorization', authorization)
       .expect(204);
   });
 
