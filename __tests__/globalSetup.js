@@ -1,21 +1,7 @@
-const { writeJSON } = require('../src/lib/helpers/swagger-handler');
+require('dotenv').config({ path: './__tests__/.env.test' });
 
-const { description, name: title, version } = require('../package.json');
+global.apiHelper = require('../src/lib/helpers/apiHelper');
 
-module.exports = async function () {
-  // initialize swagger base
-  await writeJSON({
-    openapi: '3.0.0',
-    info: {
-      title,
-      version,
-      description,
-    },
-    host: 'localhost:3001',
-    schemes: ['https', 'http'],
-    paths: {},
-    definitions: {},
-  });
-
+module.exports = function () {
   return null;
 };

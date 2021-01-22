@@ -7,7 +7,7 @@ import oAuth from '@app/lib/oauth';
 import User, { UserJson } from '@app/database/models/user';
 import { StrategiesNames } from '@app/lib/oauth/types';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
-import { apiDoc } from '@app/lib/helpers/apidoc-helper';
+import apiHelper from '@app/lib/helpers/apiHelper';
 
 const { CLIENT_URI: redirectUrl } = process.env;
 
@@ -46,14 +46,14 @@ const socialCallback = async (req: Request, res: Response) => {
 
 router.get(
   '/facebook',
-  apiDoc({ summary: 'facebook social login api' }),
+  apiHelper.apiDoc({ summary: 'facebook social login api' }),
   oAuth.authenticate(StrategiesNames.FACEBOOK, { auth_type: 'rerequest' }),
 );
 router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), socialCallback);
 
 router.get(
   '/kakao',
-  apiDoc({ summary: 'kakao social login api' }),
+  apiHelper.apiDoc({ summary: 'kakao social login api' }),
   oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
 );
 router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);

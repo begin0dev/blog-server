@@ -4,15 +4,13 @@ import cors from 'cors';
 import express, { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
-import swaggerUi from 'swagger-ui-express';
 
 import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
-import swaggerDocument from '@app/swagger/index.json';
 import logger from '@app/lib/helpers/logger';
 import { connectDB } from '@app/database';
-import { setSwaggerResponse } from '@app/lib/helpers/swagger-handler';
-import { ExpressError, Status } from '@app/types/base';
+import apiHelper from '@app/lib/helpers/apiHelper';
+import { ExpressError, ResponseStatus } from '@app/types/base';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 
 const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
@@ -62,24 +60,19 @@ class Server {
 
     /* SETUP OAUTH STRATEGIES */
     oAuthStrategies();
-
-    /* SETUP SWAGGER */
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-    if (process.env.NODE_ENV === 'test') app.use(setSwaggerResponse);
-
+    /* SETUP OPENAPI 3 */
+    apiHelper.setMiddleware('/api-docs', app);
     /* SETUP JWT TOKEN MIDDLEWARE */
     app.use(checkAccessToken, checkRefreshToken);
     /* SETUP ROUTER */
     app.use('/api', controllers);
-
     /* SETUP 404 ERROR MIDDLEWARE */
     app.use((req: Request, res: Response, next: NextFunction) => {
       const err = new ExpressError('Not Found!');
       err.status = 404;
       next(err);
     });
-
-    /* RETURN ERROR */
+    /* ERROR HANDLER */
     // eslint-disable-next-line no-unused-vars
     app.use((err: ExpressError, req: Request, res: Response, next: NextFunction) => {
       logger.error(err);
@@ -87,7 +80,7 @@ class Server {
         newrelic.addCustomAttribute('query', JSON.stringify(req.query));
         newrelic.addCustomAttribute('body', JSON.stringify(req.body || {}));
       }
-      res.status(err.status || 500).json({ status: Status.ERROR, message: err.message });
+      res.status(err.status || 500).json({ status: ResponseStatus.ERROR, message: err.message });
     });
 
     this.application = app;

@@ -1,10 +1,7 @@
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
 import { connectDB } from '@app/database';
-
-dotenv.config({ path: './__tests__/.env.test' });
 
 let mongoServer: MongoMemoryServer;
 
