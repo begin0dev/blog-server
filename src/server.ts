@@ -1,7 +1,7 @@
 import hpp from 'hpp';
 import helmet from 'helmet';
 import cors from 'cors';
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Request, Response, NextFunction, Express } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 
@@ -18,7 +18,7 @@ const isProduction = NODE_ENV === 'production';
 const newrelic = isProduction ? require('newrelic') : null;
 
 class Server {
-  public application: express.Application;
+  public application: Express;
 
   constructor() {
     const app = express();
