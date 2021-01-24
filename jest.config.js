@@ -11,7 +11,5 @@ module.exports = {
   moduleNameMapper: { '@app/(.*)': '<rootDir>/src/$1' },
   testEnvironment: 'node',
   testMatch: ['<rootDir>/__tests__/**/?(*.)(test).(js|ts)'],
-  transform: {
-    '^.+\\.(ts)$': 'ts-jest',
-  },
+  preset: 'ts-jest',
 };
