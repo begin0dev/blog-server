@@ -4,7 +4,7 @@ import User from '@app/database/models/user';
 import { isLoggedIn } from '@app/middlewares/auth';
 import { asyncErrorHelper } from '@app/lib/helpers/base-helper';
 import { ResponseStatus } from '@app/types/base';
-import apiHelper from '@app/lib/helpers/apiHelper';
+import apiHelper from '@app/lib/helpers/api-helper';
 
 const router = express.Router();
 

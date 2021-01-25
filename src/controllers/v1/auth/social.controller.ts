@@ -7,7 +7,7 @@ import oAuth from '@app/lib/oauth';
 import User, { UserJson } from '@app/database/models/user';
 import { StrategiesNames } from '@app/lib/oauth/types';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
-import apiHelper from '@app/lib/helpers/apiHelper';
+import apiHelper from '@app/lib/helpers/api-helper';
 
 const { CLIENT_URI: redirectUrl } = process.env;
 

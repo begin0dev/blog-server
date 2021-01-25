@@ -4,7 +4,7 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 import { ResponseStatus } from '@app/types/base';
-import apiHelper from '@app/lib/helpers/apiHelper';
+import apiHelper from '@app/lib/helpers/api-helper';
 
 const router = express.Router();
 

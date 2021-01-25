@@ -9,7 +9,7 @@ import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
 import logger from '@app/lib/helpers/logger';
 import { connectDB } from '@app/database';
-import apiHelper from '@app/lib/helpers/apiHelper';
+import apiHelper from '@app/lib/helpers/api-helper';
 import { ExpressError, ResponseStatus } from '@app/types/base';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 

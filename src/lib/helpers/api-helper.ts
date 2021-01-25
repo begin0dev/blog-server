@@ -8,7 +8,7 @@ const apiHelper = new ApiValidationDoc({
     version: packageJson.version,
     description: 'node express server for begin0dev blog',
   },
-  filePath: './src/swagger/index.json',
+  filePath: 'src/swagger/index.json',
 });
 
 export default apiHelper;

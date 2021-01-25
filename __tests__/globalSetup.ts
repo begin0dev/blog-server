@@ -1,6 +1,8 @@
-import dotenv from 'dotenv';
+import apiHelper from '../src/lib/helpers/api-helper';
+
+require('dotenv').config({ path: './__tests__/.env.test' });
 
 module.exports = (): null => {
-  dotenv.config({ path: './__tests__/.env.test' });
+  apiHelper.initJSON();
   return null;
 };
