@@ -3,7 +3,6 @@ import { Router } from 'express-swagger-validator';
 
 import User from '@app/database/models/user';
 import { isLoggedIn } from '@app/middlewares/auth';
-import { asyncErrorHelper } from '@app/lib/helpers/base-helper';
 import { ResponseStatus } from '@app/types/base';
 
 const router = Router();
@@ -18,7 +17,7 @@ router.delete(
   '/logout',
   { summary: '유저 로그아웃 api', tags: ['users'] },
   isLoggedIn,
-  asyncErrorHelper(async (req: Request, res: Response) => {
+  async (req: Request, res: Response) => {
     const { _id } = req.user;
 
     await User.findByIdAndUpdate(_id, { $unset: { 'oAuth.local': 1 } });
@@ -26,7 +25,7 @@ router.delete(
     res.deleteCookie('accessToken');
     res.deleteCookie('refreshToken');
     res.status(204).end();
-  }),
+  },
 );
 
 export default router;
