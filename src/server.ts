@@ -4,14 +4,16 @@ import cors from 'cors';
 import express, { Request, Response, NextFunction, Express } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import { SwaggerGenerator } from 'express-swagger-validator';
+import listEndpoints from 'express-list-endpoints';
 
 import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
 import logger from '@app/lib/helpers/logger';
 import { connectDB } from '@app/database';
-import apiHelper from '@app/lib/helpers/api-helper';
 import { ExpressError, ResponseStatus } from '@app/types/base';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
+import packageJson from '../package.json';
 
 const { NODE_ENV, COOKIE_SECRET, MONGO_URI, MONGO_DB_NAME, MONGO_USER, MONGO_PWD } = process.env;
 const isProduction = NODE_ENV === 'production';
@@ -60,12 +62,19 @@ class Server {
 
     /* SETUP OAUTH STRATEGIES */
     oAuthStrategies();
-    /* SETUP OPENAPI 3 */
-    apiHelper.setMiddleware('/api-docs', app);
     /* SETUP JWT TOKEN MIDDLEWARE */
     app.use(checkAccessToken, checkRefreshToken);
     /* SETUP ROUTER */
     app.use('/api', controllers);
+    /* SETUP SWAGGER UI */
+    const generator = new SwaggerGenerator(app, {
+      info: {
+        title: 'begin0dev-blog-api',
+        version: packageJson.version,
+        description: 'node express server for begin0dev blog',
+      },
+    });
+    generator.setSwaggerUi('/api-docs');
     /* SETUP 404 ERROR MIDDLEWARE */
     app.use((req: Request, res: Response, next: NextFunction) => {
       const err = new ExpressError('Not Found!');

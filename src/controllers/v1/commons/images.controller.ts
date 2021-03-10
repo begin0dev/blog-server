@@ -1,12 +1,12 @@
-import express, { Request, Response, Express } from 'express';
+import { Request, Response, Express } from 'express';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
+import { Router } from 'express-swagger-validator';
 
 import { ResponseStatus } from '@app/types/base';
-import apiHelper from '@app/lib/helpers/api-helper';
 
-const router = express.Router();
+const router = Router();
 
 const { CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
 
@@ -29,7 +29,7 @@ const uploader = multer({
 
 router.post(
   '/images',
-  apiHelper.apiDoc({ summary: '이미지 등록 api' }),
+  { summary: '이미지 등록 api', tags: ['common'] },
   uploader.array('images', 3),
   (req: Request, res: Response) => {
     res.status(200).json({

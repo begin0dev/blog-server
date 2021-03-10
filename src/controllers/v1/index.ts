@@ -1,13 +1,13 @@
 import express from 'express';
 
-import auth from './auth';
+import auths from './auths';
 import users from './users';
-import common from './common';
+import commons from './commons';
 
 const router = express.Router();
 
-router.use('/auth', auth);
+router.use('/auths', auths);
 router.use('/users', users);
-router.use('/common', common);
+router.use('/commons', commons);
 
 export default router;

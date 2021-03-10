@@ -1,14 +1,14 @@
-import express from 'express';
+import { Request, Response } from 'express';
+import { Router } from 'express-swagger-validator';
 
 import User from '@app/database/models/user';
 import { isLoggedIn } from '@app/middlewares/auth';
 import { asyncErrorHelper } from '@app/lib/helpers/base-helper';
 import { ResponseStatus } from '@app/types/base';
-import apiHelper from '@app/lib/helpers/api-helper';
 
-const router = express.Router();
+const router = Router();
 
-router.get('/check', apiHelper.apiDoc({ summary: '유저 정보 확인 api' }), (req, res) => {
+router.get('/check', { summary: '유저 정보 확인 api', tags: ['users'] }, (req: Request, res: Response) => {
   const { user } = req;
   if (user) return res.status(200).json({ status: ResponseStatus.SUCCESS, data: { user } });
   res.status(401).json({ status: ResponseStatus.FAIL, message: 'Unauthorized' });
@@ -16,9 +16,9 @@ router.get('/check', apiHelper.apiDoc({ summary: '유저 정보 확인 api' }), 
 
 router.delete(
   '/logout',
-  apiHelper.apiDoc({ summary: '유저 로그아웃 api' }),
+  { summary: '유저 로그아웃 api', tags: ['users'] },
   isLoggedIn,
-  asyncErrorHelper(async (req, res) => {
+  asyncErrorHelper(async (req: Request, res: Response) => {
     const { _id } = req.user;
 
     await User.findByIdAndUpdate(_id, { $unset: { 'oAuth.local': 1 } });

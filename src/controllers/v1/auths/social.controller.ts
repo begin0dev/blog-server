@@ -1,17 +1,17 @@
 import qs from 'qs';
 import url from 'url';
 import dayjs from 'dayjs';
-import express, { Request, Response } from 'express';
+import { Request, Response } from 'express';
+import { Router } from 'express-swagger-validator';
 
 import oAuth from '@app/lib/oauth';
 import User, { UserJson } from '@app/database/models/user';
 import { StrategiesNames } from '@app/lib/oauth/types';
 import { generateAccessToken, generateRefreshToken } from '@app/lib/helpers/token-helper';
-import apiHelper from '@app/lib/helpers/api-helper';
 
 const { CLIENT_URI: redirectUrl } = process.env;
 
-const router = express.Router();
+const router = Router();
 
 const socialCallback = async (req: Request, res: Response) => {
   const failureRedirect = (message: string) => {
@@ -46,16 +46,26 @@ const socialCallback = async (req: Request, res: Response) => {
 
 router.get(
   '/facebook',
-  apiHelper.apiDoc({ summary: 'facebook social login api' }),
+  { summary: '폐이스북 소셜 로그인', tags: ['social'] },
   oAuth.authenticate(StrategiesNames.FACEBOOK, { auth_type: 'rerequest' }),
 );
-router.get('/facebook/callback', oAuth.authenticate(StrategiesNames.FACEBOOK), socialCallback);
+router.get(
+  '/facebook/callback',
+  { summary: '폐이스북 소셜 로그인 콜백', tags: ['social'] },
+  oAuth.authenticate(StrategiesNames.FACEBOOK),
+  socialCallback,
+);
 
 router.get(
   '/kakao',
-  apiHelper.apiDoc({ summary: 'kakao social login api' }),
+  { summary: '카카오 소셜 로그인', tags: ['social'] },
   oAuth.authenticate(StrategiesNames.KAKAO, { auth_type: 'reauthenticate' }),
 );
-router.get('/kakao/callback', oAuth.authenticate(StrategiesNames.KAKAO), socialCallback);
+router.get(
+  '/kakao/callback',
+  { summary: '카카오 소셜 로그인 콜백', tags: ['social'] },
+  oAuth.authenticate(StrategiesNames.KAKAO),
+  socialCallback,
+);
 
 export default router;
