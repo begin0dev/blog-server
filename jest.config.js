@@ -3,8 +3,6 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: 'coverage',
   coveragePathIgnorePatterns: ['/node_modules/'],
-  globalSetup: '<rootDir>/__tests__/globalSetup.ts',
-  globalTeardown: '<rootDir>/__tests__/globalTeardown.ts',
   setupFilesAfterEnv: ['<rootDir>/__tests__/test-helper.ts'],
   moduleDirectories: ['node_modules', 'src'],
   moduleFileExtensions: ['ts', 'js'],

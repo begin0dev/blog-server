@@ -1,7 +1,8 @@
+import 'dotenv/config';
 import mongoose from 'mongoose';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 
-import { connectDB } from '@app/database';
+import { MongoDB } from '@app/database';
 
 let mongoServer: MongoMemoryServer;
 
@@ -9,9 +10,10 @@ beforeEach(async () => {
   try {
     mongoServer = new MongoMemoryServer();
     const mongoUri = await mongoServer.getUri();
-    await connectDB(mongoUri);
+    const db = new MongoDB(mongoUri);
+    await db.connect();
   } catch (err) {
-    console.error('Mongodb connection error', err);
+    console.error('TEST: Mongodb connection error', err);
   }
 });
 

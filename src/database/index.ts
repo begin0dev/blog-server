@@ -1,38 +1,51 @@
-import mongoose from 'mongoose';
+import mongoose, { Mongoose, ConnectionOptions } from 'mongoose';
 
 const { NODE_ENV } = process.env;
 
-// mongoose setting
-mongoose.set('debug', NODE_ENV === 'development');
-mongoose.set('useCreateIndex', true);
-mongoose.set('useFindAndModify', false);
+export class MongoDB {
+  private readonly uri: string;
+  private readonly options: ConnectionOptions;
+  private mongoose: Mongoose;
+  private retryCount: number;
 
-export const connectDB = async (uri: string, options = {}) => {
-  let retryCount = 0;
+  constructor(uri: string, options?: ConnectionOptions) {
+    this.retryCount = 0;
 
-  const connect = () =>
-    mongoose.connect(uri, {
-      ...options,
+    this.uri = uri;
+    this.options = {
+      ...(options || {}),
       useNewUrlParser: true,
       useUnifiedTopology: true,
-    });
+    };
 
-  try {
-    await connect();
-    mongoose.connection.on('error', (err) => {
+    this.mongoose = mongoose;
+    // mongoose setting
+    this.mongoose.set('debug', NODE_ENV === 'development');
+    this.mongoose.set('useCreateIndex', true);
+    this.mongoose.set('useFindAndModify', false);
+
+    if (NODE_ENV === 'test') return;
+    this.mongoose.connection.on('error', (err) => {
       console.error('Mongodb connection error', err);
     });
-    mongoose.connection.on('disconnected', () => {
-      if (NODE_ENV === 'test') return;
-      if (retryCount < 3) {
-        console.error('The connection to the Mongodb has been lost. Retry the connection');
-        connect();
-        retryCount += 1;
+    this.mongoose.connection.on('disconnected', async () => {
+      if (this.retryCount > 3) {
+        console.error('The connection to the Mongodb has been lost. Retry the count over');
+        return;
       }
+      console.error('The connection to the Mongodb has been lost. Retry the connection');
+      this.retryCount += 1;
+      await this.connect();
     });
-    return mongoose;
-  } catch (err) {
-    console.error('Mongodb connection error', err);
-    process.exit(1);
   }
-};
+
+  connect = async () => {
+    try {
+      await this.mongoose.connect(this.uri, this.options);
+      this.retryCount = 0;
+    } catch (err) {
+      console.error('Mongodb connection error', err);
+      process.exit(1);
+    }
+  };
+}

@@ -30,6 +30,6 @@ jest.mock('multer', () => () => ({
 
 describe('Test images controller', () => {
   test('/', async () => {
-    await agent(Server.application).post('/api/v1/common/images').expect(200);
+    await agent(Server.application).post('/api/v1/commons/images').expect(200);
   });
 });

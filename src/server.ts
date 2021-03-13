@@ -5,12 +5,11 @@ import express, { Request, Response, NextFunction, Express } from 'express';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import { SwaggerGenerator } from 'express-swagger-validator';
-import listEndpoints from 'express-list-endpoints';
 
 import controllers from '@app/controllers';
 import oAuthStrategies from '@app/middlewares/strategies';
 import logger from '@app/lib/helpers/logger';
-import { connectDB } from '@app/database';
+import { MongoDB } from '@app/database';
 import { ExpressError, ResponseStatus } from '@app/types/base';
 import { checkAccessToken, checkRefreshToken } from '@app/middlewares/jwt';
 import packageJson from '../package.json';
@@ -97,11 +96,12 @@ class Server {
 
   async run(port: number) {
     /* CONNECT MONGO */
-    await connectDB(MONGO_URI as string, {
+    const db = new MongoDB(MONGO_URI, {
       user: MONGO_USER,
       pass: MONGO_PWD,
       dbName: MONGO_DB_NAME,
     });
+    await db.connect();
 
     this.application.listen(port, () => {
       console.log(`Express is running on port ${port} - ${NODE_ENV}`);
