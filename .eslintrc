@@ -17,6 +17,7 @@
     "jest/globals": true
   },
   "rules": {
+    "camelcase": "off",
     "consistent-return": "off",
     "object-property-newline": "off",
     "object-curly-newline": "off",

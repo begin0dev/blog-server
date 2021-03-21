@@ -7,15 +7,14 @@ export const enum StrategiesNames {
   KAKAO = 'kakao',
 }
 
-export type RequiredOptionsTypes = keyof RequiredOptions<StrategiesNames>;
-export type RequiredUrlTypes = 'authorizationURL' | 'tokenURL' | 'profileURL';
-
 interface RequiredOptions<N extends StrategiesNames> {
   name: N;
   clientID: string;
   clientSecret: string;
   callbackURL: string;
 }
+export type RequiredOptionsTypes = keyof RequiredOptions<StrategiesNames>;
+export type RequiredUrlTypes = 'authorizationURL' | 'tokenURL' | 'profileURL';
 
 export interface Options<N extends StrategiesNames> extends RequiredOptions<N> {
   grantType?: string;
@@ -66,5 +65,5 @@ export interface DoneProfile {
 export type VerifyFunction<N extends StrategiesNames> = (
   accessToken: string,
   profile: ProfileResponses[N],
-  done: (err: Error, profile?: DoneProfile) => void,
+  done: (err: Error, doneProfile?: DoneProfile) => void,
 ) => void;
